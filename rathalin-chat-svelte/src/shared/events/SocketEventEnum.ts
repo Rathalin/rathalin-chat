@@ -1,0 +1,9 @@
+export enum SocketEventEnum {
+    UNKNOWN = "UNKNOWN",
+    TEXT_MESSAGE = "TEXT_MESSAGE",
+    LOGIN = "LOGIN",
+    LOGOUT = "LOGOUT",
+    SYSTEM_INFO = "SYSTEM_INFO",
+    SYSTEM_WARNING = "SYSTEM_WARNING",
+    SYSTEM_ERROR = "SYSTEM_ERROR",
+}
