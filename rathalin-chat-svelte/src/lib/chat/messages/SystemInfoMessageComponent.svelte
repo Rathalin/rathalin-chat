@@ -14,6 +14,9 @@
         <span class="text">
             {infoMessage.text}
         </span>
+        <span class="timestamp">
+            {timestamp}
+        </span>
     </blockquote>
 </li>
 
@@ -44,5 +47,11 @@
         font-size: 10pt;
         background-color: var(--primary-lighter);
         color: white;
+    }
+
+    .timestamp {
+        font-size: 8pt;
+        margin-left: 0.5em;
+        color: rgba(255, 255, 255, 0.5);
     }
 </style>

@@ -1,15 +1,14 @@
 import { Manager, Socket } from "socket.io-client";
 import { Subject } from "rxjs";
 import { get } from "svelte/store";
-import type { User } from "../../shared/user/User";
 import type { TextMessage } from "../../shared/messages/TextMessage";
 import type { SystemInfoMessage } from "../../shared/messages/SystemInfoMessage";
 import type { SystemWarningMessage } from "../../shared/messages/SystemWarningMessage";
 import type { SystemErrorMessage } from "../../shared/messages/SystemErrorMessage";
-import { socketIoServerConnection } from "../../stores/connection.store";
 import { SocketEventEnum } from "../../shared/events/SocketEventEnum";
 import type { LoginMessage } from "../../shared/messages/LoginMessage";
 import type { LogoutMessage } from "../../shared/messages/LogoutMessage";
+import { socketIoServerConnection } from "../../stores/config.store";
 
 class ChatService {
 
@@ -39,23 +38,42 @@ class ChatService {
         this._socket.on("connect", () => this.onConnected.next());
         this._socket.on("disconnect", () => this.onDisconnected.next());
         this._socket.on("connect_error", (error) => this.onError.next(error));
-        this._socket.on(SocketEventEnum.LOGIN, (loginMessage: LoginMessage): void => {
-            this.onLogin.next(loginMessage);
+        this._socket.on(SocketEventEnum.LOGIN, (data: any): void => {
+            this.onLogin.next({
+                user: data.user,
+                date: new Date(data.date),
+            });
         });
-        this._socket.on(SocketEventEnum.LOGOUT, (logoutMessage: LogoutMessage): void => {
-            this.onLogout.next(logoutMessage);
+        this._socket.on(SocketEventEnum.LOGOUT, (data: any): void => {
+            this.onLogout.next({
+                user: data.user,
+                date: new Date(data.date),
+            });
         });
-        this._socket.on(SocketEventEnum.TEXT_MESSAGE, (textMessage: TextMessage): void => {
-            this.onTextMessage.next(textMessage);
+        this._socket.on(SocketEventEnum.TEXT_MESSAGE, (data: any): void => {
+            this.onTextMessage.next({
+                sender: data.sender,
+                text: data.text,
+                date: new Date(data.date),
+            });
         });
-        this._socket.on(SocketEventEnum.SYSTEM_INFO, (systemMessage: SystemInfoMessage): void => {
-            this.onSystemInfoMessage.next(systemMessage);
+        this._socket.on(SocketEventEnum.SYSTEM_INFO, (data: any): void => {
+            this.onSystemInfoMessage.next({
+                text: data.text,
+                date: new Date(data.date),
+            });
         });
-        this._socket.on(SocketEventEnum.SYSTEM_WARNING, (systemWarningMessage: SystemWarningMessage): void => {
-            this.onSystemInfoMessage.next(systemWarningMessage);
+        this._socket.on(SocketEventEnum.SYSTEM_WARNING, (data: any): void => {
+            this.onSystemInfoMessage.next({
+                text: data.text,
+                date: new Date(data.date),
+            });
         });
-        this._socket.on(SocketEventEnum.SYSTEM_ERROR, (systemErrorMessage: SystemErrorMessage): void => {
-            this.onSystemInfoMessage.next(systemErrorMessage);
+        this._socket.on(SocketEventEnum.SYSTEM_ERROR, (data: any): void => {
+            this.onSystemInfoMessage.next({
+                text: data.text,
+                date: new Date(data.date),
+            });
         });
     }
 

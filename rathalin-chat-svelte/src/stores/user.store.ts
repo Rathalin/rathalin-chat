@@ -12,5 +12,4 @@ function createUserStore() {
 
 export const user = createUserStore();
 export const loggedIn: Writable<boolean> = writable<boolean>(false);
-// export const lastUsername: Writable<string> = writable(localStorage?.getItem("lastUsername") || '');
 export const lastUsername: Writable<string> = writable('');

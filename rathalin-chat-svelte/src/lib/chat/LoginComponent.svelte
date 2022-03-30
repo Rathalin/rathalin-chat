@@ -28,7 +28,7 @@
     function login(): void {
         const username: string = usernameInput?.trim();
         if (!username || username.length === 0) return;
-
+        
         $user = { username };
         $lastUsername = username;
         chatService.connect();

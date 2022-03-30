@@ -1,19 +1,15 @@
 <script lang="ts">
 	import { chatService } from "../services/chat/chat.service";
 
-	import {
-		locale,
-		setupI18n,
-		translate,
-	} from "../services/i18n/i18n.service";
-
-	import { socketIoServerConnection } from "../stores/connection.store";
+	import { translate } from "../services/i18n/i18n.service";
 	import { lastUsername, loggedIn } from "../stores/user.store";
 
 	import ChatAuthComponent from "../lib/chat/ChatAuthComponent.svelte";
+	import { socketIoServerConnection } from "../stores/config.store";
 
 	if (typeof localStorage !== "undefined") {
-		lastUsername.subscribe((username) => {
+		$lastUsername = localStorage.getItem("lastUsername");
+		lastUsername.subscribe(username => {
 			localStorage.setItem("lastUsername", username);
 			console.log("Set username in local storage to " + username);
 		});
@@ -39,7 +35,6 @@
 <svelte:head>
 	<title>{$translate("app.name")}</title>
 	<html lang="en" />
-	<!-- <script src="http://localhost:5001/socket.io/socket.io.js"></script> -->
 </svelte:head>
 
 <ChatAuthComponent />
