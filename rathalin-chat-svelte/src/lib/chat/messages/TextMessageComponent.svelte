@@ -3,14 +3,23 @@
 
     export let textMessage: TextMessage;
     export let isMyMessage: boolean;
+    let hover: boolean = false;
 
     $: timestamp = textMessage.date.toLocaleTimeString("at-AT", {
         hour: "2-digit",
         minute: "2-digit",
     });
+
+    function onMouseEnter(): void {
+        hover = true;
+    }
+
+    function onMouseLeave(): void {
+        hover = false;
+    }
 </script>
 
-<li>
+<li on:mouseenter={onMouseEnter} on:mouseleave={onMouseLeave} class:hover>
     <blockquote class:msg-me={isMyMessage}>
         <span class="name">
             {textMessage.sender.username}
@@ -78,6 +87,10 @@
                         transparent transparent;
                 }
             }
+        }
+
+        .hover {
+            color: red;
         }
     }
 

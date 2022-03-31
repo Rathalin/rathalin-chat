@@ -40,11 +40,13 @@ export class ChatServer {
                 console.log(`- User (${this._clients.length})`);
                 if (client != null) {
                     console.log(`User ${JSON.stringify(client.user)} loggs out`);
-                    const logoutMessage: LogoutMessage = {
-                        user: client.user,
-                        date: new Date(),
-                    };
-                    socket.broadcast.emit(SocketEventEnum.LOGOUT, logoutMessage);
+                    if (client.user?.username?.trim().length > 0) {
+                        const logoutMessage: LogoutMessage = {
+                            user: client.user,
+                            date: new Date(),
+                        };
+                        socket.broadcast.emit(SocketEventEnum.LOGOUT, logoutMessage);
+                    }
                 }
             });
 
@@ -53,10 +55,6 @@ export class ChatServer {
                 socket.emit(SocketEventEnum.LOGIN, loginMessage);
                 this.addUserToClient(socket, loginMessage.user);
                 console.log(`User ${JSON.stringify(loginMessage.user)} loggs in`);
-            });
-            socket.on(SocketEventEnum.LOGOUT, (logoutMessage: LogoutMessage): void => {
-                // console.log(`User ${JSON.stringify(logoutMessage.user)} loggs out`);
-                // socket.broadcast.emit(SocketEventEnum.LOGOUT, logoutMessage);
             });
             socket.on(SocketEventEnum.TEXT_MESSAGE, (textMessage: TextMessage) => {
                 socket.broadcast.emit(SocketEventEnum.TEXT_MESSAGE, textMessage);
