@@ -18,7 +18,6 @@ export class ChatServer {
 
 
     constructor(config: IServerConfig) {
-
         console.log(`Listening on port ${config.SOCKETIO_PORT}`);
         // const corsOrigin: string = `http://localhost:${config.SVELTE_PORT}`;
         const corsOrigin: string = `*`;
@@ -51,7 +50,9 @@ export class ChatServer {
 
             socket.on(SocketEventEnum.LOGIN, (loginMessage: LoginMessage): void => {
                 socket.broadcast.emit(SocketEventEnum.LOGIN, loginMessage);
+                socket.emit(SocketEventEnum.LOGIN, loginMessage);
                 this.addUserToClient(socket, loginMessage.user);
+                console.log(`User ${JSON.stringify(loginMessage.user)} loggs in`);
             });
             socket.on(SocketEventEnum.LOGOUT, (logoutMessage: LogoutMessage): void => {
                 // console.log(`User ${JSON.stringify(logoutMessage.user)} loggs out`);
@@ -74,17 +75,20 @@ export class ChatServer {
     }
 
 
+    listen(): void {
+        this.initConnections();
+    }
+
+
     addUserToClient(socket: Socket, user: User): void {
-        console.log("addUserToClient");
         const client: Client = this.getClient(socket);
         client.user = user;
     }
 
 
     removeClient(socket: Socket): Client {
-        console.log("removeClient");
         const client: Client = this.getClient(socket);
-        this._clients = this._clients.filter(c => c.socket === socket);
+        this._clients = this._clients.filter(c => c.socket !== socket);
         return client;
     }
 
@@ -95,10 +99,5 @@ export class ChatServer {
             throw new Error(`Socket not found in client list!`);
         }
         return client;
-    }
-
-
-    listen(): void {
-        this.initConnections();
     }
 }

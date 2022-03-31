@@ -1,5 +1,4 @@
 import { config } from 'dotenv';
-import { Server } from 'socket.io';
 import { ChatServer } from './chatserver';
 import { IServerConfig } from './interfaces/IServerConfig';
 import { loadServerConfig } from './loadConfig';
@@ -12,7 +11,11 @@ import { loadServerConfig } from './loadConfig';
         console.error("Could not load server config!");
         return;
     }
-    const chatServer: ChatServer = new ChatServer(serverConfig);
-    chatServer.listen();
+    try {
+        const chatServer: ChatServer = new ChatServer(serverConfig);
+        chatServer.listen();
+    } catch (e: unknown) {
+        console.log("oh no");
+    }
 
 })();
