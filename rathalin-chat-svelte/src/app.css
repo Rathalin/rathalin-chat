@@ -1,5 +1,32 @@
 @import url('https://fonts.googleapis.com/css2?family=Roboto:ital,wght@0,100;0,300;0,400;0,700;1,100;1,300;1,400;1,700&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Cairo:wght@300;400&display=swap');
 @import url('https://fonts.googleapis.com/icon?family=Material+Icons');
+
+:root {
+    /* CSS HEX */
+    --dark-purple: #16001eff;
+    --glaucous: #7180acff;
+    --light-blue: #a8d0dbff;
+    --red-crayola: #ed254eff;
+    --naples-yellow: #f9dc5cff;
+    --primary: #212121;
+    --primary-light: #2f2f2f;
+    --primary-lighter: #585858;
+    --primary-dark: rgb(28, 28, 28);
+    --primary-darker: #000000;
+    --secondary: #ff6f00;
+    --secondary-light: #ffa040;
+    --secondary-dark: #c43e00;
+    --alert-success: #d4edda;
+    --alert-primary: #585858;
+    --alert-secondary: #ffa040;
+    --alert-success: #d4edda;
+    --alert-danger: #851a24;
+    --alert-warning: #fff3cd;
+    --alert-info: #d1ecf1;
+    --alert-light: #fefefe;
+    --alert-dark: #d6d8d9;
+}
 
 html,
 body {
@@ -9,10 +36,14 @@ body {
 }
 
 body {
+    font-family: "Cairo", "Roboto", "Segoe UI", -apple-system, Ubuntu, Tahoma, Geneva, Verdana, sans-serif;
+    background-color: var(--primary);
+    color: white;
 	margin: 0;
 	padding: 0px;
-	box-sizing: border-box;
-	font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Oxygen-Sans, Ubuntu, Cantarell, "Helvetica Neue", sans-serif;
+	box-sizing: border-box;  
+    display: flex;
+    flex-direction: column;
 }
 
 *,
@@ -20,6 +51,7 @@ body {
 ::before {
 	box-sizing: border-box;
 }
+
 
 a {
 	color: rgb(0, 100, 200);

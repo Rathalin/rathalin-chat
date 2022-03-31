@@ -28,14 +28,35 @@
     @import "./messages.scss";
 
     li {
+        font-family: "Roboto";
         display: flex;
 
         blockquote {
-            padding: 0.3em 1em 0.5em 1em;
+            padding: 0.4em .8em 0.4em .8em;
             color: white;
             border-radius: 0px 8px 8px 8px;
             background-color: var(--primary-light);
-            max-width: 35%;
+            max-width: 35%;            
+
+            .name {
+                font-size: 11pt;
+                color: var(--secondary-light);
+            }
+
+            .timestamp {
+                font-size: 9pt;
+                margin-left: 0.5em;
+                color: rgba(255, 255, 255, 0.5);
+            }
+
+            .text {
+                font-size: 12pt;
+                word-break: break-word;
+                white-space: pre-wrap;
+                overflow-wrap: break-word;
+                -ms-word-break: break-word;
+                word-break: break-word;
+            }
 
             &::before {
                 position: absolute;
@@ -56,28 +77,6 @@
                     border-color: var(--primary-lighter) var(--primary-lighter)
                         transparent transparent;
                 }
-            }
-
-            .name {
-                font-size: 10pt;
-                font-weight: bold;
-                color: var(--secondary-light);
-            }
-
-            .timestamp {
-                font-size: 8pt;
-                margin-left: 0.5em;
-                color: rgba(255, 255, 255, 0.5);
-            }
-
-            .text {
-                font-family: "Segoe UI";
-                font-size: 11pt;
-                word-break: break-word;
-                white-space: pre-wrap;
-                overflow-wrap: break-word;
-                -ms-word-break: break-word;
-                word-break: break-word;
             }
         }
     }

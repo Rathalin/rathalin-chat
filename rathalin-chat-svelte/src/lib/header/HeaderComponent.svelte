@@ -30,7 +30,6 @@
     nav {
         padding: 0em 1em;
         width: 100%;
-        font-family: "Roboto";
         font-weight: 300;
         font-size: large;
         background-color: var(--primary-dark);

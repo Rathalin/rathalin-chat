@@ -11,7 +11,7 @@
     });
 </script>
 
-<li>
+<li class="connect-message">
     <blockquote>
         <span class="text">
             {$translate("messages.logout_message", {
@@ -26,22 +26,4 @@
 
 <style lang="scss">
     @import "./messages.scss";
-
-    li {
-        align-self: center;
-        
-        blockquote {
-            padding: 0.3em 0.8em;
-            font-size: 10pt;
-            background-color: var(--primary-lighter);
-            color: white;
-            align-self: center;
-
-            .timestamp {
-                font-size: 8pt;
-                margin-left: 0.5em;
-                color: rgba(255, 255, 255, 0.5);
-            }
-        }
-    }
 </style>
