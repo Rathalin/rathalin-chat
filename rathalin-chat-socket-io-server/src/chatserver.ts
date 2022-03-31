@@ -1,13 +1,13 @@
-import { LoginMessage } from "$shared/messages/LoginMessage";
-import { LogoutMessage } from "$shared/messages/LogoutMessage";
-import { Message } from "$shared/messages/Message";
-import { UsernameAcceptMessage } from "$shared/messages/UsernameAcceptMessage";
-import { UsernameTakenMessage } from "$shared/messages/UsernameTakenMessage";
-import { User } from "$shared/user/User";
-import { Server, Socket } from "socket.io";
-import { IServerConfig } from "./interfaces/IServerConfig";
-import { SocketEventEnum } from "./shared/events/SocketEventEnum";
-import { TextMessage } from "./shared/messages/TextMessage";
+import { LoginMessage } from '$shared/messages/LoginMessage';
+import { LogoutMessage } from '$shared/messages/LogoutMessage';
+import { Message } from '$shared/messages/Message';
+import { UsernameAcceptMessage } from '$shared/messages/UsernameAcceptMessage';
+import { UsernameTakenMessage } from '$shared/messages/UsernameTakenMessage';
+import { User } from '$shared/user/User';
+import { Server, Socket } from 'socket.io';
+import { IServerConfig } from './interfaces/IServerConfig';
+import { SocketEventEnum } from './shared/events/SocketEventEnum';
+import { TextMessage } from './shared/messages/TextMessage';
 
 interface Client {
     socket: Socket;
@@ -16,34 +16,27 @@ interface Client {
 
 export class ChatServer {
 
-    private _server: Server;
-    private _clients: Client[] = [];
-    private _messages: Message[] = [];
+    private server: Server | null = null;
+    private clients: Client[] = [];
+    private messages: Message[] = [];
 
 
-    constructor(config: IServerConfig) {
-        console.log(`Listening on port ${config.SOCKETIO_PORT}`);
-        // const corsOrigin: string = `http://localhost:${config.SVELTE_PORT}`;
-        const corsOrigin: string = `*`;
-        this._server = new Server(config.SOCKETIO_PORT, {
-            cors: {
-                origin: corsOrigin,
-            }
-        });
-        console.log(`Allow CORS of origin ${corsOrigin}`);
+    constructor(private readonly config: IServerConfig) {
     }
 
 
     initConnections(): void {
+        if (this.server == null) return;
+
         // Connect
-        this._server.on('connection', socket => {
+        this.server.on('connection', socket => {
             this.addClient(socket);
-            console.log(`+ User (${this._clients.length})`);
+            console.log(`+ User (${this.clients.length})`);
 
             // Disconnect
             socket.on('disconnect', reason => {
                 const client: Client = this.removeClient(socket);
-                console.log(`- User (${this._clients.length})`);
+                console.log(`- User (${this.clients.length})`);
                 if (client != null) {
                     console.log(`User ${JSON.stringify(client.user)} loggs out (${reason})`);
                     if (client.user?.username?.trim().length > 0) {
@@ -53,14 +46,14 @@ export class ChatServer {
                             date: new Date(),
                         };
                         socket.broadcast.emit(SocketEventEnum.LOGOUT, logoutMessage);
-                        this._messages.push(logoutMessage);
+                        this.messages.push(logoutMessage);
                     }
                 }
             });
 
             // Login
             socket.on(SocketEventEnum.LOGIN, (loginMessage: LoginMessage): void => {
-                console.log("Login with ", loginMessage.user.username);
+                console.log('Login with', loginMessage.user.username);
                 if (loginMessage.user.username.trim().length === 0) return;
 
                 const usernameMaxLength: number = 20;
@@ -86,12 +79,11 @@ export class ChatServer {
                     socket.emit(SocketEventEnum.LOGIN_USERNAME_ACCEPT, acceptMessage);
                     socket.broadcast.emit(SocketEventEnum.LOGIN, loginMessage);
                     this.sendAllMessagesToClient(socket);
-                }
 
-                socket.broadcast.emit(SocketEventEnum.LOGIN, loginMessage);
-                socket.emit(SocketEventEnum.LOGIN, loginMessage);
-                this.addUserToClient(socket, loginMessage.user);
-                console.log(`User ${JSON.stringify(loginMessage.user)} loggs in`);
+                    socket.broadcast.emit(SocketEventEnum.LOGIN, loginMessage);
+                    this.addUserToClient(socket, loginMessage.user);
+                    console.log(`User ${JSON.stringify(loginMessage.user)} loggs in`);
+                }
             });
 
             // Text message
@@ -104,6 +96,15 @@ export class ChatServer {
 
 
     listen(): void {
+        console.log(`Listening on port ${this.config.SOCKETIO_PORT}`);
+        // const corsOrigin: string = `http://localhost:${config.SVELTE_PORT}`;
+        const corsOrigin: string = `*`;
+        this.server = new Server(this.config.SOCKETIO_PORT, {
+            cors: {
+                origin: corsOrigin,
+            }
+        });
+        console.log(`Allow CORS of origin ${corsOrigin}`);
         this.initConnections();
     }
 
@@ -111,9 +112,9 @@ export class ChatServer {
     addClient(socket: Socket): Client {
         const client: Client = {
             socket,
-            user: { username: "" },
+            user: { username: '' },
         };
-        this._clients.push(client);
+        this.clients.push(client);
         return client;
     }
 
@@ -126,13 +127,13 @@ export class ChatServer {
 
     removeClient(socket: Socket): Client {
         const client: Client = this.getClient(socket);
-        this._clients = this._clients.filter(c => c.socket !== socket);
+        this.clients = this.clients.filter(c => c.socket !== socket);
         return client;
     }
 
 
     getClient(socket: Socket): Client {
-        const client: Client | undefined = this._clients.find(c => c.socket === socket);
+        const client: Client | undefined = this.clients.find(c => c.socket === socket);
         if (client == null) {
             throw new Error(`Socket not found in client list!`);
         }
@@ -142,26 +143,25 @@ export class ChatServer {
 
     setUsernameOfClient(socket: Socket, username: string) {
         const user: User = this.getClient(socket).user;
-        console.log(`${user.username} -> ${username}`)
+        console.log(`${user.username.length === 0 ? `''` : user.username} -> ${username}`)
         user.username = username;
     }
 
 
     usernameTaken(username: string): boolean {
-        return this._clients
+        return this.clients
             .some(client => client.user.username.toLocaleLowerCase() === username.toLocaleLowerCase());
     }
 
 
     hasValidUsername(socket: Socket): boolean {
         const client: Client = this.getClient(socket);
-        console.log("Textmessage from " + client.user.username);
         return client.user.username.length > 0;
     }
 
 
     sendAllMessagesToClient(socket: Socket): void {
-        this._messages.forEach(msg => socket.emit(msg.type, msg));
+        this.messages.forEach(msg => socket.emit(msg.type, msg));
     }
 
 }
