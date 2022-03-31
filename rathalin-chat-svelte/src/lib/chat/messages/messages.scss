@@ -1,0 +1,21 @@
+li {
+    list-style: none;
+
+    &:first-child {
+        margin-top: 30px;
+    }
+
+    &:not(:last-child) {
+        margin-bottom: 1em;
+    }
+
+    &:last-child {
+        margin-bottom: 1em;
+    }
+
+    blockquote {
+        margin: 0px;
+        border-radius: 8px;
+        position: relative;
+    }
+}

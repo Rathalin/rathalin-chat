@@ -23,38 +23,23 @@
     </blockquote>
 </li>
 
-<style>
+<style lang="scss">
+    @import "./messages.scss";
+
     li {
-        list-style: none;
         align-self: center;
-    }
 
-    li:first-child {
-        margin-top: 30px;
-    }
+        blockquote {
+            padding: 0.6em 0.8em;
+            font-size: 10pt;
+            background-color: var(--primary-lighter);
+            color: white;
 
-    li:not(:last-child) {
-        margin-bottom: 1em;
-    }
-
-    li:last-child {
-        margin-bottom: 1em;
-    }
-
-    blockquote {
-        padding: 0.3em 0.8em;
-        margin: 0px;
-        border-radius: 8px;
-        white-space: pre;
-        position: relative;
-        font-size: 10pt;
-        background-color: var(--primary-lighter);
-        color: white;
-    }
-
-    .timestamp {
-        font-size: 8pt;
-        margin-left: 0.5em;
-        color: rgba(255, 255, 255, 0.5);
+            .timestamp {
+                font-size: 8pt;
+                margin-left: 0.5em;
+                color: rgba(255, 255, 255, 0.5);
+            }
+        }
     }
 </style>
