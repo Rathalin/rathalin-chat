@@ -1,7 +1,7 @@
 <script lang="ts">
 	import ChatComponent from "./ChatComponent.svelte";
 	import { chatService } from "../../services/chat/chat.service";
-	import { lastUsername, loggedIn } from "../../stores/user.store";
+	import { lastUsername, connected, loggedIn } from "../../stores/user.store";
 	import { socketIoServerConnection } from "../../stores/config.store";
 	import LoginComponent from "./login/LoginComponent.svelte";
 
@@ -15,24 +15,26 @@
 		});
 	}
 
-	chatService.onConnected.subscribe(() => {
+	chatService.onConnect.subscribe(() => {
 		console.log(`Connected to ${$socketIoServerConnection}`);
-		loggedIn.set(true);
+		$connected = true;
 	});
 
-	chatService.onDisconnected.subscribe(() => {
+	chatService.onDisconnect.subscribe(() => {
 		console.log(`Disconnected from to ${$socketIoServerConnection}`);
-		loggedIn.set(false);
+		$connected = false;
+		$loggedIn = false;
 	});
 
 	chatService.onError.subscribe((error) => {
 		console.log(`Failed connecting to ${$socketIoServerConnection}`);
 		console.error(error);
-		loggedIn.set(false);
+		$connected = false;
+		$loggedIn = false;
 	});
 </script>
 
-{#if !$loggedIn}
+{#if !$connected || !$loggedIn}
 	<LoginComponent />
 {:else}
 	<ChatComponent />

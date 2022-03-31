@@ -12,5 +12,6 @@ function createUserStore() {
 };
 
 export const user = createUserStore();
+export const connected: Writable<boolean> = writable<boolean>(false);
 export const loggedIn: Writable<boolean> = writable<boolean>(false);
 export const lastUsername: Writable<string> = writable<string>('');

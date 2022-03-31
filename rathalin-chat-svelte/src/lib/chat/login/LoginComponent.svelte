@@ -1,14 +1,14 @@
 <script lang="ts">
     import type { Subscription } from "rxjs";
-    import { lastUsername, user } from "../../../stores/user.store";
+    import { lastUsername, loggedIn, user } from "../../../stores/user.store";
 
     import { onDestroy, onMount } from "svelte";
     import { chatService } from "../../../services/chat/chat.service";
     import LoginErrorComponent from "./LoginErrorComponent.svelte";
     import { translate } from "../../../services/i18n/i18n.service";
     import { SocketEventEnum } from "../../../shared/events/SocketEventEnum";
-    import type { UsernameAcceptMessage } from "src/shared/messages/UsernameAcceptMessage";
-    import type { UsernameTakenMessage } from "src/shared/messages/UsernameTakenMessage";
+    import type { UsernameAcceptMessage } from "../../../shared/messages/UsernameAcceptMessage";
+    import type { UsernameTakenMessage } from "../../../shared/messages/UsernameTakenMessage";
 
     const subscriptions: Subscription[] = [];
 
@@ -22,6 +22,7 @@
         subscriptions.push(
             chatService.onError.subscribe((error) => {
                 showConnectionError = true;
+                $loggedIn = false;
                 loginPending = false;
             }),
             chatService.onLoginUsernameAccept.subscribe(
@@ -30,6 +31,7 @@
                     console.log(`Username ${username} accepted!`);
                     $user = { username };
                     $lastUsername = username;
+                    $loggedIn = true;
                     loginPending = false;
                 }
             ),
@@ -38,9 +40,10 @@
                     const { username } = takenMessage;
                     console.log(`Username ${username} rejected!`);
                     showDuplicateUsernameError = true;
+                    $loggedIn = false;
                     loginPending = false;
                 }
-            ),
+            )
         );
     });
 
@@ -51,9 +54,6 @@
     function login(): void {
         const username: string = usernameInput.trim();
         if (!username || username.length === 0) return;
-
-        $user = { username };
-        $lastUsername = username;
 
         clearErrors();
         chatService.connect();
