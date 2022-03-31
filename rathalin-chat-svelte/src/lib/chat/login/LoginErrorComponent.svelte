@@ -10,7 +10,7 @@
     </p>
 {/if}
 
-<style>
+<style lang="scss">
     p {
         flex: 1;
         color: white;

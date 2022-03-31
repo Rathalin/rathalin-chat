@@ -1,23 +1,46 @@
 <script lang="ts">
     import type { Subscription } from "rxjs";
-    import { lastUsername, user } from "../../stores/user.store";
+    import { lastUsername, user } from "../../../stores/user.store";
 
     import { onDestroy, onMount } from "svelte";
-    import { chatService } from "../../services/chat/chat.service";
-    import AuthErrorComponent from "./AuthErrorComponent.svelte";
-    import { translate } from "../../services/i18n/i18n.service";
+    import { chatService } from "../../../services/chat/chat.service";
+    import LoginErrorComponent from "./LoginErrorComponent.svelte";
+    import { translate } from "../../../services/i18n/i18n.service";
+    import { SocketEventEnum } from "../../../shared/events/SocketEventEnum";
+    import type { UsernameAcceptMessage } from "src/shared/messages/UsernameAcceptMessage";
+    import type { UsernameTakenMessage } from "src/shared/messages/UsernameTakenMessage";
 
     const subscriptions: Subscription[] = [];
 
-    let usernameInputEl: HTMLInputElement;
+    let usernameMaxInputLength: number = 20;
     let usernameInput: string = $lastUsername;
     let showConnectionError: boolean = false;
+    let showDuplicateUsernameError: boolean = false;
+    let loginPending: boolean = false;
 
     onMount(() => {
         subscriptions.push(
             chatService.onError.subscribe((error) => {
                 showConnectionError = true;
-            })
+                loginPending = false;
+            }),
+            chatService.onLoginUsernameAccept.subscribe(
+                (acceptMessage: UsernameAcceptMessage) => {
+                    const { username } = acceptMessage;
+                    console.log(`Username ${username} accepted!`);
+                    $user = { username };
+                    $lastUsername = username;
+                    loginPending = false;
+                }
+            ),
+            chatService.onLoginUsernameTaken.subscribe(
+                (takenMessage: UsernameTakenMessage) => {
+                    const { username } = takenMessage;
+                    console.log(`Username ${username} rejected!`);
+                    showDuplicateUsernameError = true;
+                    loginPending = false;
+                }
+            ),
         );
     });
 
@@ -26,16 +49,28 @@
     });
 
     function login(): void {
-        const username: string = usernameInput?.trim();
+        const username: string = usernameInput.trim();
         if (!username || username.length === 0) return;
-        
+
         $user = { username };
         $lastUsername = username;
+
+        clearErrors();
         chatService.connect();
-        chatService.login({ user: { username }, date: new Date() });
+        chatService.login({
+            type: SocketEventEnum.LOGIN,
+            user: { username },
+            date: new Date(),
+        });
+        loginPending = true;
     }
 
-    function onUsernameInputKeyDown(event): void {
+    function clearErrors(): void {
+        showConnectionError = false;
+        showDuplicateUsernameError = false;
+    }
+
+    function onUsernameInputKeyDown(event: any): void {
         if (event.key !== "Enter") return;
         login();
     }
@@ -44,16 +79,26 @@
 <div id="login">
     {#if showConnectionError}
         <div class="login-error">
-            <AuthErrorComponent
+            <LoginErrorComponent
                 text={$translate("connection.connection_error_message")}
+            />
+        </div>
+    {/if}
+    {#if showDuplicateUsernameError}
+        <div class="login-error">
+            <LoginErrorComponent
+                text={$translate(
+                    "connection.login_username_taken_error_message"
+                )}
             />
         </div>
     {/if}
     <!-- svelte-ignore a11y-autofocus -->
     <input
-        bind:this={usernameInputEl}
         bind:value={usernameInput}
         on:keydown={onUsernameInputKeyDown}
+        maxlength={usernameMaxInputLength}
+        disabled={loginPending}
         type="text"
         id="login-username"
         placeholder={$translate("connection.username_input_label")}

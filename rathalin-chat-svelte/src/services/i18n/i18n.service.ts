@@ -1,59 +1,26 @@
 import {
-    dictionary,
+    addMessages,
+    init,
+    getLocaleFromNavigator,
     locale as i18n_locale,
     _
-} from 'svelte-i18n';
+} from "svelte-i18n";
 
-function setupI18n(locale: string = 'en') {
-    dictionary.set({
-        en: {
-            "app": {
-                "name": "Rathalin Messenger",
-            },
-            "connection": {
-                "username_input_label": "Username",
-                "email_input_label": "Email",
-                "password_input_label": "Password",
-                "enter_label": "Enter",
-                "exit_label": "Exit",
-                "login_label": "Log in",
-                "logout_label": "Log out",
-                "connection_error_message": "Failed to establish a connection to the server.",
-                "connection_lost_message": "Connection lost.",
-            },
-            "messages": {
-                "login_message": "{username} joined the chat.",
-                "logout_message": "{username} left the chat.",
-            },
-            "header": {
-                "view_on": "View on",
-            }
-        },
-        de: {
-            "app": {
-                "name": "Rathalin Messenger",
-            },
-            "connection": {
-                "username_input_label": "Name",
-                "email_input_label": "E-Mail",
-                "password_input_label": "Passwort",
-                "enter_label": "Beitreten",
-                "exit_label": "Abmelden",
-                "login_label": "Anmelden",
-                "logout_label": "Abmelden",
-                "connection_error_message": "Es konnte keine Verbindung zum Server hergestellt werden.",
-                "connection_lost_message": "Verbindung verloren.",
-            },
-            "messages": {
-                "login_message": "{username} ist eingetreten.",
-                "logout_message": "{username} ist gegangen.",
-            },
-            "header": {
-                "view_on": "Ansehen auf",
-            }
-        },
+import en from "./en.json";
+import de from "./de.json";
+
+function setupI18n() {
+    // register('en', () => import('./en.json'));
+    // register('de', () => import('./de.json'));
+    addMessages("en", en);
+    addMessages("de", de);
+    const fallbackLocale: string = "en";
+    init({
+        fallbackLocale,
+        initialLocale: getLocaleFromNavigator(),
     });
-    i18n_locale.set(locale);
+
+    i18n_locale.set(fallbackLocale);
 }
 
 export {

@@ -3,8 +3,9 @@
 
     import { createEventDispatcher, onDestroy, onMount } from "svelte";
     import { user } from "../../stores/user.store";
+    import { SocketEventEnum } from "../../shared/events/SocketEventEnum";
 
-    let dispatch = createEventDispatcher<{message: TextMessage}>();
+    let dispatch = createEventDispatcher<{ message: TextMessage }>();
 
     let text: string = "";
     let inputEl: HTMLInputElement;
@@ -19,6 +20,7 @@
 
         if (messageText.length > 0) {
             const message: TextMessage = {
+                type: SocketEventEnum.TEXT_MESSAGE,
                 sender: {
                     username: myUsername,
                 },

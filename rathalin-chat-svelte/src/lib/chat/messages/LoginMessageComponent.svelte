@@ -1,4 +1,6 @@
 <script lang="ts">
+    import { getRandomInt } from "../../../util/random";
+
     import { translate } from "../../../services/i18n/i18n.service";
     import type { LoginMessage } from "../../../shared/messages/LoginMessage";
 
@@ -13,7 +15,7 @@
 <li class="connect-message">
     <blockquote>
         <span class="text">
-            {$translate("messages.login_message", {
+            {$translate(`messages.login_message_${getRandomInt(1, 10)}`, {
                 values: { username: loginMessage.user.username },
             })}
         </span>

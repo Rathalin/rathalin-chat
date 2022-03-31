@@ -61,7 +61,7 @@
                     addMessageToChat({ type: "TEXT", message: textMessage });
                 }
             ),
-            chatService.onSystemInfoMessage.subscribe(
+            chatService.onSystemInfo.subscribe(
                 (systemInfoMessage: SystemInfoMessage): void => {
                     addMessageToChat({
                         type: "SYSTEM_INFO",
@@ -69,7 +69,7 @@
                     });
                 }
             ),
-            chatService.onSystemWarningMessage.subscribe(
+            chatService.onSystemWarning.subscribe(
                 (systemWarningMessage: SystemWarningMessage): void => {
                     addMessageToChat({
                         type: "SYSTEM_WARNING",
@@ -77,7 +77,7 @@
                     });
                 }
             ),
-            chatService.onSystemErrorMessage.subscribe(
+            chatService.onSystemError.subscribe(
                 (systemErrorMessage: SystemErrorMessage): void => {
                     addMessageToChat({
                         type: "SYSTEM_ERROR",

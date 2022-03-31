@@ -35,7 +35,7 @@
 
 <style lang="scss">
     @import "./messages.scss";
-
+    
     li {
         font-family: "Roboto";
         display: flex;
