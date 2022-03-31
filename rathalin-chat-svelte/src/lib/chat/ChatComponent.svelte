@@ -158,11 +158,9 @@
 
 <style>
     ul.chat-messages {
-        width: 100%;
         padding: 0em 2em;
         margin: 0em 0em 0.2em 0em;
         flex: 1;
-        max-width: 100vw;
         overflow-y: auto;
         display: flex;
         flex-direction: column;

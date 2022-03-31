@@ -71,6 +71,7 @@
             }
 
             .text {
+                font-family: "Segoe UI";
                 font-size: 11pt;
                 word-break: break-word;
                 white-space: pre-wrap;
@@ -86,16 +87,16 @@
             max-width: 95%;
         }
 
-        .name {
-            font-size: 11pt;
-        }
+        // .name {
+        //     font-size: 11pt;
+        // }
 
-        .timestamp {
-            font-size: 9pt;
-        }
+        // .timestamp {
+        //     font-size: 9pt;
+        // }
 
-        .text {
-            font-size: 12pt;
-        }
+        // .text {
+        //     font-size: 12pt;
+        // }
     }
 </style>
