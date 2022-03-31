@@ -80,7 +80,7 @@
     </button>
 </div>
 
-<style>
+<style lang="scss">
     #chat-input-wrapper {
         padding: 5px;
         width: 100%;
@@ -102,16 +102,18 @@
     button {
         background-color: transparent;
         border: none;
-        margin: 0em;
-    }
+        padding: 0;
+        margin: 0;
 
-    button:hover,
-    button:focus {
-        background-color: transparent;
-    }
+        &:hover,
+        &:focus {
+            background-color: transparent;
+        }
 
-    button i {
-        color: var(--secondary-light);
+        i {
+            margin: 8px;
+            color: var(--secondary-light);
+        }
     }
 
     @media (max-width: 700px) {

@@ -35,31 +35,34 @@
 
 <style lang="scss">
     @import "./messages.scss";
-    
+
     li {
-        font-family: "Roboto";
+        font-family: var(--font-primary);
+        font-weight: 400;
         display: flex;
 
         blockquote {
-            padding: 0.4em .8em 0.4em .8em;
+            padding: 0.2em 0.8em 0.5em 0.8em;
             color: white;
             border-radius: 0px 8px 8px 8px;
             background-color: var(--primary-light);
-            max-width: 35%;            
+            max-width: 35%;
 
             .name {
-                font-size: 11pt;
+                font-family: var(--font-secondary);
+                font-size: 10pt;
                 color: var(--secondary-light);
             }
 
             .timestamp {
-                font-size: 9pt;
+                font-family: var(--font-secondary);
+                font-size: 8pt;
                 margin-left: 0.5em;
                 color: rgba(255, 255, 255, 0.5);
             }
 
             .text {
-                font-size: 12pt;
+                font-size: 11pt;
                 word-break: break-word;
                 white-space: pre-wrap;
                 overflow-wrap: break-word;
@@ -74,7 +77,7 @@
                 width: 0;
                 height: 0;
                 top: 0em;
-                left: -0.8em;
+                left: -0.4em;
                 border: 0.4em solid var(--primary-light);
                 border-color: var(--primary-light) var(--primary-light)
                     transparent transparent;

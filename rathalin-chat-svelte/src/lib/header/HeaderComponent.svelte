@@ -28,6 +28,7 @@
 
 <style>
     nav {
+        font-family: var(--font-secondary);
         padding: 0em 1em;
         width: 100%;
         font-weight: 300;

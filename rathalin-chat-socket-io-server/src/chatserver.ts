@@ -53,7 +53,6 @@ export class ChatServer {
 
             // Login
             socket.on(SocketEventEnum.LOGIN, (loginMessage: LoginMessage): void => {
-                console.log('Login with', loginMessage.user.username);
                 if (loginMessage.user.username.trim().length === 0) return;
 
                 const usernameMaxLength: number = 20;
@@ -66,8 +65,8 @@ export class ChatServer {
                         date: new Date(),
                         username: trimmedUsername,
                     };
-                    console.log(`Sending username taken: ${JSON.stringify(takenMessage)}`);
                     socket.emit(SocketEventEnum.LOGIN_USERNAME_TAKEN, takenMessage);
+                    console.log(`  ! Taken Login "${takenMessage.username}"`);
                 } else {
                     const acceptMessage: UsernameAcceptMessage = {
                         type: SocketEventEnum.LOGIN_USERNAME_ACCEPT,
@@ -75,14 +74,13 @@ export class ChatServer {
                         username: trimmedUsername,
                     };
                     this.setUsernameOfClient(socket, trimmedUsername);
-                    console.log(`Sending username accepted: ${trimmedUsername}`);
                     socket.emit(SocketEventEnum.LOGIN_USERNAME_ACCEPT, acceptMessage);
-                    socket.broadcast.emit(SocketEventEnum.LOGIN, loginMessage);
-                    this.sendAllMessagesToClient(socket);
+                    console.log(`    Accept Login "${acceptMessage.username}"`);
+                    this.addUserToClient(socket, loginMessage.user);
+                    this.messages.push(loginMessage);
 
                     socket.broadcast.emit(SocketEventEnum.LOGIN, loginMessage);
-                    this.addUserToClient(socket, loginMessage.user);
-                    console.log(`User ${JSON.stringify(loginMessage.user)} loggs in`);
+                    this.sendAllMessagesToClient(socket);
                 }
             });
 
@@ -90,6 +88,7 @@ export class ChatServer {
             socket.on(SocketEventEnum.TEXT_MESSAGE, (textMessage: TextMessage) => {
                 if (!this.hasValidUsername(socket)) return;
                 socket.broadcast.emit(SocketEventEnum.TEXT_MESSAGE, textMessage);
+                this.messages.push(textMessage);
             });
         });
     }
@@ -143,7 +142,6 @@ export class ChatServer {
 
     setUsernameOfClient(socket: Socket, username: string) {
         const user: User = this.getClient(socket).user;
-        console.log(`${user.username.length === 0 ? `''` : user.username} -> ${username}`)
         user.username = username;
     }
 

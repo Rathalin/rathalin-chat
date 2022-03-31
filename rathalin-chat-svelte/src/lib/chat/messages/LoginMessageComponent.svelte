@@ -5,6 +5,7 @@
     import type { LoginMessage } from "../../../shared/messages/LoginMessage";
 
     export let loginMessage: LoginMessage;
+    const messageTranslateKey: string = `messages.login_message_${getRandomInt(1, 10)}`;
 
     $: timestamp = loginMessage.date.toLocaleTimeString("at-AT", {
         hour: "2-digit",
@@ -15,7 +16,7 @@
 <li class="connect-message">
     <blockquote>
         <span class="text">
-            {$translate(`messages.login_message_${getRandomInt(1, 10)}`, {
+            {$translate(messageTranslateKey, {
                 values: { username: loginMessage.user.username },
             })}
         </span>

@@ -4,6 +4,7 @@
     import type { LogoutMessage } from "../../../shared/messages/LogoutMessage";
 
     export let logoutMessage: LogoutMessage;
+    const messageTranslateKey: string = `messages.logout_message_${getRandomInt(1, 10)}`;
 
     $: timestamp = logoutMessage.date.toLocaleTimeString("at-AT", {
         hour: "2-digit",
@@ -14,7 +15,7 @@
 <li class="connect-message">
     <blockquote>
         <span class="text">
-            {$translate(`messages.logout_message_${getRandomInt(1, 10)}`, {
+            {$translate(messageTranslateKey, {
                 values: { username: logoutMessage.user.username },
             })}
         </span>
