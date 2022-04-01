@@ -1,11 +1,11 @@
-import { ChatServer } from "../chatserver";
+import { ChatServer } from "src/chatserver";
 
 describe('Connect', () => {
 
     let server: ChatServer;
 
     beforeEach(() => {
-        server = new ChatServer({ SOCKETIO_PORT: 9456, SVELTE_PORT: 9457 }); 
+        server = new ChatServer();
     });
 
     it('should add new client to list', () => {

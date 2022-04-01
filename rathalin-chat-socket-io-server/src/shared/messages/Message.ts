@@ -1,6 +1,6 @@
-import { SocketEventEnum } from "$shared/events/SocketEventEnum";
+import { SocketEvent } from "$shared/events/SocketEvent";
 
 export interface Message {
-    type: SocketEventEnum;
+    type: SocketEvent;
     date: Date;
 }

@@ -1,13 +1,12 @@
-import { LoginMessage } from '$shared/messages/LoginMessage';
-import { LogoutMessage } from '$shared/messages/LogoutMessage';
-import { Message } from '$shared/messages/Message';
-import { UsernameAcceptMessage } from '$shared/messages/UsernameAcceptMessage';
-import { UsernameTakenMessage } from '$shared/messages/UsernameTakenMessage';
-import { User } from '$shared/user/User';
-import { Server, Socket } from 'socket.io';
-import { IServerConfig } from './interfaces/IServerConfig';
-import { SocketEventEnum } from './shared/events/SocketEventEnum';
-import { TextMessage } from './shared/messages/TextMessage';
+import { LoginMessage } from "$shared/messages/LoginMessage";
+import { LogoutMessage } from "$shared/messages/LogoutMessage";
+import { Message } from "$shared/messages/Message";
+import { UsernameAcceptMessage } from "$shared/messages/UsernameAcceptMessage";
+import { UsernameTakenMessage } from "$shared/messages/UsernameTakenMessage";
+import { User } from "$shared/user/User";
+import { Server, Socket } from "socket.io";
+import { SocketEvent } from "./shared/events/SocketEvent";
+import { TextMessage } from "./shared/messages/TextMessage";
 
 interface Client {
     socket: Socket;
@@ -21,20 +20,18 @@ export class ChatServer {
     private messages: Message[] = [];
 
 
-    constructor(private readonly config: IServerConfig) {
+    constructor() {
     }
 
 
-    public listen(): void {
-        console.log(`Listening on port ${this.config.SOCKETIO_PORT}`);
-        // const corsOrigin: string = `http://localhost:${config.SVELTE_PORT}`;
-        const corsOrigin: string = `*`;
-        this.server = new Server(this.config.SOCKETIO_PORT, {
+    public listen(socketIOPort: number, corsPort: number | "*"): void {
+        console.log(`Listening on port ${socketIOPort}`);
+        this.server = new Server(socketIOPort, {
             cors: {
-                origin: corsOrigin,
+                origin: corsPort.toString(),
             }
         });
-        console.log(`Allow CORS of origin ${corsOrigin}`);
+        console.log(`Allow CORS of origin ${socketIOPort}`);
         this.initConnections();
     }
 
@@ -42,68 +39,88 @@ export class ChatServer {
     private initConnections(): void {
         if (this.server == null) return;
 
-        // Connect
-        this.server.on('connection', socket => {
+        this.server.on("connection", socket => {
             this.addClient(socket);
             console.log(`+ User (${this.clients.length})`);
 
-            // Disconnect
-            socket.on('disconnect', reason => {
-                const client: Client = this.removeClient(socket);
-                console.log(`- User (${this.clients.length})`);
-                if (client != null) {
-                    console.log(`    Logout ${JSON.stringify(client.user)}`);
-                    if (client.user?.username?.trim().length > 0) {
-                        const logoutMessage: LogoutMessage = {
-                            type: SocketEventEnum.LOGOUT,
-                            user: client.user,
-                            date: new Date(),
-                        };
-                        socket.broadcast.emit(SocketEventEnum.LOGOUT, logoutMessage);
-                        this.messages.push(logoutMessage);
-                    }
-                }
-            });
+            this.registerClientDisconnect(socket);
+            this.registerClientRequestsLogin(socket);
+            this.registerClientSendsTextMessage(socket);
+            this.registerClientRequestsMessages(socket);
+        });
+    }
 
-            // Login
-            socket.on(SocketEventEnum.LOGIN, (loginMessage: LoginMessage): void => {
-                if (loginMessage.user.username.trim().length === 0) return;
 
-                const usernameMaxLength: number = 20;
-                const trimmedUsername: string = loginMessage.user.username.trim().substring(0, usernameMaxLength);
-                if (trimmedUsername.length === 0) return;
-
-                if (this.usernameTaken(trimmedUsername)) {
-                    const takenMessage: UsernameTakenMessage = {
-                        type: SocketEventEnum.LOGIN_USERNAME_TAKEN,
+    private registerClientDisconnect(socket: Socket): void {
+        socket.on("disconnect", reason => {
+            const client: Client = this.removeClient(socket);
+            console.log(`- User (${this.clients.length})`);
+            if (client != null) {
+                console.log(`    Logout ${JSON.stringify(client.user)}`);
+                if (client.user?.username?.trim().length > 0) {
+                    const logoutMessage: LogoutMessage = {
+                        type: SocketEvent.SERVER_SENDS_LOGOUT,
+                        user: client.user,
                         date: new Date(),
-                        username: trimmedUsername,
                     };
-                    socket.emit(SocketEventEnum.LOGIN_USERNAME_TAKEN, takenMessage);
-                    console.log(`  ! Taken Login "${takenMessage.username}"`);
-                } else {
-                    const acceptMessage: UsernameAcceptMessage = {
-                        type: SocketEventEnum.LOGIN_USERNAME_ACCEPT,
-                        date: new Date(),
-                        username: trimmedUsername,
-                    };
-                    this.setUsernameOfClient(socket, trimmedUsername);
-                    socket.emit(SocketEventEnum.LOGIN_USERNAME_ACCEPT, acceptMessage);
-                    console.log(`    Accept Login "${acceptMessage.username}"`);
-                    this.addUserToClient(socket, loginMessage.user);
-                    this.messages.push(loginMessage);
-
-                    socket.broadcast.emit(SocketEventEnum.LOGIN, loginMessage);
-                    this.sendAllMessagesToClient(socket);
+                    socket.broadcast.emit(SocketEvent.SERVER_SENDS_LOGOUT, logoutMessage);
+                    this.messages.push(logoutMessage);
                 }
-            });
+            }
+        });
+    }
 
-            // Text message
-            socket.on(SocketEventEnum.TEXT_MESSAGE, (textMessage: TextMessage) => {
-                if (!this.hasValidUsername(socket)) return;
-                socket.broadcast.emit(SocketEventEnum.TEXT_MESSAGE, textMessage);
-                this.messages.push(textMessage);
-            });
+
+    private registerClientRequestsLogin(socket: Socket): void {
+        socket.on(SocketEvent.CLIENT_REQUESTS_LOGIN, (loginMessage: LoginMessage): void => {
+            if (loginMessage.user.username.trim().length === 0) return;
+
+            const usernameMaxLength: number = 20;
+            const trimmedUsername: string = loginMessage.user.username.trim().substring(0, usernameMaxLength);
+            if (trimmedUsername.length === 0) return;
+
+            if (this.usernameTaken(trimmedUsername)) {
+                const takenMessage: UsernameTakenMessage = {
+                    type: SocketEvent.SERVER_RESPONDS_LOGIN_USERNAME_TAKEN,
+                    date: new Date(),
+                    username: trimmedUsername,
+                };
+                socket.emit(SocketEvent.SERVER_RESPONDS_LOGIN_USERNAME_TAKEN, takenMessage);
+                console.log(`  ! Taken Login "${takenMessage.username}"`);
+            } else {
+                const acceptMessage: UsernameAcceptMessage = {
+                    type: SocketEvent.SERVER_RESPONDS_LOGIN_USERNAME_ACCEPT,
+                    date: new Date(),
+                    username: trimmedUsername,
+                };
+                this.setUsernameOfClient(socket, trimmedUsername);
+                socket.emit(SocketEvent.SERVER_RESPONDS_LOGIN_USERNAME_ACCEPT, acceptMessage);
+                console.log(`    Accept Login "${acceptMessage.username}"`);
+                this.addUserToClient(socket, loginMessage.user);
+                this.messages.push(loginMessage);
+
+                socket.broadcast.emit(SocketEvent.SERVER_SENDS_LOGIN, loginMessage);
+                this.sendAllMessagesToClient(socket);
+            }
+        });
+    }
+
+
+    private registerClientSendsTextMessage(socket: Socket): void {
+        socket.on(SocketEvent.CLIENT_SENDS_TEXT_MESSAGE, (clientTextMessage: TextMessage) => {
+            if (!this.authUser(socket)) return;
+            clientTextMessage.type = SocketEvent.SERVER_SENDS_TEXT_MESSAGE;
+            socket.broadcast.emit(SocketEvent.SERVER_SENDS_TEXT_MESSAGE, clientTextMessage);
+            this.messages.push(clientTextMessage);
+        });
+    }
+
+
+    private registerClientRequestsMessages(socket: Socket): void {
+        socket.on(SocketEvent.CLIENT_REQUESTS_MESSAGES, () => {
+            if (!this.authUser(socket)) return;
+            console.log(`  Send ${this.messages.length} messages`);
+            socket.emit(SocketEvent.SERVER_RESPONDS_MESSAGES, this.messages);
         });
     }
 
@@ -111,7 +128,7 @@ export class ChatServer {
     private addClient(socket: Socket): Client {
         const client: Client = {
             socket,
-            user: { username: '' },
+            user: { username: "" },
         };
         this.clients.push(client);
         return client;
@@ -149,6 +166,11 @@ export class ChatServer {
     private usernameTaken(username: string): boolean {
         return this.clients
             .some(client => client.user.username.toLocaleLowerCase() === username.toLocaleLowerCase());
+    }
+
+
+    private authUser(socket: Socket): boolean {
+        return this.hasValidUsername(socket);
     }
 
 

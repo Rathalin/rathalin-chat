@@ -1,6 +1,6 @@
-import { IServerConfig } from "./interfaces/IServerConfig";
+import { ServerConfig } from "./ServerConfig";
 
-function loadServerConfig(): IServerConfig | null {
+export function loadServerConfig(): ServerConfig {
 
     const errors: string[] = [];
 
@@ -8,24 +8,29 @@ function loadServerConfig(): IServerConfig | null {
 
     const port: number = parseInt(process.env.SOCKETIO_PORT || '');
     if (isNaN(port)) {
-        errors.push('Invalid SOCKETIO_PORT in .evn');
+        errors.push('Invalid SOCKETIO_PORT in .env');
     };
 
-    const sveltePort: number = parseInt(process.env.SVELTE_PORT || '');
-    if (isNaN(sveltePort)) {
-        errors.push('Invalid SVELTE_PORT in .evn');
-    };
+    const { SVELTE_PORT } = process.env;
+    let sveltePort: number | "*";
+    if (SVELTE_PORT === "*") {
+        sveltePort = SVELTE_PORT;
+    } else {
+        sveltePort = parseInt(process.env.SVELTE_PORT || '');
+        if (isNaN(sveltePort)) {
+            errors.push('Invalid SVELTE_PORT in .env');
+        };
+    }
 
-    
+
     if (errors.length > 0) {
-        errors.forEach(err => console.error(err));
-        return null;
+        let errorMessages: string = "";
+        errors.forEach(err => errorMessages += err + "\n");
+        throw new Error(errorMessages);
     }
 
     return {
-        SOCKETIO_PORT: port,
-        SVELTE_PORT: sveltePort,
+        socketIoPort: port,
+        corsPort: sveltePort,
     };
 };
-
-export { loadServerConfig };
