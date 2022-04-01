@@ -41,11 +41,7 @@
         display: flex;
 
         blockquote {
-<<<<<<< HEAD
-            padding: 0.4em 0.8em 0.4em 0.8em;
-=======
             padding: 0.2em 0.8em 0.5em 0.8em;
->>>>>>> ce1e80c9f3bae346a9f2b0b1da3381c804a912ff
             color: white;
             border-radius: 0px 8px 8px 8px;
             background-color: var(--primary-light);
