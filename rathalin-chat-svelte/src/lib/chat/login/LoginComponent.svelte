@@ -160,7 +160,7 @@
         }
     }
 
-    @media (max-width: 1000px) {
+    @media (max-width: 600px) {
         #login {
             width: initial;
             margin: auto 1em;

@@ -12,5 +12,5 @@
 
 <ChatAuthComponent />
 
-<style>
+<style lang="scss">
 </style>

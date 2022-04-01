@@ -52,7 +52,7 @@ export class ChatServer {
                 const client: Client = this.removeClient(socket);
                 console.log(`- User (${this.clients.length})`);
                 if (client != null) {
-                    console.log(`User ${JSON.stringify(client.user)} loggs out (${reason})`);
+                    console.log(`    Logout ${JSON.stringify(client.user)}`);
                     if (client.user?.username?.trim().length > 0) {
                         const logoutMessage: LogoutMessage = {
                             type: SocketEventEnum.LOGOUT,
@@ -153,12 +153,12 @@ export class ChatServer {
 
 
     private hasValidUsername(socket: Socket): boolean {
-        const client: Client = this.getClient(socket);
-        return client.user.username.length > 0;
+        return this.getClient(socket).user.username.length > 0;
     }
 
 
     private sendAllMessagesToClient(socket: Socket): void {
+        console.log(`  Textmessages ${this.messages.length}`);
         this.messages.forEach(msg => socket.emit(msg.type, msg));
     }
 

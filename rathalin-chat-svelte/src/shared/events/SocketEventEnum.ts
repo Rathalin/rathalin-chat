@@ -1,5 +1,6 @@
 export enum SocketEventEnum {
     UNKNOWN = "UNKNOWN",
+    MESSAGES = "MESSAGES",
     TEXT_MESSAGE = "TEXT_MESSAGE",
     LOGIN = "LOGIN",
     LOGIN_USERNAME_TAKEN ="LOGIN_USERNAME_TAKEN",

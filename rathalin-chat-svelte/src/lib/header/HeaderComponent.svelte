@@ -32,6 +32,7 @@
 </header>
 
 <style lang="scss">
+
     nav {
         font-family: var(--font-secondary);
         padding: 0em 1em;
@@ -72,7 +73,7 @@
             justify-content: center;
         }
 
-        @media (max-width: 500px) {
+        @media (max-width: 600px) {
             .nav-left-content {
                 display: none;
             }

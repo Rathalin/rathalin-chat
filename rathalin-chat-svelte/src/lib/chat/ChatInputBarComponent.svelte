@@ -90,6 +90,7 @@
     }
 
     input {
+        font-size: 11pt;
         margin: 0em;
         flex-grow: 1;
         border-width: 0px;
@@ -115,10 +116,4 @@
             color: var(--secondary-light);
         }
     }
-
-    // @media (max-width: 700px) {
-    //     input {
-    //         font-size: initial;
-    //     }
-    // }
 </style>

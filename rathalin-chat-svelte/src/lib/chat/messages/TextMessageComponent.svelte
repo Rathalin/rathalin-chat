@@ -34,18 +34,17 @@
 </li>
 
 <style lang="scss">
-
     li {
         font-family: var(--font-primary);
         font-weight: 400;
         display: flex;
 
         blockquote {
+            max-width: 95%;
             padding: 0.2em 0.8em 0.5em 0.8em;
             color: white;
             border-radius: 0px 8px 8px 8px;
             background-color: var(--primary-light);
-            max-width: 35%;
 
             .name {
                 font-family: var(--font-secondary);
@@ -90,11 +89,13 @@
                 }
             }
         }
-    }
 
-    // @media (max-width: 1000px) {
-    //     blockquote {
-    //         max-width: 95%;
-    //     }
-    // }
+        @media (min-width: 600px) {
+            max-width: 65%;
+        }
+
+        @media (min-width: 1200px) {
+            max-width: 35%;
+        }
+    }
 </style>
