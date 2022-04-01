@@ -41,11 +41,11 @@
         display: flex;
 
         blockquote {
-            padding: 0.4em .8em 0.4em .8em;
+            padding: 0.4em 0.8em 0.4em 0.8em;
             color: white;
             border-radius: 0px 8px 8px 8px;
             background-color: var(--primary-light);
-            max-width: 35%;            
+            max-width: 35%;
 
             .name {
                 font-size: 11pt;
