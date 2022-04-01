@@ -1,3 +1,4 @@
+import type { User } from "../shared/user/User";
 import { type Writable, writable } from "svelte/store";
 
 function createUserStore() {
@@ -11,5 +12,6 @@ function createUserStore() {
 };
 
 export const user = createUserStore();
+export const connected: Writable<boolean> = writable<boolean>(false);
 export const loggedIn: Writable<boolean> = writable<boolean>(false);
-export const lastUsername: Writable<string> = writable('');
+export const lastUsername: Writable<string> = writable<string>('');

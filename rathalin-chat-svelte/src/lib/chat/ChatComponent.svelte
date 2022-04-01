@@ -61,7 +61,7 @@
                     addMessageToChat({ type: "TEXT", message: textMessage });
                 }
             ),
-            chatService.onSystemInfoMessage.subscribe(
+            chatService.onSystemInfo.subscribe(
                 (systemInfoMessage: SystemInfoMessage): void => {
                     addMessageToChat({
                         type: "SYSTEM_INFO",
@@ -69,7 +69,7 @@
                     });
                 }
             ),
-            chatService.onSystemWarningMessage.subscribe(
+            chatService.onSystemWarning.subscribe(
                 (systemWarningMessage: SystemWarningMessage): void => {
                     addMessageToChat({
                         type: "SYSTEM_WARNING",
@@ -77,7 +77,7 @@
                     });
                 }
             ),
-            chatService.onSystemErrorMessage.subscribe(
+            chatService.onSystemError.subscribe(
                 (systemErrorMessage: SystemErrorMessage): void => {
                     addMessageToChat({
                         type: "SYSTEM_ERROR",
@@ -156,7 +156,7 @@
 </ul>
 <ChatInputBarComponent on:message={sendTextMessage} />
 
-<style>
+<style lang="scss">
     ul.chat-messages {
         padding: 0em 2em;
         margin: 0em 0em 0.2em 0em;
@@ -164,11 +164,5 @@
         overflow-y: auto;
         display: flex;
         flex-direction: column;
-    }
-
-    @media (max-width: 700px) {
-        ul.chat-messages {
-            padding: 0.5em 1em;
-        }
     }
 </style>

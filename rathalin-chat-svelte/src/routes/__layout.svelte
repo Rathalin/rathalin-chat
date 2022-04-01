@@ -3,9 +3,7 @@
     import { selectedLocale } from "../stores/config.store";
 
     export async function load() {
-        const localeString: string = "en";
-        selectedLocale.set(localeString);
-        setupI18n(localeString);
+        setupI18n();
         selectedLocale.subscribe((lang) => locale.set(lang));
         return {};
     }
@@ -13,7 +11,7 @@
 
 <script lang="ts">
     import HeaderComponent from "$lib/header/HeaderComponent.svelte";
-    import "../app.css";
+    import "../styles/app.scss";
 </script>
 
 <HeaderComponent />
@@ -21,7 +19,7 @@
     <slot />
 </main>
 
-<style>
+<style lang="scss">
     main {
         flex: 1;
         overflow-y: auto;

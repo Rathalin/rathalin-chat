@@ -1,13 +1,13 @@
 <script lang="ts">
-    import ChatComponent from "./ChatComponent.svelte";
-    import LoginComponent from "./LoginComponent.svelte";    
+	import ChatComponent from "./ChatComponent.svelte";
 	import { chatService } from "../../services/chat/chat.service";
-	import { lastUsername, loggedIn } from "../../stores/user.store";
+	import { lastUsername, connected, loggedIn } from "../../stores/user.store";
 	import { socketIoServerConnection } from "../../stores/config.store";
+	import LoginComponent from "./login/LoginComponent.svelte";
 
 	if (typeof localStorage !== "undefined") {
 		$lastUsername = localStorage.getItem("lastUsername");
-		lastUsername.subscribe(username => {
+		lastUsername.subscribe((username) => {
 			if (username?.trim()?.length > 0) {
 				localStorage.setItem("lastUsername", username);
 				console.log("Set username in local storage to " + username);
@@ -15,28 +15,30 @@
 		});
 	}
 
-	chatService.onConnected.subscribe(() => {
+	chatService.onConnect.subscribe(() => {
 		console.log(`Connected to ${$socketIoServerConnection}`);
-		loggedIn.set(true);
+		$connected = true;
 	});
 
-	chatService.onDisconnected.subscribe(() => {
+	chatService.onDisconnect.subscribe(() => {
 		console.log(`Disconnected from to ${$socketIoServerConnection}`);
-		loggedIn.set(false);
+		$connected = false;
+		$loggedIn = false;
 	});
 
 	chatService.onError.subscribe((error) => {
 		console.log(`Failed connecting to ${$socketIoServerConnection}`);
 		console.error(error);
-		loggedIn.set(false);
+		$connected = false;
+		$loggedIn = false;
 	});
 </script>
 
-{#if !$loggedIn}
-    <LoginComponent />
+{#if !$connected || !$loggedIn}
+	<LoginComponent />
 {:else}
-    <ChatComponent />
+	<ChatComponent />
 {/if}
 
-<style>
+<style lang="scss">
 </style>

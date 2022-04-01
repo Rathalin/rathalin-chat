@@ -21,7 +21,8 @@ li {
 }
 
 li.connect-message {
-    font-family: "Roboto Light";
+    font-family: var(--font-secondary);
+    font-weight: 400;
     align-self: center;
 
     blockquote {
@@ -34,7 +35,8 @@ li.connect-message {
             align-self: flex-end;
             font-size: 8pt;
             margin-left: 0.5em;
-            color: rgba(255, 255, 255, 0.5);
+            color: rgba(255, 255, 255, 0.6);
         }
     }
 }
+

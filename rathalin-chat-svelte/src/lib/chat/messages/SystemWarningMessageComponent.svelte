@@ -21,7 +21,6 @@
 </li>
 
 <style lang="scss">
-    @import "./messages.scss";
 
     li {
         align-self: center;

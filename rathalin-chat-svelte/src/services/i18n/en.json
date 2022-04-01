@@ -1,0 +1,42 @@
+{
+    "app": {
+        "name": "Rathalin Messenger"
+    },
+    "connection": {
+        "username_input_label": "Username",
+        "email_input_label": "Email",
+        "password_input_label": "Password",
+        "enter_label": "Enter",
+        "exit_label": "Exit",
+        "login_label": "Log in",
+        "logout_label": "Log out",
+        "login_username_taken_error_message": "This username is already taken.",
+        "connection_error_message": "Failed to establish a connection to the server.",
+        "connection_lost_message": "Connection lost."
+    },
+    "messages": {
+        "login_message_1": "{username} joined the chat.",
+        "login_message_2": "{username} has entered the chat.",
+        "login_message_3": "{username} is ready to talk.",
+        "login_message_4": "{username} joined.",
+        "login_message_5": "{username} entered.",
+        "login_message_6": "{username} is here.",
+        "login_message_7": "{username} arrived.",
+        "login_message_8": "{username} just joined.",
+        "login_message_9": "{username} is finally here.",
+        "login_message_10": "{username} is ready to chat.",
+        "logout_message_1": "{username} is gone.",
+        "logout_message_2": "{username} left.",
+        "logout_message_3": "{username} is out of time.",
+        "logout_message_4": "{username} ragequit.",
+        "logout_message_5": "{username} closed the chat.",
+        "logout_message_6": "{username} had enough.",
+        "logout_message_7": "{username} is not online anymore.",
+        "logout_message_8": "{username} disconnected.",
+        "logout_message_9": "{username} couldn't take it anymore.",
+        "logout_message_10": "{username} just left."
+    },
+    "header": {
+        "view_on": "View on"
+    }
+}

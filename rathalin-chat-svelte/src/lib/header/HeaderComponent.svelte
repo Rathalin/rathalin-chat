@@ -1,4 +1,6 @@
 <script lang="ts">
+    import LogoutComponent from "$lib/header/LogoutComponent.svelte";
+
     import { translate } from "../../services/i18n/i18n.service";
     import LanguageSelectionComponent from "./LanguageSelectionComponent.svelte";
     import ProfileMenuComponent from "./ProfileMenuComponent.svelte";
@@ -11,7 +13,7 @@
             <a
                 class="d-none d-md-block"
                 href="https://github.com/Rathalin/RathalinChat"
-                >{`${$translate("header.view_on")} Github`}</a
+                target="_blank">{`${$translate("header.view_on")} Github`}</a
             >
         </div>
         <div class="nav-content nav-right-content">
@@ -20,14 +22,18 @@
                 <ProfileMenuComponent />
             </div>
             <div class="vertical-center">
+                <LogoutComponent />
+            </div>
+            <div class="vertical-center">
                 <LanguageSelectionComponent />
             </div>
         </div>
     </nav>
 </header>
 
-<style>
+<style lang="scss">
     nav {
+        font-family: var(--font-secondary);
         padding: 0em 1em;
         width: 100%;
         font-weight: 300;
@@ -35,53 +41,41 @@
         background-color: var(--primary-dark);
         display: flex;
         flex-direction: row;
-    }
 
-    .nav-content {
-        padding: 0.5em 0em;
-    }
-
-    .nav-left-content {
-        text-transform: uppercase;
-        display: flex;
-        flex-direction: row;
-    }
-
-    .nav-right-content {
-        flex: 1;
-        justify-self: flex-end;
-        display: flex;
-        flex-direction: row;
-    }
-
-    .nav-right-content div:first-child {
-        flex: 1;
-    }
-
-    .vertical-center {
-        padding: 0em;
-        margin: 0em;
-        display: flex;
-        flex-direction: column;
-        justify-content: center;
-    }
-
-    @media (max-width: 500px) {
-        .nav-left-content {
-            display: none;
+        .nav-content {
+            padding: 0.5em 0em;
+            gap: 1em;
         }
-    }
 
-    nav div,
-    nav a {
-        padding-right: 20px;
-    }
+        .nav-left-content {
+            text-transform: uppercase;
+            display: flex;
+            flex-direction: row;
+        }
 
-    a {
-        color: var(--secondary-light);
-    }
+        .nav-right-content {
+            flex: 1;
+            justify-self: flex-end;
+            display: flex;
+            flex-direction: row;
+        }
 
-    a:hover {
-        color: var(--secondary-dark);
+        .nav-right-content div:first-child {
+            flex: 1;
+        }
+
+        .vertical-center {
+            padding: 0em;
+            margin: 0em;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+        }
+
+        @media (max-width: 500px) {
+            .nav-left-content {
+                display: none;
+            }
+        }
     }
 </style>

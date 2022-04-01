@@ -1,0 +1,42 @@
+{
+    "app": {
+        "name": "Rathalin Messenger"
+    },
+    "connection": {
+        "username_input_label": "Name",
+        "email_input_label": "E-Mail",
+        "password_input_label": "Passwort",
+        "enter_label": "Beitreten",
+        "exit_label": "Abmelden",
+        "login_label": "Anmelden",
+        "logout_label": "Abmelden",
+        "login_username_taken_error_message": "Dieser Name ist bereits vergeben.",
+        "connection_error_message": "Es konnte keine Verbindung zum Server hergestellt werden.",
+        "connection_lost_message": "Verbindung verloren."
+    },
+    "messages": {
+        "login_message_1": "{username} ist eingetreten.",
+        "login_message_2": "{username} hat sich angeschlossen.",
+        "login_message_3": "{username} ist mit dabei.",
+        "login_message_4": "{username} ist hier.",
+        "login_message_5": "{username} möchte sich mitteilen.",
+        "login_message_6": "{username} ist online.",
+        "login_message_7": "{username} lauscht jetzt mit.",
+        "login_message_8": "{username} hat den Link gefunden.",
+        "login_message_9": "{username} kann jetzt schreiben.",
+        "login_message_10": "{username} ist bereit zu chatten.",
+        "logout_message_1": "{username} ist gegangen.",
+        "logout_message_2": "{username} hat die Nase voll.",
+        "logout_message_3": "{username} ist fix und fertig.",
+        "logout_message_4": "{username} ist einfach gegangen.",
+        "logout_message_5": "{username} ist raus.",
+        "logout_message_6": "{username} hat die Verbindung getrennt.",
+        "logout_message_7": "{username} musste weg.",
+        "logout_message_8": "{username} hat keine Zeit mehr.",
+        "logout_message_9": "{username} hat den Chat geschlossen.",
+        "logout_message_10": "{username} hat den Chat verlassen."
+    },
+    "header": {
+        "view_on": "Ansehen auf"
+    }
+}
