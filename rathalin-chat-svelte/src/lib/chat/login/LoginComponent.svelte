@@ -112,7 +112,7 @@
     </div>
 </div>
 
-<style>
+<style lang="scss">
     #login {
         margin: auto;
         display: flex;
@@ -135,15 +135,15 @@
         padding: 0.8em 0.8em;
         margin-bottom: 1em;
         border: transparent solid 1px;
-    }
 
-    input:focus-visible {
-        outline: none;
-        border: var(--secondary-dark) solid 1px;
-    }
+        &:focus-visible {
+            outline: none;
+            border: var(--secondary-dark) solid 1px;
+        }
 
-    input::placeholder {
-        color: rgb(187, 187, 187);
+        &::placeholder {
+            color: rgb(187, 187, 187);
+        }
     }
 
     #login-button {
@@ -152,12 +152,12 @@
         background-color: var(--secondary-light);
         padding: 0.8em;
         border: none;
-    }
 
-    #login-button:hover {
-        background-color: var(--secondary-dark);
-        cursor: pointer;
-        color: white;
+        &:hover {
+            background-color: var(--secondary-dark);
+            cursor: pointer;
+            color: white;
+        }
     }
 
     @media (max-width: 1000px) {

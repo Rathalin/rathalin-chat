@@ -116,9 +116,9 @@
         }
     }
 
-    @media (max-width: 700px) {
-        input {
-            font-size: initial;
-        }
-    }
+    // @media (max-width: 700px) {
+    //     input {
+    //         font-size: initial;
+    //     }
+    // }
 </style>

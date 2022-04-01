@@ -11,7 +11,7 @@
 
 <script lang="ts">
     import HeaderComponent from "$lib/header/HeaderComponent.svelte";
-    import "../app.scss";
+    import "../styles/app.scss";
 </script>
 
 <HeaderComponent />
@@ -19,7 +19,7 @@
     <slot />
 </main>
 
-<style>
+<style lang="scss">
     main {
         flex: 1;
         overflow-y: auto;

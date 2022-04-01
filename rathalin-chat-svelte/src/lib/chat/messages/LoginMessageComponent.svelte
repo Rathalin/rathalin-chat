@@ -27,5 +27,4 @@
 </li>
 
 <style lang="scss">
-    @import "./messages.scss";
 </style>

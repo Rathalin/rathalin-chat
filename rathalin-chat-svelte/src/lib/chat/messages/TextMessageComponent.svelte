@@ -34,7 +34,6 @@
 </li>
 
 <style lang="scss">
-    @import "./messages.scss";
 
     li {
         font-family: var(--font-primary);
@@ -91,27 +90,11 @@
                 }
             }
         }
-
-        .hover {
-            color: red;
-        }
     }
 
-    @media (max-width: 1000px) {
-        blockquote {
-            max-width: 95%;
-        }
-
-        // .name {
-        //     font-size: 11pt;
-        // }
-
-        // .timestamp {
-        //     font-size: 9pt;
-        // }
-
-        // .text {
-        //     font-size: 12pt;
-        // }
-    }
+    // @media (max-width: 1000px) {
+    //     blockquote {
+    //         max-width: 95%;
+    //     }
+    // }
 </style>

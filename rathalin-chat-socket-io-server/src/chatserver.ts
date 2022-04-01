@@ -25,7 +25,21 @@ export class ChatServer {
     }
 
 
-    initConnections(): void {
+    public listen(): void {
+        console.log(`Listening on port ${this.config.SOCKETIO_PORT}`);
+        // const corsOrigin: string = `http://localhost:${config.SVELTE_PORT}`;
+        const corsOrigin: string = `*`;
+        this.server = new Server(this.config.SOCKETIO_PORT, {
+            cors: {
+                origin: corsOrigin,
+            }
+        });
+        console.log(`Allow CORS of origin ${corsOrigin}`);
+        this.initConnections();
+    }
+
+
+    private initConnections(): void {
         if (this.server == null) return;
 
         // Connect
@@ -94,21 +108,7 @@ export class ChatServer {
     }
 
 
-    listen(): void {
-        console.log(`Listening on port ${this.config.SOCKETIO_PORT}`);
-        // const corsOrigin: string = `http://localhost:${config.SVELTE_PORT}`;
-        const corsOrigin: string = `*`;
-        this.server = new Server(this.config.SOCKETIO_PORT, {
-            cors: {
-                origin: corsOrigin,
-            }
-        });
-        console.log(`Allow CORS of origin ${corsOrigin}`);
-        this.initConnections();
-    }
-
-
-    addClient(socket: Socket): Client {
+    private addClient(socket: Socket): Client {
         const client: Client = {
             socket,
             user: { username: '' },
@@ -118,20 +118,20 @@ export class ChatServer {
     }
 
 
-    addUserToClient(socket: Socket, user: User): void {
+    private addUserToClient(socket: Socket, user: User): void {
         const client: Client = this.getClient(socket);
         client.user = user;
     }
 
 
-    removeClient(socket: Socket): Client {
+    private removeClient(socket: Socket): Client {
         const client: Client = this.getClient(socket);
         this.clients = this.clients.filter(c => c.socket !== socket);
         return client;
     }
 
 
-    getClient(socket: Socket): Client {
+    private getClient(socket: Socket): Client {
         const client: Client | undefined = this.clients.find(c => c.socket === socket);
         if (client == null) {
             throw new Error(`Socket not found in client list!`);
@@ -140,25 +140,25 @@ export class ChatServer {
     }
 
 
-    setUsernameOfClient(socket: Socket, username: string) {
+    private setUsernameOfClient(socket: Socket, username: string) {
         const user: User = this.getClient(socket).user;
         user.username = username;
     }
 
 
-    usernameTaken(username: string): boolean {
+    private usernameTaken(username: string): boolean {
         return this.clients
             .some(client => client.user.username.toLocaleLowerCase() === username.toLocaleLowerCase());
     }
 
 
-    hasValidUsername(socket: Socket): boolean {
+    private hasValidUsername(socket: Socket): boolean {
         const client: Client = this.getClient(socket);
         return client.user.username.length > 0;
     }
 
 
-    sendAllMessagesToClient(socket: Socket): void {
+    private sendAllMessagesToClient(socket: Socket): void {
         this.messages.forEach(msg => socket.emit(msg.type, msg));
     }
 
