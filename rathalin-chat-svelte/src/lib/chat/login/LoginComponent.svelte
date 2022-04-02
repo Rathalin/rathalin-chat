@@ -34,7 +34,6 @@
                     $lastUsername = username;
                     $loggedIn = true;
                     loginPending = false;
-                    chatService.requestMessageList();
                 }
             ),
             chatService.onLoginUsernameTaken.subscribe(

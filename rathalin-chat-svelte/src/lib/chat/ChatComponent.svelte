@@ -2,14 +2,11 @@
     import { chatService } from "../../services/chat/chat.service";
     import type { LoginMessage } from "../../shared/messages/LoginMessage";
     import type { LogoutMessage } from "../../shared/messages/LogoutMessage";
-
     import type { SystemErrorMessage } from "../../shared/messages/SystemErrorMessage";
     import type { SystemInfoMessage } from "../../shared/messages/SystemInfoMessage";
     import type { SystemWarningMessage } from "../../shared/messages/SystemWarningMessage";
     import type { TextMessage } from "../../shared/messages/TextMessage";
-
     import { user } from "../../stores/user.store";
-
     import type { Subscription } from "rxjs";
     import TextMessageComponent from "./messages/TextMessageComponent.svelte";
     import SystemInfoMessageComponent from "./messages/SystemInfoMessageComponent.svelte";
@@ -60,6 +57,8 @@
                 }
             )
         );
+
+        chatService.requestMessageList(50);
     });
 
     onDestroy(() => {

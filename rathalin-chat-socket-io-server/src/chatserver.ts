@@ -193,13 +193,13 @@ export class ChatServer {
 
     private sendMessageListToClient(socket: Socket, limit?: number): void {
         let messages: Message[];
-        if (limit != null && this.messages.length > limit) {
-            messages = this.messages.slice(0, limit);
+        if (limit != null) {
+            messages = this.messages.slice(Math.max(0, this.messages.length - limit), this.messages.length);
         } else {
             messages = this.messages;
         }
         console.log(`  Sending message in sequence (${this.messages.length})`);
-        this.messages.forEach(msg => socket.emit(msg.event, msg));
+        messages.forEach(msg => socket.emit(msg.event, msg));
     }
 
 }
