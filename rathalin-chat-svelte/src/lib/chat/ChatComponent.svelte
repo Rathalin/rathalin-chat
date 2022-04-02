@@ -19,70 +19,46 @@
     import LogoutMessageComponent from "./messages/LogoutMessageComponent.svelte";
     import ChatInputBarComponent from "./ChatInputBarComponent.svelte";
     import { onDestroy, onMount, tick } from "svelte";
-
-    type MessageType =
-        | "TEXT"
-        | "SYSTEM_INFO"
-        | "SYSTEM_WARNING"
-        | "SYSTEM_ERROR"
-        | "LOGIN"
-        | "LOGOUT";
-
-    interface MessageWithType {
-        type: MessageType;
-        message: any; // Type should be Message
-    }
+    import { MessageType } from "../../shared/MessageType";
+    import type { Message } from "../../shared/messages/Message";
 
     const subscriptions: Subscription[] = [];
     let lastWindowHeight: number;
     let messageListEl: HTMLUListElement;
 
     let myUsername: string = $user?.username;
-    let messages: MessageWithType[] = [];
+    let messages: Message[] = [];
 
     onMount(() => {
         subscriptions.push(
             chatService.onLogin.subscribe(
                 (loginMessage: LoginMessage): void => {
-                    addMessageToChat({ type: "LOGIN", message: loginMessage });
-                    console.log(
-                        "User " + loginMessage.user.username + " logged in"
-                    );
+                    addMessageToChat(loginMessage);
+                    console.log("User " + loginMessage.username + " logged in");
                 }
             ),
             chatService.onLogout.subscribe((logoutMessage: LogoutMessage) => {
-                addMessageToChat({ type: "LOGOUT", message: logoutMessage });
-                console.log(
-                    "User " + logoutMessage.user.username + " logged out"
-                );
+                addMessageToChat(logoutMessage);
+                console.log("User " + logoutMessage.username + " logged out");
             }),
             chatService.onTextMessage.subscribe(
                 (textMessage: TextMessage): void => {
-                    addMessageToChat({ type: "TEXT", message: textMessage });
+                    addMessageToChat(textMessage);
                 }
             ),
             chatService.onSystemInfo.subscribe(
                 (systemInfoMessage: SystemInfoMessage): void => {
-                    addMessageToChat({
-                        type: "SYSTEM_INFO",
-                        message: systemInfoMessage,
-                    });
+                    addMessageToChat(systemInfoMessage);
                 }
             ),
             chatService.onSystemWarning.subscribe(
                 (systemWarningMessage: SystemWarningMessage): void => {
-                    addMessageToChat({
-                        type: "SYSTEM_WARNING",
-                        message: systemWarningMessage,
-                    });
+                    addMessageToChat(systemWarningMessage);
                 }
             ),
             chatService.onSystemError.subscribe(
                 (systemErrorMessage: SystemErrorMessage): void => {
-                    addMessageToChat({
-                        type: "SYSTEM_ERROR",
-                        message: systemErrorMessage,
-                    });
+                    addMessageToChat(systemErrorMessage);
                 }
             )
         );
@@ -92,14 +68,14 @@
         subscriptions.forEach((subscription) => subscription.unsubscribe());
     });
 
-    function addMessageToChat(message: MessageWithType): void {
+    function addMessageToChat(message: Message): void {
         messages = [...messages, message];
     }
 
     async function sendTextMessage(event): Promise<void> {
         const textMessage: TextMessage = event.detail;
         chatService.sendTextMessage(textMessage);
-        addMessageToChat({ type: "TEXT", message: textMessage });
+        addMessageToChat(textMessage);
         await tick();
         scrollToBottom();
     }
@@ -136,21 +112,21 @@
 
 <ul class="chat-messages" bind:this={messageListEl}>
     {#each messages as message}
-        {#if message.type === "TEXT"}
+        {#if chatService.isTextMessage(message)}
             <TextMessageComponent
-                isMyMessage={message.message.sender.username === myUsername}
-                textMessage={message.message}
+                isMyMessage={message.sender === myUsername}
+                textMessage={message}
             />
-        {:else if message.type === "SYSTEM_INFO"}
-            <SystemInfoMessageComponent infoMessage={message.message} />
-        {:else if message.type === "SYSTEM_WARNING"}
-            <SystemWarningMessageComponent warningMessage={message.message} />
-        {:else if message.type === "SYSTEM_ERROR"}
-            <SystemErrorMessageComponent errorMessage={message.message} />
-        {:else if message.type === "LOGIN"}
-            <LoginMessageComponent loginMessage={message.message} />
-        {:else if message.type === "LOGOUT"}
-            <LogoutMessageComponent logoutMessage={message.message} />
+        {:else if chatService.isSystemInfoMessage(message)}
+            <SystemInfoMessageComponent infoMessage={message} />
+        {:else if chatService.isSystemWarningMessage(message)}
+            <SystemWarningMessageComponent warningMessage={message} />
+        {:else if chatService.isSystemErrorMessage(message)}
+            <SystemErrorMessageComponent errorMessage={message} />
+        {:else if chatService.isLoginMessage(message)}
+            <LoginMessageComponent loginMessage={message} />
+        {:else if chatService.isLogoutMessage(message)}
+            <LogoutMessageComponent logoutMessage={message} />
         {/if}
     {/each}
 </ul>

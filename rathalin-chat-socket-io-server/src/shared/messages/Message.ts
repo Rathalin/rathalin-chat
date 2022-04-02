@@ -1,6 +1,8 @@
-import { SocketEvent } from "$shared/events/SocketEvent";
+import type { MessageType } from "../MessageType";
+import type { SocketEvent } from "../SocketEvent";
 
 export interface Message {
-    type: SocketEvent;
+    event: SocketEvent;
+    type: MessageType;
     date: Date;
 }

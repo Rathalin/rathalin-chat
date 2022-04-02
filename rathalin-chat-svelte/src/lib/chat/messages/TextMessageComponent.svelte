@@ -22,7 +22,7 @@
 <li on:mouseenter={onMouseEnter} on:mouseleave={onMouseLeave} class:hover>
     <blockquote class:msg-me={isMyMessage}>
         <span class="name">
-            {textMessage.sender.username}
+            {textMessage.sender}
         </span>
         <span class="timestamp">
             {timestamp}

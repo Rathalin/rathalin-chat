@@ -17,7 +17,7 @@
     <blockquote>
         <span class="text">
             {$translate(messageTranslateKey, {
-                values: { username: loginMessage.user.username },
+                values: { username: loginMessage.username },
             })}
         </span>
         <span class="timestamp">

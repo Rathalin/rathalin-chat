@@ -1,6 +1,8 @@
-import type { SocketEventEnum } from "../events/SocketEventEnum";
+import type { MessageType } from "../MessageType";
+import type { SocketEvent } from "../SocketEvent";
 
 export interface Message {
-    type: SocketEventEnum;
+    event: SocketEvent;
+    type: MessageType;
     date: Date;
 }

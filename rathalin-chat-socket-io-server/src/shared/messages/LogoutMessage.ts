@@ -1,6 +1,6 @@
-import { User } from "$shared/user/User";
-import { Message } from "./Message";
+import type { Message } from "./Message";
+import type { Username } from "./Username";
 
 export interface LogoutMessage extends Message {
-    user: User;
+    username: Username;
 }

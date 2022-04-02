@@ -6,9 +6,10 @@
     import { chatService } from "../../../services/chat/chat.service";
     import LoginErrorComponent from "./LoginErrorComponent.svelte";
     import { translate } from "../../../services/i18n/i18n.service";
-    import { SocketEventEnum } from "../../../shared/events/SocketEventEnum";
+    import { SocketEvent } from "../../../shared/SocketEvent";
     import type { UsernameAcceptMessage } from "../../../shared/messages/UsernameAcceptMessage";
     import type { UsernameTakenMessage } from "../../../shared/messages/UsernameTakenMessage";
+    import { MessageType } from "../../../shared/MessageType";
 
     const subscriptions: Subscription[] = [];
 
@@ -33,6 +34,7 @@
                     $lastUsername = username;
                     $loggedIn = true;
                     loginPending = false;
+                    chatService.requestMessageList();
                 }
             ),
             chatService.onLoginUsernameTaken.subscribe(
@@ -58,8 +60,9 @@
         clearErrors();
         chatService.connect();
         chatService.login({
-            type: SocketEventEnum.LOGIN,
-            user: { username },
+            event: SocketEvent.CLIENT_REQUESTS_LOGIN,
+            type: MessageType.USERNAME,
+            username,
             date: new Date(),
         });
         loginPending = true;

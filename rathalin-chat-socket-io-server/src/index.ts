@@ -1,5 +1,5 @@
 import { config } from 'dotenv';
-import { ChatServer } from './chatserver';
+import { ChatServer } from './ChatServer';
 import { loadServerConfig } from './loadConfig';
 
 (function main(): void {

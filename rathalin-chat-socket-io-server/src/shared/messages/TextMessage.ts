@@ -1,7 +1,7 @@
-import { User } from "$shared/user/User";
-import { Message } from "./Message";
+import type { Message } from "./Message";
+import type { Username } from "./Username";
 
 export interface TextMessage extends Message {
     text: string,
-    sender: User,
+    sender: Username,
 }

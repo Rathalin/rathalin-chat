@@ -1,6 +1,6 @@
-import type { User } from "../user/User";
 import type { Message } from "./Message";
+import type { Username } from "./Username";
 
 export interface LogoutMessage extends Message {
-    user: User;
+    username: Username;
 }

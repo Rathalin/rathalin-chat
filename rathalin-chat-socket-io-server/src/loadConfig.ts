@@ -1,4 +1,4 @@
-import { ServerConfig } from "./ServerConfig";
+import type { ServerConfig } from "./ServerConfig";
 
 export function loadServerConfig(): ServerConfig {
 
@@ -6,19 +6,19 @@ export function loadServerConfig(): ServerConfig {
 
     console.log("Parsing .env");
 
-    const port: number = parseInt(process.env.SOCKETIO_PORT || '');
-    if (isNaN(port)) {
-        errors.push('Invalid SOCKETIO_PORT in .env');
+    const socketIoPort: number = parseInt(process.env.SOCKET_IO_PORT || '');
+    if (isNaN(socketIoPort)) {
+        errors.push('Invalid SOCKET_IO_PORT in .env');
     };
 
-    const { SVELTE_PORT } = process.env;
-    let sveltePort: number | "*";
-    if (SVELTE_PORT === "*") {
-        sveltePort = SVELTE_PORT;
+    const { CORS_PORT } = process.env;
+    let corsPort: number | "*";
+    if (CORS_PORT === "*") {
+        corsPort = CORS_PORT;
     } else {
-        sveltePort = parseInt(process.env.SVELTE_PORT || '');
-        if (isNaN(sveltePort)) {
-            errors.push('Invalid SVELTE_PORT in .env');
+        corsPort = parseInt(process.env.CORS_PORT || '');
+        if (isNaN(corsPort)) {
+            errors.push('Invalid CORS_PORT in .env');
         };
     }
 
@@ -29,8 +29,5 @@ export function loadServerConfig(): ServerConfig {
         throw new Error(errorMessages);
     }
 
-    return {
-        socketIoPort: port,
-        corsPort: sveltePort,
-    };
+    return { socketIoPort, corsPort, };
 };

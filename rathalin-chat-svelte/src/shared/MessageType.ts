@@ -1,0 +1,9 @@
+export enum MessageType {
+    LOGIN = "LOGIN",
+    LOGOUT = "LOGOUT",
+    SYSTEM_ERROR = "SYSTEM_ERROR",
+    SYSTEM_INFO = "SYSTEM_INFO",
+    SYSTEM_WARNING = "SYSTEM_WARNING",
+    TEXT = "TEXT",
+    USERNAME = "USERNAME",
+}

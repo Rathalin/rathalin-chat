@@ -1,21 +1,15 @@
 <script lang="ts">
-    import { SocketEventEnum } from "../../shared/events/SocketEventEnum";
     import { chatService } from "../../services/chat/chat.service";
     import { translate } from "../../services/i18n/i18n.service";
     import { loggedIn, user } from "../../stores/user.store";
 
-    function logout(): void {
-        chatService.logout({
-            type: SocketEventEnum.LOGOUT,
-            user: { username: $user.usernamep },
-            date: new Date(),
-        });
+    function exit(): void {
         chatService.disconnect();
     }
 </script>
 
 {#if $loggedIn}
-    <button id="exit-button" on:click={logout}
+    <button id="exit-button" on:click={exit}
         >{$translate("connection.exit_label")}</button
     >
 {/if}

@@ -1,17 +1,15 @@
-import { LoginMessage } from "$shared/messages/LoginMessage";
-import { LogoutMessage } from "$shared/messages/LogoutMessage";
-import { Message } from "$shared/messages/Message";
-import { UsernameAcceptMessage } from "$shared/messages/UsernameAcceptMessage";
-import { UsernameTakenMessage } from "$shared/messages/UsernameTakenMessage";
-import { User } from "$shared/user/User";
+import type { LoginMessage } from "./shared/messages/LoginMessage";
+import type { LogoutMessage } from "./shared/messages/LogoutMessage";
+import type { Message } from "./shared/messages/Message";
+import type { UsernameAcceptMessage } from "./shared/messages/UsernameAcceptMessage";
+import type { UsernameTakenMessage } from "./shared/messages/UsernameTakenMessage";
 import { Server, Socket } from "socket.io";
-import { SocketEvent } from "./shared/events/SocketEvent";
-import { TextMessage } from "./shared/messages/TextMessage";
+import type { TextMessage } from "./shared/messages/TextMessage";
+import { MessageType } from "./shared/MessageType";
+import type { Client } from "./interfaces/Client";
+import type { User } from "./interfaces/User";
+import { SocketEvent } from "./shared/SocketEvent";
 
-interface Client {
-    socket: Socket;
-    user: User;
-}
 
 export class ChatServer {
 
@@ -26,12 +24,13 @@ export class ChatServer {
 
     public listen(socketIOPort: number, corsPort: number | "*"): void {
         console.log(`Listening on port ${socketIOPort}`);
+        const corsOrigin: string = corsPort === "*" ? corsPort : `http://localhost:${corsPort}`;
         this.server = new Server(socketIOPort, {
             cors: {
-                origin: corsPort.toString(),
+                origin: corsOrigin,
             }
         });
-        console.log(`Allow CORS of origin ${socketIOPort}`);
+        console.log(`Allow CORS of origin ${corsOrigin}`);
         this.initConnections();
     }
 
@@ -59,8 +58,9 @@ export class ChatServer {
                 console.log(`    Logout ${JSON.stringify(client.user)}`);
                 if (client.user?.username?.trim().length > 0) {
                     const logoutMessage: LogoutMessage = {
-                        type: SocketEvent.SERVER_SENDS_LOGOUT,
-                        user: client.user,
+                        event: SocketEvent.SERVER_SENDS_LOGOUT,
+                        type: MessageType.LOGOUT,
+                        username: client.user.username,
                         date: new Date(),
                     };
                     socket.broadcast.emit(SocketEvent.SERVER_SENDS_LOGOUT, logoutMessage);
@@ -73,15 +73,16 @@ export class ChatServer {
 
     private registerClientRequestsLogin(socket: Socket): void {
         socket.on(SocketEvent.CLIENT_REQUESTS_LOGIN, (loginMessage: LoginMessage): void => {
-            if (loginMessage.user.username.trim().length === 0) return;
+            if (loginMessage.username.trim().length === 0) return;
 
             const usernameMaxLength: number = 20;
-            const trimmedUsername: string = loginMessage.user.username.trim().substring(0, usernameMaxLength);
+            const trimmedUsername: string = loginMessage.username.trim().substring(0, usernameMaxLength);
             if (trimmedUsername.length === 0) return;
 
             if (this.usernameTaken(trimmedUsername)) {
                 const takenMessage: UsernameTakenMessage = {
-                    type: SocketEvent.SERVER_RESPONDS_LOGIN_USERNAME_TAKEN,
+                    event: SocketEvent.SERVER_RESPONDS_LOGIN_USERNAME_TAKEN,
+                    type: MessageType.USERNAME,
                     date: new Date(),
                     username: trimmedUsername,
                 };
@@ -89,14 +90,15 @@ export class ChatServer {
                 console.log(`  ! Taken Login "${takenMessage.username}"`);
             } else {
                 const acceptMessage: UsernameAcceptMessage = {
-                    type: SocketEvent.SERVER_RESPONDS_LOGIN_USERNAME_ACCEPT,
+                    event: SocketEvent.SERVER_RESPONDS_LOGIN_USERNAME_ACCEPT,
+                    type: MessageType.USERNAME,
                     date: new Date(),
                     username: trimmedUsername,
                 };
                 this.setUsernameOfClient(socket, trimmedUsername);
                 socket.emit(SocketEvent.SERVER_RESPONDS_LOGIN_USERNAME_ACCEPT, acceptMessage);
                 console.log(`    Accept Login "${acceptMessage.username}"`);
-                this.addUserToClient(socket, loginMessage.user);
+                this.addUserToClient(socket, { username: loginMessage.username });
                 this.messages.push(loginMessage);
 
                 socket.broadcast.emit(SocketEvent.SERVER_SENDS_LOGIN, loginMessage);
@@ -109,7 +111,7 @@ export class ChatServer {
     private registerClientSendsTextMessage(socket: Socket): void {
         socket.on(SocketEvent.CLIENT_SENDS_TEXT_MESSAGE, (clientTextMessage: TextMessage) => {
             if (!this.authUser(socket)) return;
-            clientTextMessage.type = SocketEvent.SERVER_SENDS_TEXT_MESSAGE;
+            clientTextMessage.event = SocketEvent.SERVER_SENDS_TEXT_MESSAGE;
             socket.broadcast.emit(SocketEvent.SERVER_SENDS_TEXT_MESSAGE, clientTextMessage);
             this.messages.push(clientTextMessage);
         });
@@ -117,10 +119,17 @@ export class ChatServer {
 
 
     private registerClientRequestsMessages(socket: Socket): void {
-        socket.on(SocketEvent.CLIENT_REQUESTS_MESSAGES, () => {
+        socket.on(SocketEvent.CLIENT_REQUESTS_MESSAGES, (limit?: number) => {
             if (!this.authUser(socket)) return;
             console.log(`  Send ${this.messages.length} messages`);
-            socket.emit(SocketEvent.SERVER_RESPONDS_MESSAGES, this.messages);
+            let messages: Message[];
+            if (limit != null && this.messages.length > limit) {
+                messages = this.messages.slice(0, limit);
+            } else {
+                messages = this.messages;
+            }
+
+            messages.forEach(msg => socket.emit(msg.type, msg));
         });
     }
 
