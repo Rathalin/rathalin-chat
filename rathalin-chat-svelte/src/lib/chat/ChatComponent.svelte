@@ -41,23 +41,21 @@
                 addMessageToChat(logoutMessage);
                 console.log("User " + logoutMessage.username + " logged out");
             }),
-            chatService.onTextMessage.subscribe(
-                (textMessage: TextMessage): void => {
-                    addMessageToChat(textMessage);
-                }
-            ),
+            chatService.onTextMessage.subscribe((textMessage: TextMessage) => {
+                addMessageToChat(textMessage);
+            }),
             chatService.onSystemInfo.subscribe(
-                (systemInfoMessage: SystemInfoMessage): void => {
+                (systemInfoMessage: SystemInfoMessage) => {
                     addMessageToChat(systemInfoMessage);
                 }
             ),
             chatService.onSystemWarning.subscribe(
-                (systemWarningMessage: SystemWarningMessage): void => {
+                (systemWarningMessage: SystemWarningMessage) => {
                     addMessageToChat(systemWarningMessage);
                 }
             ),
             chatService.onSystemError.subscribe(
-                (systemErrorMessage: SystemErrorMessage): void => {
+                (systemErrorMessage: SystemErrorMessage) => {
                     addMessageToChat(systemErrorMessage);
                 }
             )

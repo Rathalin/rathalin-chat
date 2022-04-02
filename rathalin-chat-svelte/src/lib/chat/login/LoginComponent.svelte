@@ -61,7 +61,7 @@
         chatService.connect();
         chatService.login({
             event: SocketEvent.CLIENT_REQUESTS_LOGIN,
-            type: MessageType.USERNAME,
+            type: MessageType.LOGIN,
             username,
             date: new Date(),
         });

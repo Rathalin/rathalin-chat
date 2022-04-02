@@ -9,6 +9,7 @@ import { MessageType } from "./shared/MessageType";
 import type { Client } from "./interfaces/Client";
 import type { User } from "./interfaces/User";
 import { SocketEvent } from "./shared/SocketEvent";
+import type { MessageListLimit } from "./shared/messages/MessageListLimit";
 
 
 export class ChatServer {
@@ -72,17 +73,17 @@ export class ChatServer {
 
 
     private registerClientRequestsLogin(socket: Socket): void {
-        socket.on(SocketEvent.CLIENT_REQUESTS_LOGIN, (loginMessage: LoginMessage): void => {
-            if (loginMessage.username.trim().length === 0) return;
+        socket.on(SocketEvent.CLIENT_REQUESTS_LOGIN, (clientLoginMessage: LoginMessage): void => {
+            if (clientLoginMessage.username.trim().length === 0) return;
 
             const usernameMaxLength: number = 20;
-            const trimmedUsername: string = loginMessage.username.trim().substring(0, usernameMaxLength);
+            const trimmedUsername: string = clientLoginMessage.username.trim().substring(0, usernameMaxLength);
             if (trimmedUsername.length === 0) return;
 
             if (this.usernameTaken(trimmedUsername)) {
                 const takenMessage: UsernameTakenMessage = {
                     event: SocketEvent.SERVER_RESPONDS_LOGIN_USERNAME_TAKEN,
-                    type: MessageType.USERNAME,
+                    type: MessageType.USERNAME_TAKEN,
                     date: new Date(),
                     username: trimmedUsername,
                 };
@@ -91,18 +92,22 @@ export class ChatServer {
             } else {
                 const acceptMessage: UsernameAcceptMessage = {
                     event: SocketEvent.SERVER_RESPONDS_LOGIN_USERNAME_ACCEPT,
-                    type: MessageType.USERNAME,
+                    type: MessageType.USERNAME_ACCEPT,
                     date: new Date(),
                     username: trimmedUsername,
                 };
                 this.setUsernameOfClient(socket, trimmedUsername);
                 socket.emit(SocketEvent.SERVER_RESPONDS_LOGIN_USERNAME_ACCEPT, acceptMessage);
                 console.log(`    Accept Login "${acceptMessage.username}"`);
-                this.addUserToClient(socket, { username: loginMessage.username });
+                const loginMessage: LoginMessage = {
+                    event: SocketEvent.SERVER_SENDS_LOGIN,
+                    type: MessageType.LOGIN,
+                    date: new Date(),
+                    username: trimmedUsername,
+                };
+                this.addUserToClient(socket, { username: trimmedUsername });
                 this.messages.push(loginMessage);
-
                 socket.broadcast.emit(SocketEvent.SERVER_SENDS_LOGIN, loginMessage);
-                this.sendAllMessagesToClient(socket);
             }
         });
     }
@@ -111,25 +116,23 @@ export class ChatServer {
     private registerClientSendsTextMessage(socket: Socket): void {
         socket.on(SocketEvent.CLIENT_SENDS_TEXT_MESSAGE, (clientTextMessage: TextMessage) => {
             if (!this.authUser(socket)) return;
-            clientTextMessage.event = SocketEvent.SERVER_SENDS_TEXT_MESSAGE;
-            socket.broadcast.emit(SocketEvent.SERVER_SENDS_TEXT_MESSAGE, clientTextMessage);
-            this.messages.push(clientTextMessage);
+            const textMessage: TextMessage = {
+                event: SocketEvent.SERVER_SENDS_TEXT_MESSAGE,
+                type: MessageType.TEXT,
+                date: new Date(),
+                sender: clientTextMessage.sender,
+                text: clientTextMessage.text,
+            };
+            socket.broadcast.emit(SocketEvent.SERVER_SENDS_TEXT_MESSAGE, textMessage);
+            this.messages.push(textMessage);
         });
     }
 
 
     private registerClientRequestsMessages(socket: Socket): void {
-        socket.on(SocketEvent.CLIENT_REQUESTS_MESSAGES, (limit?: number) => {
+        socket.on(SocketEvent.CLIENT_REQUESTS_MESSAGE_LIST, (limit: MessageListLimit) => {
             if (!this.authUser(socket)) return;
-            console.log(`  Send ${this.messages.length} messages`);
-            let messages: Message[];
-            if (limit != null && this.messages.length > limit) {
-                messages = this.messages.slice(0, limit);
-            } else {
-                messages = this.messages;
-            }
-
-            messages.forEach(msg => socket.emit(msg.type, msg));
+            this.sendMessageListToClient(socket, limit.limit);
         });
     }
 
@@ -188,9 +191,15 @@ export class ChatServer {
     }
 
 
-    private sendAllMessagesToClient(socket: Socket): void {
-        console.log(`  Textmessages ${this.messages.length}`);
-        this.messages.forEach(msg => socket.emit(msg.type, msg));
+    private sendMessageListToClient(socket: Socket, limit?: number): void {
+        let messages: Message[];
+        if (limit != null && this.messages.length > limit) {
+            messages = this.messages.slice(0, limit);
+        } else {
+            messages = this.messages;
+        }
+        console.log(`  Sending message in sequence (${this.messages.length})`);
+        this.messages.forEach(msg => socket.emit(msg.event, msg));
     }
 
 }

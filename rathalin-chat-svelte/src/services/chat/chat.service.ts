@@ -1,5 +1,5 @@
 import { Manager, Socket } from "socket.io-client";
-import { Subject } from "rxjs";
+import { mergeScan, Subject } from "rxjs";
 import { get } from "svelte/store";
 import { SocketEvent } from "../../shared/SocketEvent";
 import { socketIoServerConnection } from "../../stores/config.store";
@@ -13,6 +13,7 @@ import type { UsernameAcceptMessage } from "../../shared/messages/UsernameAccept
 import type { UsernameTakenMessage } from "../../shared/messages/UsernameTakenMessage";
 import { MessageType } from "../../shared/MessageType";
 import type { Message } from "../../shared/messages/Message";
+import type { MessageListLimit } from "src/shared/messages/MessageListLimit";
 
 class ChatService {
 
@@ -127,7 +128,13 @@ class ChatService {
 
 
     public requestMessageList(limit?: number): void {
-        this._socket.emit(SocketEvent.CLIENT_REQUESTS_MESSAGES, limit);
+        const messageListLimit: MessageListLimit = {
+            event: SocketEvent.CLIENT_REQUESTS_MESSAGE_LIST,
+            type: MessageType.MESSAGE_LIST_LIMIT,
+            date: new Date(),
+            limit,
+        }
+        this._socket.emit(SocketEvent.CLIENT_REQUESTS_MESSAGE_LIST, messageListLimit);
     }
 
 
