@@ -29,14 +29,15 @@
     onMount(() => {
         subscriptions.push(
             chatService.onLogin.subscribe(
-                (loginMessage: LoginMessage): void => {
+                async (loginMessage: LoginMessage) => {
                     addMessageToChat(loginMessage);
-                    console.log("User " + loginMessage.username + " logged in");
+                    if (loginMessage.username === myUsername) {
+                        await scrollToBottom();
+                    }
                 }
             ),
             chatService.onLogout.subscribe((logoutMessage: LogoutMessage) => {
                 addMessageToChat(logoutMessage);
-                console.log("User " + logoutMessage.username + " logged out");
             }),
             chatService.onTextMessage.subscribe((textMessage: TextMessage) => {
                 addMessageToChat(textMessage);
@@ -73,11 +74,11 @@
         const textMessage: TextMessage = event.detail;
         chatService.sendTextMessage(textMessage);
         addMessageToChat(textMessage);
-        await tick();
-        scrollToBottom();
+        await scrollToBottom();
     }
 
-    function scrollToBottom(): void {
+    async function scrollToBottom(): Promise<void> {
+        await tick();
         messageListEl.scrollTop =
             messageListEl.scrollHeight - messageListEl.clientHeight;
     }

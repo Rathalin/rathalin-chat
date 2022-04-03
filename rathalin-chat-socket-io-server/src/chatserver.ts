@@ -199,7 +199,17 @@ export class ChatServer {
             messages = this.messages;
         }
         console.log(`  Sending message in sequence (${this.messages.length})`);
-        messages.forEach(msg => socket.emit(msg.event, msg));
+        messages
+            .filter(msg => msg.type === MessageType.TEXT)
+            .forEach(msg => socket.emit(msg.event, msg));
+        // Send login 
+        const loginMessage: LoginMessage = {
+            event: SocketEvent.SERVER_SENDS_LOGIN,
+            type: MessageType.LOGIN,
+            date: new Date(),
+            username: this.getClient(socket).user.username,
+        }
+        socket.emit(SocketEvent.SERVER_SENDS_LOGIN, loginMessage);
     }
 
 }
