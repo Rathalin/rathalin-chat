@@ -1,11 +1,11 @@
 <script lang="ts">
     import { chatService } from "../../services/chat/chat.service";
-    import type { LoginMessage } from "../../shared/messages/LoginMessage";
-    import type { LogoutMessage } from "../../shared/messages/LogoutMessage";
-    import type { SystemErrorMessage } from "../../shared/messages/SystemErrorMessage";
-    import type { SystemInfoMessage } from "../../shared/messages/SystemInfoMessage";
-    import type { SystemWarningMessage } from "../../shared/messages/SystemWarningMessage";
-    import type { TextMessage } from "../../shared/messages/TextMessage";
+    import type { LoginMessage } from "../../shared/messages/login/LoginMessage";
+    import type { LogoutMessage } from "../../shared/messages/logout/LogoutMessage";
+    import type { SystemErrorMessage } from "../../shared/messages/system/SystemErrorMessage";
+    import type { SystemInfoMessage } from "../../shared/messages/system/SystemInfoMessage";
+    import type { SystemWarningMessage } from "../../shared/messages/system/SystemWarningMessage";
+    import type { TextMessage } from "../../shared/messages/content/TextMessage";
     import { user } from "../../stores/user.store";
     import type { Subscription } from "rxjs";
     import TextMessageComponent from "./messages/TextMessageComponent.svelte";
@@ -16,12 +16,12 @@
     import LogoutMessageComponent from "./messages/LogoutMessageComponent.svelte";
     import ChatInputBarComponent from "./ChatInputBarComponent.svelte";
     import { onDestroy, onMount, tick } from "svelte";
-    import { MessageType } from "../../shared/MessageType";
     import type { Message } from "../../shared/messages/Message";
+    import { messageListLimit } from "../../stores/config.store";
 
     const subscriptions: Subscription[] = [];
-    let lastWindowHeight: number;
-    let messageListEl: HTMLUListElement;
+    let lastWindowHeight: number = 0;
+    let messageListEl: HTMLUListElement | null = null;
 
     let myUsername: string = $user?.username;
     let messages: Message[] = [];
@@ -58,7 +58,7 @@
             )
         );
 
-        chatService.requestMessageList(50);
+        chatService.requestMessageList($messageListLimit);
     });
 
     onDestroy(() => {
@@ -83,6 +83,7 @@
     }
 
     window.addEventListener("resize", (event: UIEvent): void => {
+        
         // if (
         //     lastWindowHeight &&
         //     window.outerHeight < 700 &&

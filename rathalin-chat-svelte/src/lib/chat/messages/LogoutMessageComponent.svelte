@@ -1,10 +1,18 @@
 <script lang="ts">
+    import {
+        messageFadeInPosition,
+        messageFadeInDuration,
+    } from "../../../stores/config.store";
+    import { fly } from "svelte/transition";
     import { getRandomInt } from "../../../util/random";
     import { translate } from "../../../services/i18n/i18n.service";
-    import type { LogoutMessage } from "../../../shared/messages/LogoutMessage";
+    import type { LogoutMessage } from "../../../shared/messages/logout/LogoutMessage";
 
     export let logoutMessage: LogoutMessage;
-    const messageTranslateKey: string = `messages.logout_message_${getRandomInt(1, 10)}`;
+    const messageTranslateKey: string = `messages.logout_message_${getRandomInt(
+        1,
+        10
+    )}`;
 
     $: timestamp = logoutMessage.date.toLocaleTimeString("at-AT", {
         hour: "2-digit",
@@ -12,7 +20,10 @@
     });
 </script>
 
-<li class="connect-message">
+<li
+    class="connect-message"
+    in:fly={{ x: $messageFadeInPosition, duration: $messageFadeInDuration }}
+>
     <blockquote>
         <span class="text">
             {$translate(messageTranslateKey, {

@@ -1,5 +1,5 @@
 <script lang="ts">
-    import type { TextMessage } from "../../shared/messages/TextMessage";
+    import type { TextMessage } from "../../shared/messages/content/TextMessage";
     import { createEventDispatcher, onDestroy, onMount } from "svelte";
     import { user } from "../../stores/user.store";
     import { SocketEvent } from "../../shared/SocketEvent";

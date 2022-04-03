@@ -1,5 +1,10 @@
 <script lang="ts">
-    import type { TextMessage } from "../../../shared/messages/TextMessage";
+    import {
+        messageFadeInPosition,
+        messageFadeInDuration,
+    } from "../../../stores/config.store";
+    import { fly } from "svelte/transition";
+    import type { TextMessage } from "../../../shared/messages/content/TextMessage";
 
     export let textMessage: TextMessage;
     export let isMyMessage: boolean;
@@ -19,7 +24,12 @@
     }
 </script>
 
-<li on:mouseenter={onMouseEnter} on:mouseleave={onMouseLeave} class:hover>
+<li
+    on:mouseenter={onMouseEnter}
+    on:mouseleave={onMouseLeave}
+    class:hover
+    in:fly={{ x: $messageFadeInPosition, duration: $messageFadeInDuration }}
+>
     <blockquote class:msg-me={isMyMessage}>
         <span class="name">
             {textMessage.sender}

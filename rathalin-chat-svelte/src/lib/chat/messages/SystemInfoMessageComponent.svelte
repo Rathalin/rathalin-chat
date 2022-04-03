@@ -1,5 +1,10 @@
 <script lang="ts">
-    import type { SystemInfoMessage } from "../../../shared/messages/SystemInfoMessage";
+    import {
+        messageFadeInPosition,
+        messageFadeInDuration,
+    } from "../../../stores/config.store";
+    import { fly } from "svelte/transition";
+    import type { SystemInfoMessage } from "../../../shared/messages/system/SystemInfoMessage";
 
     export let infoMessage: SystemInfoMessage;
 
@@ -9,7 +14,7 @@
     });
 </script>
 
-<li>
+<li in:fly={{ x: $messageFadeInPosition, duration: $messageFadeInDuration }}>
     <blockquote>
         <span class="text">
             {infoMessage.text}
@@ -21,7 +26,6 @@
 </li>
 
 <style lang="scss">
-
     li {
         align-self: center;
 

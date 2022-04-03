@@ -3,17 +3,17 @@ import { mergeScan, Subject } from "rxjs";
 import { get } from "svelte/store";
 import { SocketEvent } from "../../shared/SocketEvent";
 import { socketIoServerConnection } from "../../stores/config.store";
-import type { TextMessage } from "../../shared/messages/TextMessage";
-import type { SystemInfoMessage } from "../../shared/messages/SystemInfoMessage";
-import type { SystemWarningMessage } from "../../shared/messages/SystemWarningMessage";
-import type { SystemErrorMessage } from "../../shared/messages/SystemErrorMessage";
-import type { LoginMessage } from "../../shared/messages/LoginMessage";
-import type { LogoutMessage } from "../../shared/messages/LogoutMessage";
-import type { UsernameAcceptMessage } from "../../shared/messages/UsernameAcceptMessage";
-import type { UsernameTakenMessage } from "../../shared/messages/UsernameTakenMessage";
+import type { TextMessage } from "../../shared/messages/content/TextMessage";
+import type { SystemInfoMessage } from "../../shared/messages/system/SystemInfoMessage";
+import type { SystemWarningMessage } from "../../shared/messages/system/SystemWarningMessage";
+import type { SystemErrorMessage } from "../../shared/messages/system/SystemErrorMessage";
+import type { LoginMessage } from "../../shared/messages/login/LoginMessage";
+import type { LogoutMessage } from "../../shared/messages/logout/LogoutMessage";
+import type { UsernameAcceptMessage } from "../../shared/messages/login/UsernameAcceptMessage";
+import type { UsernameTakenMessage } from "../../shared/messages/login/UsernameTakenMessage";
 import { MessageType } from "../../shared/MessageType";
 import type { Message } from "../../shared/messages/Message";
-import type { MessageListLimit } from "src/shared/messages/MessageListLimit";
+import type { MessageListLimit } from "src/shared/messages/message-list/MessageListLimit";
 
 class ChatService {
 

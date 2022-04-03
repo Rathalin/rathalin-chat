@@ -1,5 +1,10 @@
 <script lang="ts">
-    import type { SystemWarningMessage } from "../../../shared/messages/SystemWarningMessage";
+    import {
+        messageFadeInPosition,
+        messageFadeInDuration,
+    } from "../../../stores/config.store";
+    import { fly } from "svelte/transition";
+    import type { SystemWarningMessage } from "../../../shared/messages/system/SystemWarningMessage";
 
     export let warningMessage: SystemWarningMessage;
 
@@ -9,7 +14,7 @@
     });
 </script>
 
-<li>
+<li in:fly={{ x: $messageFadeInPosition, duration: $messageFadeInDuration }}>
     <blockquote>
         <span class="text">
             {warningMessage.text}
@@ -21,7 +26,6 @@
 </li>
 
 <style lang="scss">
-
     li {
         align-self: center;
 

@@ -1,15 +1,15 @@
-import type { LoginMessage } from "./shared/messages/LoginMessage";
-import type { LogoutMessage } from "./shared/messages/LogoutMessage";
+import type { LoginMessage } from "./shared/messages/login/LoginMessage";
+import type { LogoutMessage } from "./shared/messages/logout/LogoutMessage";
 import type { Message } from "./shared/messages/Message";
-import type { UsernameAcceptMessage } from "./shared/messages/UsernameAcceptMessage";
-import type { UsernameTakenMessage } from "./shared/messages/UsernameTakenMessage";
+import type { UsernameAcceptMessage } from "./shared/messages/login/UsernameAcceptMessage";
+import type { UsernameTakenMessage } from "./shared/messages/login/UsernameTakenMessage";
 import { Server, Socket } from "socket.io";
-import type { TextMessage } from "./shared/messages/TextMessage";
+import type { TextMessage } from "./shared/messages/content/TextMessage";
 import { MessageType } from "./shared/MessageType";
 import type { Client } from "./interfaces/Client";
 import type { User } from "./interfaces/User";
 import { SocketEvent } from "./shared/SocketEvent";
-import type { MessageListLimit } from "./shared/messages/MessageListLimit";
+import type { MessageListLimit } from "./shared/messages/message-list/MessageListLimit";
 
 
 export class ChatServer {

@@ -1,5 +1,10 @@
 <script lang="ts">
-    import type { SystemErrorMessage } from "../../../shared/messages/SystemErrorMessage";
+    import {
+        messageFadeInPosition,
+        messageFadeInDuration,
+    } from "../../../stores/config.store";
+    import { fly } from "svelte/transition";
+    import type { SystemErrorMessage } from "../../../shared/messages/system/SystemErrorMessage";
 
     export let errorMessage: SystemErrorMessage;
 
@@ -9,7 +14,7 @@
     });
 </script>
 
-<li>
+<li in:fly={{ x: $messageFadeInPosition, duration: $messageFadeInDuration }}>
     <blockquote>
         <span class="text">
             {errorMessage.text}
@@ -21,7 +26,6 @@
 </li>
 
 <style lang="scss">
-
     li {
         align-self: center;
 

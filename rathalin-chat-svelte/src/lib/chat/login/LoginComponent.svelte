@@ -7,8 +7,8 @@
     import LoginErrorComponent from "./LoginErrorComponent.svelte";
     import { translate } from "../../../services/i18n/i18n.service";
     import { SocketEvent } from "../../../shared/SocketEvent";
-    import type { UsernameAcceptMessage } from "../../../shared/messages/UsernameAcceptMessage";
-    import type { UsernameTakenMessage } from "../../../shared/messages/UsernameTakenMessage";
+    import type { UsernameAcceptMessage } from "../../../shared/messages/login/UsernameAcceptMessage";
+    import type { UsernameTakenMessage } from "../../../shared/messages/login/UsernameTakenMessage";
     import { MessageType } from "../../../shared/MessageType";
 
     const subscriptions: Subscription[] = [];
