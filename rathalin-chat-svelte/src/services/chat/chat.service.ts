@@ -16,9 +16,7 @@ import type { Message } from "../../shared/messages/Message";
 import type { MessageListLimit } from "src/shared/messages/message-list/MessageListLimit";
 
 class ChatService {
-
-    private _socket: Socket;
-
+ 
     public readonly onConnect: Subject<void> = new Subject();
     public readonly onReconnect: Subject<void> = new Subject();
     public readonly onDisconnect: Subject<void> = new Subject();
@@ -32,7 +30,6 @@ class ChatService {
     public readonly onSystemWarning: Subject<SystemWarningMessage> = new Subject();
     public readonly onSystemError: Subject<SystemErrorMessage> = new Subject();
 
-
     constructor() {
         const manager = new Manager(get(socketIoServerConnection), {
             autoConnect: false,
@@ -41,6 +38,8 @@ class ChatService {
         this._socket = manager.socket("/");
         this.initConnections();
     }
+
+    private _socket: Socket;
 
 
     private initConnections(): void {
