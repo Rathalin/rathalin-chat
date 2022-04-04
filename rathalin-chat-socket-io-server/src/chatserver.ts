@@ -76,7 +76,7 @@ export class ChatServer {
         socket.on(SocketEvent.CLIENT_REQUESTS_LOGIN, (clientLoginMessage: LoginMessage): void => {
             if (clientLoginMessage.username.trim().length === 0) return;
 
-            const usernameMaxLength: number = 20;
+            const usernameMaxLength: number = 100;
             const trimmedUsername: string = clientLoginMessage.username.trim().substring(0, usernameMaxLength);
             if (trimmedUsername.length === 0) return;
 

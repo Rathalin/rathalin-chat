@@ -1,10 +1,12 @@
 <script lang="ts">
+    import { fade } from "svelte/transition";
     import type { Subscription } from "rxjs";
     import { lastUsername, loggedIn, user } from "../../../stores/user.store";
 
     import { onDestroy, onMount } from "svelte";
     import { chatService } from "../../../services/chat/chat.service";
     import LoginErrorComponent from "./LoginErrorComponent.svelte";
+    import LoginLoadComponent from "./LoginLoadComponent.svelte";
     import { translate } from "../../../services/i18n/i18n.service";
     import { SocketEvent } from "../../../shared/SocketEvent";
     import type { UsernameAcceptMessage } from "../../../shared/messages/login/UsernameAcceptMessage";
@@ -13,7 +15,7 @@
 
     const subscriptions: Subscription[] = [];
 
-    let usernameMaxInputLength: number = 20;
+    let usernameMaxInputLength: number = 50;
     let usernameInput: string = $lastUsername;
     let showConnectionError: boolean = false;
     let showDuplicateUsernameError: boolean = false;
@@ -80,19 +82,22 @@
 
 <div id="login">
     {#if showConnectionError}
-        <div class="login-error">
+        <div class="error" in:fade>
             <LoginErrorComponent
-                text={$translate("connection.connection_error_message")}
+                text={$translate("connection.error.connection.error.label")}
             />
         </div>
     {/if}
     {#if showDuplicateUsernameError}
-        <div class="login-error">
+        <div class="error" in:fade>
             <LoginErrorComponent
-                text={$translate(
-                    "connection.login_username_taken_error_message"
-                )}
+                text={$translate("connection.error.username.taken.label")}
             />
+        </div>
+    {/if}
+    {#if loginPending}
+        <div class="loading" in:fade>
+            <LoginLoadComponent text={$translate("connection.connect.label")} />
         </div>
     {/if}
     <!-- svelte-ignore a11y-autofocus -->
@@ -103,13 +108,13 @@
         disabled={loginPending}
         type="text"
         id="login-username"
-        placeholder={$translate("connection.username_input_label")}
+        placeholder={$translate("connection.input.username.label")}
         autocomplete="off"
         autofocus
     />
     <div>
-        <button id="login-button" on:click={login}
-            >{$translate("connection.enter_label")}</button
+        <button id="login-button" on:click={login} disabled={loginPending}
+            >{$translate("connection.enter.label")}</button
         >
     </div>
 </div>
@@ -127,7 +132,7 @@
         display: flex;
     }
 
-    .login-error {
+    .error {
         flex: 1;
     }
 
@@ -156,7 +161,7 @@
         padding: 0.8em;
         border: none;
 
-        &:hover {
+        &:hover:not([disabled]) {
             background-color: var(--secondary-dark);
             cursor: pointer;
             color: white;

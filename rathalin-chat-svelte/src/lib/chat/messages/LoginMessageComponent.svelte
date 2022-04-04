@@ -10,7 +10,7 @@
     import type { LoginMessage } from "../../../shared/messages/login/LoginMessage";
 
     export let loginMessage: LoginMessage;
-    const messageTranslateKey: string = `messages.login_message_${getRandomInt(
+    const messageTranslateKey: string = `messages.login.${getRandomInt(
         1,
         10
     )}`;

@@ -1,0 +1,22 @@
+<script lang="ts">
+    export let text: string = "";
+
+    $: trimmedText = text.trim();
+</script>
+
+{#if trimmedText?.length > 0}
+    <p>
+        {text}
+    </p>
+{/if}
+
+<style lang="scss">
+    p {
+        flex: 1;
+        color: white;
+        border-radius: 2px;
+        background-color: var(--alert-primary);
+        padding: 1em 1.5em;
+        margin-bottom: 1em;
+    }
+</style>

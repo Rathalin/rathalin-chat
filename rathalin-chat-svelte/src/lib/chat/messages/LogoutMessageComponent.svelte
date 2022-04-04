@@ -9,7 +9,7 @@
     import type { LogoutMessage } from "../../../shared/messages/logout/LogoutMessage";
 
     export let logoutMessage: LogoutMessage;
-    const messageTranslateKey: string = `messages.logout_message_${getRandomInt(
+    const messageTranslateKey: string = `messages.logout.${getRandomInt(
         1,
         10
     )}`;

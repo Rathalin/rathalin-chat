@@ -10,7 +10,7 @@
 
 {#if $loggedIn}
     <button id="exit-button" on:click={exit}
-        >{$translate("connection.exit_label")}</button
+        >{$translate("connection.exit.label")}</button
     >
 {/if}
 

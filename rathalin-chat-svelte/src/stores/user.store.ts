@@ -1,4 +1,3 @@
-import type { User } from "../shared/user/User";
 import { type Writable, writable } from "svelte/store";
 
 function createUserStore() {
