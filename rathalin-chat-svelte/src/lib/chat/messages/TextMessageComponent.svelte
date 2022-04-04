@@ -8,6 +8,8 @@
 
     export let textMessage: TextMessage;
     export let isMyMessage: boolean;
+    export let isFollowUpMessage: boolean = false;
+    export let debugLastUsername: string = "";
     let hover: boolean = false;
 
     $: timestamp = textMessage.date.toLocaleTimeString("at-AT", {
@@ -28,30 +30,36 @@
     on:mouseenter={onMouseEnter}
     on:mouseleave={onMouseLeave}
     class:hover
+    class:follow-up-text-message={isFollowUpMessage}
     in:fly={{ x: $messageFadeInPosition, duration: $messageFadeInDuration }}
 >
     <blockquote class:msg-me={isMyMessage}>
-        <span class="name">
-            {textMessage.sender}
-        </span>
-        <span class="timestamp">
-            {timestamp}
-        </span>
+        {#if !isFollowUpMessage}
+            <span class="name">
+                {textMessage.sender}
+            </span>
+            <span class="timestamp">
+                {timestamp}
+            </span>
+        {/if}
         <div class="text">
             {textMessage.text}
+        </div>
+        <div class="text">
+            {debugLastUsername}
         </div>
     </blockquote>
 </li>
 
 <style lang="scss">
     li {
-        font-family: var(--font-primary);
+        font-family: var(--font-secondary);
         font-weight: 400;
         display: flex;
 
         blockquote {
             max-width: 95%;
-            padding: 0.2em 0.8em 0.5em 0.8em;
+            padding: 0.2em 0.8em 0.2em 0.8em;
             color: white;
             border-radius: 0px 8px 8px 8px;
             background-color: var(--primary-light);
@@ -67,6 +75,10 @@
                 font-size: 8pt;
                 margin-left: 0.5em;
                 color: rgba(255, 255, 255, 0.5);
+
+                & + .text {
+                    margin-top: -5px;
+                }
             }
 
             .text {
@@ -93,6 +105,7 @@
 
             &.msg-me {
                 background-color: var(--primary-lighter);
+
                 &::before {
                     border-color: var(--primary-lighter) var(--primary-lighter)
                         transparent transparent;

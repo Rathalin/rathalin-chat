@@ -2,11 +2,15 @@ li {
     list-style: none;
 
     &:first-child {
-        margin-top: 30px;
+        margin-top: 2em;
     }
 
-    &:not(:last-child) {
-        margin-bottom: 1em;
+    &:not(:first-child) {
+        margin-top: 1em;
+
+        &.follow-up-text-message {
+            margin-top: 0.3em;
+        }
     }
 
     &:last-child {

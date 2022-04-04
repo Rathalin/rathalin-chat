@@ -89,13 +89,13 @@
     }
 
     input {
+        font-family: var(--font-secondary);
         font-size: 11pt;
         margin: 0em;
         flex-grow: 1;
         border-width: 0px;
         background-color: transparent;
         color: white;
-        font-size: small;
         outline: none;
     }
 

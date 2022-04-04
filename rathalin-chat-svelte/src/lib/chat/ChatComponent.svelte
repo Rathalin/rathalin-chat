@@ -22,6 +22,7 @@
     const subscriptions: Subscription[] = [];
     let lastWindowHeight: number = 0;
     let messageListEl: HTMLUListElement | null = null;
+    let lastTextMessage: TextMessage | null = null;
 
     let myUsername: string = $user?.username;
     let messages: Message[] = [];
@@ -41,6 +42,8 @@
             }),
             chatService.onTextMessage.subscribe((textMessage: TextMessage) => {
                 addMessageToChat(textMessage);
+                console.log("Last username of text msg: ", textMessage.sender);
+                lastTextMessage = textMessage;
             }),
             chatService.onSystemInfo.subscribe(
                 (systemInfoMessage: SystemInfoMessage) => {
@@ -83,8 +86,25 @@
             messageListEl.scrollHeight - messageListEl.clientHeight;
     }
 
+    function textMessageIsFollowUp(message: TextMessage): boolean {
+        const index: number = messages.indexOf(message);
+        if (
+            index == -1 ||
+            messages.length <= 1 ||
+            index <= 0 ||
+            index >= messages.length
+        ) {
+            return false;
+        }
+        const lastMessage: Message = messages[index - 1];
+        return (
+            chatService.isTextMessage(lastMessage) &&
+            chatService.isTextMessage(message) &&
+            lastMessage.sender === message.sender
+        );
+    }
+
     window.addEventListener("resize", (event: UIEvent): void => {
-        
         // if (
         //     lastWindowHeight &&
         //     window.outerHeight < 700 &&
@@ -113,8 +133,9 @@
     {#each messages as message}
         {#if chatService.isTextMessage(message)}
             <TextMessageComponent
-                isMyMessage={message.sender === myUsername}
                 textMessage={message}
+                isMyMessage={message.sender === myUsername}
+                isFollowUpMessage={textMessageIsFollowUp(message)}
             />
         {:else if chatService.isSystemInfoMessage(message)}
             <SystemInfoMessageComponent infoMessage={message} />

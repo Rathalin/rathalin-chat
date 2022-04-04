@@ -116,6 +116,7 @@
 
 <style lang="scss">
     #login {
+        font-family: "Cairo", sans-serif;
         margin: auto;
         display: flex;
         flex-direction: column;
