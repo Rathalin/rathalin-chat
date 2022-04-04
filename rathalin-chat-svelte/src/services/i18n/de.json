@@ -4,7 +4,7 @@
     },
     "connection": {
         "connect": {
-            "label": "Connecting..."
+            "label": "Verbinden"
         },
         "input": {
             "username": {
@@ -32,15 +32,15 @@
         "error": {
             "username": {
                 "taken": {
-                    "label": "Dieser Name ist bereits vergeben."
+                    "label": "Dieser Name ist bereits vergeben"
                 }
             },
             "connection": {
                 "error": {
-                    "label": "Es konnte keine Verbindung zum Server hergestellt werden."
+                    "label": "Es konnte keine Verbindung zum Server hergestellt werden"
                 },
                 "lost": {
-                    "label": "Verbindung verloren."
+                    "label": "Verbindung verloren"
                 }
             }
         }

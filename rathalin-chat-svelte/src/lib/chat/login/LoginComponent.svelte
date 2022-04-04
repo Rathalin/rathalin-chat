@@ -2,7 +2,6 @@
     import { fade } from "svelte/transition";
     import type { Subscription } from "rxjs";
     import { lastUsername, loggedIn, user } from "../../../stores/user.store";
-
     import { onDestroy, onMount } from "svelte";
     import { chatService } from "../../../services/chat/chat.service";
     import LoginErrorComponent from "./LoginErrorComponent.svelte";
@@ -113,9 +112,9 @@
         autofocus
     />
     <div>
-        <button id="login-button" on:click={login} disabled={loginPending}
-            >{$translate("connection.enter.label")}</button
-        >
+        <button id="login-button" on:click={login} disabled={loginPending}>
+            <span>{$translate("connection.enter.label")}</span>
+        </button>
     </div>
 </div>
 
@@ -160,11 +159,20 @@
         background-color: var(--secondary-light);
         padding: 0.8em;
         border: none;
+        display: flex;
+        justify-content: center;
 
-        &:hover:not([disabled]) {
-            background-color: var(--secondary-dark);
-            cursor: pointer;
-            color: white;
+        &:hover {
+            &:not([disabled]) {
+                background-color: var(--secondary-dark);
+                cursor: pointer;
+                color: white;
+            }
+        }
+
+        &:disabled {
+            color: var(--primary);
+            opacity: 0.5;
         }
     }
 

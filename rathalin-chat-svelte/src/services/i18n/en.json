@@ -4,12 +4,9 @@
     },
     "connection": {
         "connect": {
-            "label": "Verbinden..."
+            "label": "Connecting"
         },
         "input": {
-            "connect": {
-                "label": "Verbinden..."
-            },
             "username": {
                 "label": "Username"
             },
@@ -35,15 +32,15 @@
         "error": {
             "username": {
                 "taken": {
-                    "label": "This username is already taken."
+                    "label": "This username is already taken"
                 }
             },
             "connection": {
                 "error": {
-                    "label": "Failed to establish a connection to the server."
+                    "label": "Failed to establish a connection to the server"
                 },
                 "lost": {
-                    "label": "Connection lost."
+                    "label": "Connection lost"
                 }
             }
         }        
