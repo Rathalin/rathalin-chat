@@ -20,6 +20,7 @@ class ChatService {
     private _socket: Socket;
 
     public readonly onConnect: Subject<void> = new Subject();
+    public readonly onReconnect: Subject<void> = new Subject();
     public readonly onDisconnect: Subject<void> = new Subject();
     public readonly onError: Subject<Error> = new Subject();
     public readonly onLogin: Subject<LoginMessage> = new Subject();
@@ -49,14 +50,24 @@ class ChatService {
             this.onConnect.next();
         });
 
+        // Connect Error
+        this._socket.on("connect_error", (error: Error) => {
+            this.onError.next(error);
+        });
+
+        // Reconnect
+        this._socket.on("reconnect", () => {
+            this.onReconnect.next();
+        });
+
+        // Reconnect Error
+        this._socket.on("reconnect_error", (error: Error) => {
+            this.onError.next(error);
+        });
+
         // Disconnect
         this._socket.on("disconnect", () => {
             this.onDisconnect.next();
-        });
-
-        // Connect Error
-        this._socket.on("connect_error", (error) => {
-            this.onError.next(error);
         });
 
         // Login
