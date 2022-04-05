@@ -47,28 +47,28 @@
     },
     "messages": {
         "login": {
-            "1": "{username} joined the chat.",
-            "2": "{username} has entered the chat.",
-            "3": "{username} is ready to talk.",
-            "4": "{username} joined.",
+            "1": "{username} has entered the chat.",
+            "2": "{username} joined the chat.",
+            "3": "{username} joined.",
+            "4": "{username} is ready to talk.",
             "5": "{username} entered.",
             "6": "{username} is here.",
-            "7": "{username} arrived.",
-            "8": "{username} just joined.",
-            "9": "{username} is finally here.",
+            "7": "{username} is finally here.",
+            "8": "{username} can now write.",
+            "9": "{username} found the link.",
             "10": "{username} is ready to chat."
         },
         "logout": {
-            "1": "{username} is gone.",
-            "2": "{username} left.",
-            "3": "{username} is out of time.",
+            "1": "{username} left.",
+            "2": "{username} had enough.",
+            "3": "{username} is done and out.",
             "4": "{username} ragequit.",
-            "5": "{username} closed the chat.",
-            "6": "{username} had enough.",
-            "7": "{username} is not online anymore.",
-            "8": "{username} disconnected.",
-            "9": "{username} couldn't take it anymore.",
-            "10": "{username} just left."
+            "5": "{username} couldn't take it anymore.",
+            "6": "{username} cut the connection.",
+            "7": "{username} had to go.",
+            "8": "{username} ran out of time.",
+            "9": "{username} closed the chat.",
+            "10": "{username} has left the chat."
         }
     },
     "header": {
