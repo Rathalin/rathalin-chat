@@ -12,7 +12,7 @@
             <div>{$translate("app.name")}</div>
             <a
                 class="d-none d-md-block"
-                href="https://github.com/Rathalin/RathalinChat"
+                href="https://github.com/Rathalin/rathalin-chat"
                 target="_blank">{`${$translate("header.view_on")} Github`}</a
             >
         </div>
