@@ -10,10 +10,8 @@
     <nav>
         <div class="nav-content nav-left-content">
             <div>{$translate("app.name")}</div>
-            <a
-                class="d-none d-md-block"
-                href="https://github.com/Rathalin/rathalin-chat"
-                target="_blank">{`${$translate("header.view_on")} Github`}</a
+            <a href="https://github.com/Rathalin/rathalin-chat" target="_blank"
+                >{`${$translate("header.view_on")} Github`}</a
             >
         </div>
         <div class="nav-content nav-right-content">
@@ -32,7 +30,6 @@
 </header>
 
 <style lang="scss">
-
     nav {
         font-family: var(--font-secondary);
         padding: 0em 1em;

@@ -12,4 +12,4 @@ export const messageFadeInDuration: Readable<number> = readable<number>(300);
 
 // Connection
 // export const socketIoServerConnection: Readable<string> = readable<string>("http://localhost:5001");
-export const socketIoServerConnection: Readable<string> = readable<string>("http://193.170.135.99:5001");
+export const socketIoServerConnection: Readable<string> = readable<string>("http://192.168.42.231:5001");

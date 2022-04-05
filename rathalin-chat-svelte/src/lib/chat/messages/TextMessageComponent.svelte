@@ -9,7 +9,6 @@
     export let textMessage: TextMessage;
     export let isMyMessage: boolean;
     export let isFollowUpMessage: boolean = false;
-    export let debugLastUsername: string = "";
     let hover: boolean = false;
 
     $: timestamp = textMessage.date.toLocaleTimeString("at-AT", {
@@ -35,18 +34,17 @@
 >
     <blockquote class:msg-me={isMyMessage}>
         {#if !isFollowUpMessage}
-            <span class="name">
+            <div class="name">
                 {textMessage.sender}
+            </div>
+        {/if}
+        <div class="content">
+            <span class="text">
+                {textMessage.text}
             </span>
             <span class="timestamp">
                 {timestamp}
             </span>
-        {/if}
-        <div class="text">
-            {textMessage.text}
-        </div>
-        <div class="text">
-            {debugLastUsername}
         </div>
     </blockquote>
 </li>
@@ -75,10 +73,6 @@
                 font-size: 8pt;
                 margin-left: 0.5em;
                 color: rgba(255, 255, 255, 0.5);
-
-                & + .text {
-                    margin-top: -5px;
-                }
             }
 
             .text {
@@ -88,6 +82,10 @@
                 overflow-wrap: break-word;
                 -ms-word-break: break-word;
                 word-break: break-word;
+            }
+
+            .content {
+                margin-top: -5px;
             }
 
             &::before {
@@ -119,6 +117,14 @@
 
         @media (min-width: 1200px) {
             max-width: 35%;
+        }
+    }
+
+    li.follow-up-text-message blockquote {
+        border-radius: 8px 8px 8px 8px;
+
+        &::before {
+            border: none;
         }
     }
 </style>
