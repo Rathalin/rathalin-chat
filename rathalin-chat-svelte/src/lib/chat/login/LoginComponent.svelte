@@ -121,10 +121,15 @@
 <style lang="scss">
     #login {
         font-family: "Cairo", sans-serif;
+        min-width: 300px;
         margin: auto;
         display: flex;
         flex-direction: column;
-        width: 25%;
+        
+
+        @media (min-width: 600px) {
+            width: 450px;
+        }
     }
 
     div {
@@ -173,13 +178,6 @@
         &:disabled {
             color: var(--primary);
             opacity: 0.5;
-        }
-    }
-
-    @media (max-width: 600px) {
-        #login {
-            width: initial;
-            margin: auto 1em;
         }
     }
 </style>

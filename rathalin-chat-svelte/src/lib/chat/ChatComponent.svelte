@@ -33,7 +33,7 @@
         subscriptions.push(
             chatService.onLogin.subscribe(
                 async (loginMessage: LoginMessage) => {
-                    addMessageToChat(loginMessage);
+                    await addMessageToChat(loginMessage);
                     $onlineUserNames = [
                         ...$onlineUserNames,
                         loginMessage.username,
@@ -43,36 +43,43 @@
                     }
                 }
             ),
-            chatService.onLogout.subscribe((logoutMessage: LogoutMessage) => {
-                addMessageToChat(logoutMessage);
-                $onlineUserNames = $onlineUserNames.filter(
-                    (username) => username !== logoutMessage.username
-                );
-            }),
+            chatService.onLogout.subscribe(
+                async (logoutMessage: LogoutMessage) => {
+                    await addMessageToChat(logoutMessage);
+                    $onlineUserNames = $onlineUserNames.filter(
+                        (username) => username !== logoutMessage.username
+                    );
+                }
+            ),
             chatService.onOnlineUsers.subscribe(
                 (onlineUsers: OnlineUserList) => {
                     console.log(onlineUsers);
                     $onlineUserNames = [...onlineUsers.users];
                 }
             ),
-            chatService.onTextMessage.subscribe((textMessage: TextMessage) => {
-                addMessageToChat(textMessage);
-                console.log("Last username of text msg: ", textMessage.sender);
-                lastTextMessage = textMessage;
-            }),
+            chatService.onTextMessage.subscribe(
+                async (textMessage: TextMessage) => {
+                    await addMessageToChat(textMessage);
+                    console.log(
+                        "Last username of text msg: ",
+                        textMessage.sender
+                    );
+                    lastTextMessage = textMessage;
+                }
+            ),
             chatService.onSystemInfo.subscribe(
-                (systemInfoMessage: SystemInfoMessage) => {
-                    addMessageToChat(systemInfoMessage);
+                async (systemInfoMessage: SystemInfoMessage) => {
+                    await addMessageToChat(systemInfoMessage);
                 }
             ),
             chatService.onSystemWarning.subscribe(
-                (systemWarningMessage: SystemWarningMessage) => {
-                    addMessageToChat(systemWarningMessage);
+                async (systemWarningMessage: SystemWarningMessage) => {
+                    await addMessageToChat(systemWarningMessage);
                 }
             ),
             chatService.onSystemError.subscribe(
-                (systemErrorMessage: SystemErrorMessage) => {
-                    addMessageToChat(systemErrorMessage);
+                async (systemErrorMessage: SystemErrorMessage) => {
+                    await addMessageToChat(systemErrorMessage);
                 }
             )
         );
@@ -85,8 +92,12 @@
         subscriptions.forEach((subscription) => subscription.unsubscribe());
     });
 
-    function addMessageToChat(message: Message): void {
+    async function addMessageToChat(message: Message): Promise<void> {
         messages = [...messages, message];
+        await tick();
+        if (scrollIsAtBottom) {
+            scrollToBottom();
+        }
     }
 
     async function sendTextMessage(event): Promise<void> {

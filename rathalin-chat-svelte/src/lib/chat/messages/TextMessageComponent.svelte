@@ -1,6 +1,6 @@
 <script lang="ts">
     import { Jumper } from "svelte-loading-spinners";
-    import { slide } from "svelte/transition";
+    import { fade } from "svelte/transition";
     import {
         messageFadeInPosition,
         messageFadeInDuration,
@@ -81,6 +81,16 @@
                 flex-direction: row;
                 align-items: center;
                 gap: 0.5em;
+
+                & span {
+                    opacity: 1;
+                    transition-property: opacity;
+                    transition-duration: 500ms;
+
+                    &.hidden {
+                        opacity: 0;
+                    }
+                }
             }
 
             .timestamp {
@@ -141,9 +151,5 @@
         &::before {
             border: none;
         }
-    }
-
-    .hidden {
-        display: none;
     }
 </style>
