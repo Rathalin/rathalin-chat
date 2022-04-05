@@ -47,6 +47,7 @@ export class ChatServer {
             this.registerClientRequestsLogin(socket);
             this.registerClientSendsTextMessage(socket);
             this.registerClientRequestsMessages(socket);
+            this.registerClientRequestsOnlineUsers(socket);
         });
     }
 
@@ -69,6 +70,8 @@ export class ChatServer {
                 }
             }
         });
+
+
     }
 
 
@@ -133,6 +136,14 @@ export class ChatServer {
         socket.on(SocketEvent.CLIENT_REQUESTS_MESSAGE_LIST, (limit: MessageListLimit) => {
             if (!this.authUser(socket)) return;
             this.sendMessageListToClient(socket, limit.limit);
+        });
+    }
+
+
+    private registerClientRequestsOnlineUsers(socket: Socket): void {
+        socket.on(SocketEvent.CLIENT_REQUESTS_ONLINE_USERS, () => {
+            if (!this.authUser(socket)) return;
+            this.sendOnlineUsersToClient(socket);
         });
     }
 
@@ -210,6 +221,11 @@ export class ChatServer {
             username: this.getClient(socket).user.username,
         }
         socket.emit(SocketEvent.SERVER_SENDS_LOGIN, loginMessage);
+    }
+
+
+    private sendOnlineUsersToClient(socket: Socket): void {
+        socket.emit(SocketEvent.SERVER_RESPONDS_ONLINE_USERS, this.clients.map(c => c.user.username));
     }
 
 }

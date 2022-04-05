@@ -1,15 +1,19 @@
 <script lang="ts">
+    import { Jumper } from "svelte-loading-spinners";
+    import { slide } from "svelte/transition";
     import {
         messageFadeInPosition,
         messageFadeInDuration,
     } from "../../../stores/config.store";
     import { fly } from "svelte/transition";
     import type { TextMessage } from "../../../shared/messages/content/TextMessage";
+    import { onlineUserNames } from "../../../stores/user.store";
 
     export let textMessage: TextMessage;
     export let isMyMessage: boolean;
     export let isFollowUpMessage: boolean = false;
     let hover: boolean = false;
+    let onlineIndicatorHidden: boolean = true;
 
     $: timestamp = textMessage.date.toLocaleTimeString("at-AT", {
         hour: "2-digit",
@@ -23,6 +27,10 @@
     function onMouseLeave(): void {
         hover = false;
     }
+
+    onlineUserNames.subscribe(() => {
+        onlineIndicatorHidden = !$onlineUserNames.includes(textMessage.sender);
+    });
 </script>
 
 <li
@@ -35,7 +43,10 @@
     <blockquote class:msg-me={isMyMessage}>
         {#if !isFollowUpMessage}
             <div class="name">
-                {textMessage.sender}
+                <span> {textMessage.sender}</span>
+                <span class:hidden={onlineIndicatorHidden}>
+                    <Jumper size="1" unit="em" color="#00FF00" duration="3s" />
+                </span>
             </div>
         {/if}
         <div class="content">
@@ -66,6 +77,10 @@
                 font-family: var(--font-secondary);
                 font-size: 10pt;
                 color: var(--secondary-light);
+                display: flex;
+                flex-direction: row;
+                align-items: center;
+                gap: 0.5em;
             }
 
             .timestamp {
@@ -126,5 +141,9 @@
         &::before {
             border: none;
         }
+    }
+
+    .hidden {
+        display: none;
     }
 </style>

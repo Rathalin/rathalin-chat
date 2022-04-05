@@ -14,9 +14,10 @@ import type { UsernameTakenMessage } from "../../shared/messages/login/UsernameT
 import { MessageType } from "../../shared/MessageType";
 import type { Message } from "../../shared/messages/Message";
 import type { MessageListLimit } from "src/shared/messages/message-list/MessageListLimit";
+import type { OnlineUserList } from "src/shared/messages/online-user-list/OnlineUserList";
 
 class ChatService {
- 
+
     public readonly onConnect: Subject<void> = new Subject();
     public readonly onReconnect: Subject<void> = new Subject();
     public readonly onDisconnect: Subject<void> = new Subject();
@@ -24,6 +25,7 @@ class ChatService {
     public readonly onLogin: Subject<LoginMessage> = new Subject();
     public readonly onLoginUsernameAccept: Subject<UsernameAcceptMessage> = new Subject();
     public readonly onLoginUsernameTaken: Subject<UsernameTakenMessage> = new Subject();
+    public readonly onOnlineUsers: Subject<OnlineUserList> = new Subject();
     public readonly onLogout: Subject<LogoutMessage> = new Subject();
     public readonly onTextMessage: Subject<TextMessage> = new Subject();
     public readonly onSystemInfo: Subject<SystemInfoMessage> = new Subject();
@@ -78,15 +80,19 @@ class ChatService {
         // Username Accept
         this._socket.on(SocketEvent.SERVER_RESPONDS_LOGIN_USERNAME_ACCEPT, (acceptMessage: UsernameAcceptMessage) => {
             this.setDateFromDateString(acceptMessage);
-            console.log("LOGIN_USERNAME_ACCEPT");
             this.onLoginUsernameAccept.next(acceptMessage);
         });
 
         // Username Taken
         this._socket.on(SocketEvent.SERVER_RESPONDS_LOGIN_USERNAME_TAKEN, (takenMessage: UsernameTakenMessage) => {
             this.setDateFromDateString(takenMessage);
-            console.log("LOGIN_USERNAME_TAKEN");
             this.onLoginUsernameTaken.next(takenMessage);
+        });
+
+        // Online Users
+        this._socket.on(SocketEvent.SERVER_RESPONDS_ONLINE_USERS, (onlineUsers: OnlineUserList) => {
+            this.setDateFromDateString(onlineUsers);
+            this.onOnlineUsers.next(onlineUsers);
         });
 
         // Logout
@@ -145,6 +151,11 @@ class ChatService {
             limit,
         }
         this._socket.emit(SocketEvent.CLIENT_REQUESTS_MESSAGE_LIST, messageListLimit);
+    }
+
+
+    public requestOnlineUsers(): void {
+        this._socket.emit(SocketEvent.CLIENT_REQUESTS_ONLINE_USERS);
     }
 
 

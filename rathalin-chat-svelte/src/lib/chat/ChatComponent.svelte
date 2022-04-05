@@ -6,8 +6,7 @@
     import type { SystemInfoMessage } from "../../shared/messages/system/SystemInfoMessage";
     import type { SystemWarningMessage } from "../../shared/messages/system/SystemWarningMessage";
     import type { TextMessage } from "../../shared/messages/content/TextMessage";
-    import { user } from "../../stores/user.store";
-    import type { Subscription } from "rxjs";
+    import { onlineUserNames, user } from "../../stores/user.store";
     import TextMessageComponent from "./messages/TextMessageComponent.svelte";
     import SystemInfoMessageComponent from "./messages/SystemInfoMessageComponent.svelte";
     import SystemWarningMessageComponent from "./messages/SystemWarningMessageComponent.svelte";
@@ -18,11 +17,14 @@
     import { onDestroy, onMount, tick } from "svelte";
     import type { Message } from "../../shared/messages/Message";
     import { messageListLimit } from "../../stores/config.store";
+    import type { Subscription } from "rxjs";
+    import type { OnlineUserList } from "../../shared/messages/online-user-list/OnlineUserList";
 
     const subscriptions: Subscription[] = [];
     let lastWindowHeight: number = 0;
     let messageListEl: HTMLUListElement | null = null;
     let lastTextMessage: TextMessage | null = null;
+    let scrollIsAtBottom: boolean = false;
 
     let myUsername: string = $user?.username;
     let messages: Message[] = [];
@@ -32,6 +34,10 @@
             chatService.onLogin.subscribe(
                 async (loginMessage: LoginMessage) => {
                     addMessageToChat(loginMessage);
+                    $onlineUserNames = [
+                        ...$onlineUserNames,
+                        loginMessage.username,
+                    ];
                     if (loginMessage.username === myUsername) {
                         await scrollToBottom();
                     }
@@ -39,7 +45,15 @@
             ),
             chatService.onLogout.subscribe((logoutMessage: LogoutMessage) => {
                 addMessageToChat(logoutMessage);
+                $onlineUserNames = $onlineUserNames.filter(
+                    (username) => username !== logoutMessage.username
+                );
             }),
+            chatService.onOnlineUsers.subscribe(
+                (onlineUsers: OnlineUserList) => {
+                    $onlineUserNames = [...onlineUsers.users];
+                }
+            ),
             chatService.onTextMessage.subscribe((textMessage: TextMessage) => {
                 addMessageToChat(textMessage);
                 console.log("Last username of text msg: ", textMessage.sender);
@@ -63,6 +77,7 @@
         );
 
         chatService.requestMessageList($messageListLimit);
+        chatService.requestOnlineUsers();
     });
 
     onDestroy(() => {
@@ -104,7 +119,7 @@
         );
     }
 
-    window.addEventListener("resize", (event: UIEvent): void => {
+    function onResize(event: UIEvent): void {
         // if (
         //     lastWindowHeight &&
         //     window.outerHeight < 700 &&
@@ -126,8 +141,10 @@
         //     // });
         // }
         // lastWindowHeight = window.innerHeight;
-    });
+    }
 </script>
+
+<svelte:window on:resize={onResize} />
 
 <ul class="chat-messages" bind:this={messageListEl}>
     {#each messages as message}
