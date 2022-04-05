@@ -10,6 +10,7 @@ import type { Client } from "./interfaces/Client";
 import type { User } from "./interfaces/User";
 import { SocketEvent } from "./shared/SocketEvent";
 import type { MessageListLimit } from "./shared/messages/message-list/MessageListLimit";
+import type { OnlineUserList } from "./shared/messages/online-user-list/OnlineUserList";
 
 
 export class ChatServer {
@@ -225,7 +226,13 @@ export class ChatServer {
 
 
     private sendOnlineUsersToClient(socket: Socket): void {
-        socket.emit(SocketEvent.SERVER_RESPONDS_ONLINE_USERS, this.clients.map(c => c.user.username));
+        const onlineUsers: OnlineUserList = {
+            event: SocketEvent.SERVER_RESPONDS_ONLINE_USERS,
+            type: MessageType.ONLINE_USERS_LIST,
+            date: new Date(),
+            users: this.clients.map(c => c.user.username),
+        };
+        socket.emit(SocketEvent.SERVER_RESPONDS_ONLINE_USERS, onlineUsers);
     }
 
 }

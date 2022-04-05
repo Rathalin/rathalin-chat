@@ -51,6 +51,7 @@
             }),
             chatService.onOnlineUsers.subscribe(
                 (onlineUsers: OnlineUserList) => {
+                    console.log(onlineUsers);
                     $onlineUserNames = [...onlineUsers.users];
                 }
             ),
