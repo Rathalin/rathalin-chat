@@ -1,9 +1,9 @@
 import type { Socket } from "socket.io";
-import type { Client } from "./interface/Client";
-import type { ClientInChatroom } from "./interface/ClientInChatroom";
-import type { User } from "./interface/User";
-import type { Chatroom } from "./shared/message/Chatroom";
-import type { Username } from "./shared/message/Username";
+import type { Client } from "../interface/Client";
+import type { ClientInChatroom } from "../interface/ClientInChatroom";
+import type { User } from "../interface/User";
+import type { Chatroom } from "../../shared/message/Chatroom";
+import type { Username } from "../../shared/message/Username";
 
 export class ClientManager {
 

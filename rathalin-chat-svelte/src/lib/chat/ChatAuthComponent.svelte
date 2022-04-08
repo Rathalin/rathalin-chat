@@ -4,9 +4,12 @@
 	import { lastUsername, connected, loggedIn } from "../../stores/user.store";
 	import { socketIoServerConnection } from "../../stores/config.store";
 	import LoginComponent from "./login/LoginComponent.svelte";
+	import ChatroomSelectionComponent from "./ChatroomSelectionComponent.svelte";
+
+	let selectedChatroom: string | null = null;
 
 	if (typeof localStorage !== "undefined") {
-		$lastUsername = localStorage.getItem("lastUsername");
+		$lastUsername = localStorage.getItem("lastUsername") ?? "";
 		lastUsername.subscribe((username) => {
 			if (username?.trim()?.length > 0) {
 				localStorage.setItem("lastUsername", username);
@@ -36,6 +39,8 @@
 
 {#if !$connected || !$loggedIn}
 	<LoginComponent />
+{:else if selectedChatroom == null}
+	<ChatroomSelectionComponent />
 {:else}
 	<ChatComponent />
 {/if}

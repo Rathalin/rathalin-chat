@@ -1,11 +1,11 @@
 <script lang="ts">
     import { chatService } from "../../services/chat/chat.service";
-    import type { LoginMessage } from "../../shared/messages/login/LoginMessage";
-    import type { LogoutMessage } from "../../shared/messages/logout/LogoutMessage";
-    import type { SystemErrorMessage } from "../../shared/messages/system/SystemErrorMessage";
-    import type { SystemInfoMessage } from "../../shared/messages/system/SystemInfoMessage";
-    import type { SystemWarningMessage } from "../../shared/messages/system/SystemWarningMessage";
-    import type { TextMessage } from "../../shared/messages/content/TextMessage";
+    import type { LoginMessage } from "../../shared/message/login/LoginMessage";
+    import type { LogoutMessage } from "../../shared/message/logout/LogoutMessage";
+    import type { SystemErrorMessage } from "../../shared/message/system/SystemErrorMessage";
+    import type { SystemInfoMessage } from "../../shared/message/system/SystemInfoMessage";
+    import type { SystemWarningMessage } from "../../shared/message/system/SystemWarningMessage";
+    import type { TextMessage } from "../../shared/message/content/TextMessage";
     import { onlineUserNames, user } from "../../stores/user.store";
     import TextMessageComponent from "./messages/TextMessageComponent.svelte";
     import SystemInfoMessageComponent from "./messages/SystemInfoMessageComponent.svelte";
@@ -15,18 +15,19 @@
     import LogoutMessageComponent from "./messages/LogoutMessageComponent.svelte";
     import ChatInputBarComponent from "./ChatInputBarComponent.svelte";
     import { onDestroy, onMount, tick } from "svelte";
-    import type { Message } from "../../shared/messages/Message";
+    import type { Message } from "../../shared/message/Message";
     import { messageListLimit } from "../../stores/config.store";
     import type { Subscription } from "rxjs";
-    import type { OnlineUserList } from "../../shared/messages/online-user-list/OnlineUserList";
+    import type { OnlineUserList } from "../../shared/message/online-user-list/OnlineUserList";
+    import type { Username } from "../../shared/message/Username";
 
     const subscriptions: Subscription[] = [];
     let lastWindowHeight: number = 0;
-    let messageListEl: HTMLUListElement | null = null;
+    let messageListEl: HTMLUListElement;
     let lastTextMessage: TextMessage | null = null;
     let scrollIsAtBottom: boolean = false;
 
-    let myUsername: string = $user?.username;
+    let myUsername: Username = $user?.name ?? "";
     let messages: Message[] = [];
 
     onMount(() => {
@@ -53,17 +54,12 @@
             ),
             chatService.onOnlineUsers.subscribe(
                 (onlineUsers: OnlineUserList) => {
-                    console.log(onlineUsers);
                     $onlineUserNames = [...onlineUsers.users];
                 }
             ),
             chatService.onTextMessage.subscribe(
                 async (textMessage: TextMessage) => {
                     await addMessageToChat(textMessage);
-                    console.log(
-                        "Last username of text msg: ",
-                        textMessage.sender
-                    );
                     lastTextMessage = textMessage;
                 }
             ),
@@ -100,7 +96,7 @@
         }
     }
 
-    async function sendTextMessage(event): Promise<void> {
+    async function sendTextMessage(event: any): Promise<void> {
         const textMessage: TextMessage = event.detail;
         chatService.sendTextMessage(textMessage);
         addMessageToChat(textMessage);
@@ -158,30 +154,39 @@
 
 <svelte:window on:resize={onResize} />
 
-<ul class="chat-messages" bind:this={messageListEl}>
-    {#each messages as message}
-        {#if chatService.isTextMessage(message)}
-            <TextMessageComponent
-                textMessage={message}
-                isMyMessage={message.sender === myUsername}
-                isFollowUpMessage={textMessageIsFollowUp(message)}
-            />
-        {:else if chatService.isSystemInfoMessage(message)}
-            <SystemInfoMessageComponent infoMessage={message} />
-        {:else if chatService.isSystemWarningMessage(message)}
-            <SystemWarningMessageComponent warningMessage={message} />
-        {:else if chatService.isSystemErrorMessage(message)}
-            <SystemErrorMessageComponent errorMessage={message} />
-        {:else if chatService.isLoginMessage(message)}
-            <LoginMessageComponent loginMessage={message} />
-        {:else if chatService.isLogoutMessage(message)}
-            <LogoutMessageComponent logoutMessage={message} />
-        {/if}
-    {/each}
-</ul>
-<ChatInputBarComponent on:message={sendTextMessage} />
+<div class="chat-wrapper">
+    <ul class="chat-messages" bind:this={messageListEl}>
+        {#each messages as message}
+            {#if chatService.isTextMessage(message)}
+                <TextMessageComponent
+                    textMessage={message}
+                    isMyMessage={message.sender === myUsername}
+                    isFollowUpMessage={textMessageIsFollowUp(message)}
+                />
+            {:else if chatService.isSystemInfoMessage(message)}
+                <SystemInfoMessageComponent infoMessage={message} />
+            {:else if chatService.isSystemWarningMessage(message)}
+                <SystemWarningMessageComponent warningMessage={message} />
+            {:else if chatService.isSystemErrorMessage(message)}
+                <SystemErrorMessageComponent errorMessage={message} />
+            {:else if chatService.isLoginMessage(message)}
+                <LoginMessageComponent loginMessage={message} />
+            {:else if chatService.isLogoutMessage(message)}
+                <LogoutMessageComponent logoutMessage={message} />
+            {/if}
+        {/each}
+    </ul>
+    <ChatInputBarComponent on:message={sendTextMessage} />
+</div>
 
 <style lang="scss">
+    .chat-wrapper {
+        flex: 1;
+        display: flex;
+        flex-direction: column;
+        justify-content: stretch;
+    }
+
     ul.chat-messages {
         padding: 0em 2em;
         margin: 0em 0em 0.2em 0em;

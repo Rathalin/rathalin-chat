@@ -20,15 +20,15 @@
         "/images/freepik-country-flags/png/208-germany.png"
     );
 
-    let currentImage: LanguageImage = null;
-    setLanguageImage(get(selectedLocale));
+    let currentImage: LanguageImage;
+    setLanguageImage($selectedLocale);
 
-    function toggleLanguage(event) {
+    function toggleLanguage(event: any) {
         event.preventDefault();
         let nextLang: string = currentImage.lang === "en" ? "de" : "en";
         currentImage = {
             lang: nextLang,
-            path: languageImages.get(nextLang),
+            path: languageImages.get(nextLang) ?? "",
         };
         selectedLocale.set(nextLang);
     }
@@ -36,7 +36,7 @@
     function setLanguageImage(lang: string) {
         currentImage = {
             lang,
-            path: languageImages.get(lang),
+            path: languageImages.get(lang) ?? "",
         };
     }
 </script>

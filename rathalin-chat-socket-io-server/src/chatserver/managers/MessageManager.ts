@@ -1,4 +1,5 @@
-import type { Message } from "./shared/message/Message";
+import type { Message } from "../../shared/message/Message";
+
 
 export class MessageManager {
 

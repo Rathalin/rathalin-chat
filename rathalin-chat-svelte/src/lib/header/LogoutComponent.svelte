@@ -1,7 +1,7 @@
 <script lang="ts">
     import { chatService } from "../../services/chat/chat.service";
     import { translate } from "../../services/i18n/i18n.service";
-    import { loggedIn, user } from "../../stores/user.store";
+    import { loggedIn } from "../../stores/user.store";
 
     function exit(): void {
         chatService.disconnect();

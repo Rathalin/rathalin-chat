@@ -1,16 +1,17 @@
 <script lang="ts">
-    import type { TextMessage } from "../../shared/messages/content/TextMessage";
+    import type { TextMessage } from "../../shared/message/content/TextMessage";
     import { createEventDispatcher, onDestroy, onMount } from "svelte";
     import { user } from "../../stores/user.store";
     import { SocketEvent } from "../../shared/SocketEvent";
     import { MessageType } from "../../shared/MessageType";
+    import type { Username } from "../../shared/message/Username";
 
     let dispatch = createEventDispatcher<{ message: TextMessage }>();
 
     let text: string = "";
     let inputEl: HTMLInputElement;
-    let myUsername: string;
-    user.subscribe((user) => (myUsername = user?.username));
+    let myUsername: Username;
+    user.subscribe((u) => (myUsername = u?.name ?? ""));
 
     /**
      * Raises the message event

@@ -1,20 +1,20 @@
 import { Manager, Socket } from "socket.io-client";
-import { mergeScan, Subject } from "rxjs";
+import { Subject } from "rxjs";
 import { get } from "svelte/store";
 import { SocketEvent } from "../../shared/SocketEvent";
 import { socketIoServerConnection } from "../../stores/config.store";
-import type { TextMessage } from "../../shared/messages/content/TextMessage";
-import type { SystemInfoMessage } from "../../shared/messages/system/SystemInfoMessage";
-import type { SystemWarningMessage } from "../../shared/messages/system/SystemWarningMessage";
-import type { SystemErrorMessage } from "../../shared/messages/system/SystemErrorMessage";
-import type { LoginMessage } from "../../shared/messages/login/LoginMessage";
-import type { LogoutMessage } from "../../shared/messages/logout/LogoutMessage";
-import type { UsernameAcceptMessage } from "../../shared/messages/login/UsernameAcceptMessage";
-import type { UsernameTakenMessage } from "../../shared/messages/login/UsernameTakenMessage";
 import { MessageType } from "../../shared/MessageType";
-import type { Message } from "../../shared/messages/Message";
-import type { MessageListLimit } from "src/shared/messages/message-list/MessageListLimit";
-import type { OnlineUserList } from "src/shared/messages/online-user-list/OnlineUserList";
+import type { LoginMessage } from "../../shared/message/login/LoginMessage";
+import type { UsernameAcceptMessage } from "../../shared/message/login/UsernameAcceptMessage";
+import type { UsernameTakenMessage } from "../../shared/message/login/UsernameTakenMessage";
+import type { OnlineUserList } from "../../shared/message/online-user-list/OnlineUserList";
+import type { LogoutMessage } from "../../shared/message/logout/LogoutMessage";
+import type { TextMessage } from "../../shared/message/content/TextMessage";
+import type { SystemInfoMessage } from "../../shared/message/system/SystemInfoMessage";
+import type { SystemWarningMessage } from "../../shared/message/system/SystemWarningMessage";
+import type { SystemErrorMessage } from "../../shared/message/system/SystemErrorMessage";
+import type { MessageListLimit } from "../../shared/message/message-list/MessageListLimit";
+import type { Message } from "../../shared/message/Message";
 
 class ChatService {
 

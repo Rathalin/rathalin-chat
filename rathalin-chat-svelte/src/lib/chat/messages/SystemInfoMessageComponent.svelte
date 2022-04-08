@@ -4,7 +4,7 @@
         messageFadeInDuration,
     } from "../../../stores/config.store";
     import { fly } from "svelte/transition";
-    import type { SystemInfoMessage } from "../../../shared/messages/system/SystemInfoMessage";
+    import type { SystemInfoMessage } from "../../../shared/message/system/SystemInfoMessage";
 
     export let infoMessage: SystemInfoMessage;
 

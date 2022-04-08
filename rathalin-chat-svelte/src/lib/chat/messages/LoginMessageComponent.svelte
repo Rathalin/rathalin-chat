@@ -7,7 +7,7 @@
     import { getRandomInt } from "../../../util/random";
 
     import { translate } from "../../../services/i18n/i18n.service";
-    import type { LoginMessage } from "../../../shared/messages/login/LoginMessage";
+    import type { LoginMessage } from "../../../shared/message/login/LoginMessage";
 
     export let loginMessage: LoginMessage;
     const messageTranslateKey: string = `messages.login.${getRandomInt(

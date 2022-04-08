@@ -1,37 +1,38 @@
-import type { LoginMessage } from "./shared/message/login/LoginMessage";
-import type { LogoutMessage } from "./shared/message/logout/LogoutMessage";
-import type { Message } from "./shared/message/Message";
-import type { UsernameAcceptMessage } from "./shared/message/login/UsernameAcceptMessage";
-import type { UsernameTakenMessage } from "./shared/message/login/UsernameTakenMessage";
+import type { LoginMessage } from "../shared/message/login/LoginMessage";
+import type { LogoutMessage } from "../shared/message/logout/LogoutMessage";
+import type { Message } from "../shared/message/Message";
+import type { UsernameAcceptMessage } from "../shared/message/login/UsernameAcceptMessage";
+import type { UsernameTakenMessage } from "../shared/message/login/UsernameTakenMessage";
 import { Server, Socket } from "socket.io";
-import type { TextMessage } from "./shared/message/content/TextMessage";
-import { MessageType } from "./shared/MessageType";
+import type { TextMessage } from "../shared/message/content/TextMessage";
+import { MessageType } from "../shared/MessageType";
 import type { Client } from "./interface/Client";
-import { SocketEvent } from "./shared/SocketEvent";
-import type { MessageListLimit } from "./shared/message/message-list/MessageListLimit";
-import type { OnlineUserList } from "./shared/message/online-user-list/OnlineUserList";
-import type { Chatroom } from "./shared/message/Chatroom";
-import type { NewChatroom } from "./shared/message/room/NewChatroom";
-import type { ChatroomTaken } from "./shared/message/room/ChatroomTaken";
-import type { NewChatroomAccept } from "./shared/message/room/NewChatroomAccept";
-import type { JoinChatroom } from "./shared/message/room/JoinChatroom";
-import type { JoinChatroomAccept } from "./shared/message/room/JoinChatroomAccept";
-import type { ChatroomNotExisting } from "./shared/message/room/ChatroomNotExisting";
-import type { ClientInChatroom } from "./interface/ClientInChatroom";
-import { ClientManager } from "./ClientManager";
-import { MessageManager } from "./MessageManager";
+import { SocketEvent } from "../shared/SocketEvent";
+import type { MessageListLimit } from "../shared/message/message-list/MessageListLimit";
+import type { OnlineUserList } from "../shared/message/online-user-list/OnlineUserList";
+import type { Chatroom } from "../shared/message/Chatroom";
+import type { NewChatroom } from "../shared/message/room/NewChatroom";
+import type { ChatroomTaken } from "../shared/message/room/ChatroomTaken";
+import type { NewChatroomAccept } from "../shared/message/room/NewChatroomAccept";
+import type { JoinChatroom } from "../shared/message/room/JoinChatroom";
+import type { JoinChatroomAccept } from "../shared/message/room/JoinChatroomAccept";
+import type { ChatroomNotExisting } from "../shared/message/room/ChatroomNotExisting";
+import { ClientManager } from "./managers/ClientManager";
+import { MessageManager } from "./managers/MessageManager";
 
 
 export class ChatServer {
+
+    // Constructor
+
+    // Members and Properties
 
     private server: Server | null = null;
     private readonly clientManager: ClientManager = new ClientManager();
     private readonly messageManager: MessageManager = new MessageManager();
 
 
-    constructor() {
-    }
-
+    // Public Methods
 
     public listen(socketIOPort: number, corsPort: number | "*"): void {
         console.log(`Listening on port ${socketIOPort}`);
@@ -45,6 +46,8 @@ export class ChatServer {
         this.initConnections();
     }
 
+
+    // Private Methods
 
     private initConnections(): void {
         if (this.server == null) return;

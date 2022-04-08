@@ -4,7 +4,7 @@
         messageFadeInDuration,
     } from "../../../stores/config.store";
     import { fly } from "svelte/transition";
-    import type { SystemErrorMessage } from "../../../shared/messages/system/SystemErrorMessage";
+    import type { SystemErrorMessage } from "../../../shared/message/system/SystemErrorMessage";
 
     export let errorMessage: SystemErrorMessage;
 

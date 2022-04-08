@@ -3,7 +3,7 @@
 </script>
 
 {#if $loggedIn}
-    <div>{$user.username}</div>
+    <div>{$user?.name}</div>
 {/if}
 
 <style lang="scss">

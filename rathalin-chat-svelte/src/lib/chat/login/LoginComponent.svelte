@@ -8,8 +8,8 @@
     import LoginLoadComponent from "./LoginLoadComponent.svelte";
     import { translate } from "../../../services/i18n/i18n.service";
     import { SocketEvent } from "../../../shared/SocketEvent";
-    import type { UsernameAcceptMessage } from "../../../shared/messages/login/UsernameAcceptMessage";
-    import type { UsernameTakenMessage } from "../../../shared/messages/login/UsernameTakenMessage";
+    import type { UsernameAcceptMessage } from "../../../shared/message/login/UsernameAcceptMessage";
+    import type { UsernameTakenMessage } from "../../../shared/message/login/UsernameTakenMessage";
     import { MessageType } from "../../../shared/MessageType";
 
     const subscriptions: Subscription[] = [];
@@ -29,10 +29,9 @@
             }),
             chatService.onLoginUsernameAccept.subscribe(
                 (acceptMessage: UsernameAcceptMessage) => {
-                    const { username } = acceptMessage;
-                    console.log(`Username ${username} accepted!`);
-                    $user = { username };
-                    $lastUsername = username;
+                    const { username: usrname } = acceptMessage;
+                    console.log(`Username ${usrname} accepted!`);
+                    $user = { name: usrname };
                     $loggedIn = true;
                     loginPending = false;
                 }

@@ -6,8 +6,8 @@
         messageFadeInDuration,
     } from "../../../stores/config.store";
     import { fly } from "svelte/transition";
-    import type { TextMessage } from "../../../shared/messages/content/TextMessage";
     import { onlineUserNames } from "../../../stores/user.store";
+    import type { TextMessage } from "../../../shared/message/content/TextMessage";
 
     export let textMessage: TextMessage;
     export let isMyMessage: boolean;
@@ -110,7 +110,7 @@
             }
 
             .content {
-                margin-top: -5px;
+                margin-top: -2px;
             }
 
             &::before {

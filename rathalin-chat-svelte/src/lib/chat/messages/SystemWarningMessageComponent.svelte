@@ -4,7 +4,7 @@
         messageFadeInDuration,
     } from "../../../stores/config.store";
     import { fly } from "svelte/transition";
-    import type { SystemWarningMessage } from "../../../shared/messages/system/SystemWarningMessage";
+    import type { SystemWarningMessage } from "../../../shared/message/system/SystemWarningMessage";
 
     export let warningMessage: SystemWarningMessage;
 
