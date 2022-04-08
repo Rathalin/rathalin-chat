@@ -1,3 +1,4 @@
+// Each MessageType shall reference a message
 export enum MessageType {
     LOGIN = "LOGIN",
     LOGOUT = "LOGOUT",
@@ -7,6 +8,9 @@ export enum MessageType {
     MESSAGE_LIST_LIMIT = "MESSAGE_LIST_LIMIT",
     MESSAGE_LIST = "MESSAGE_LIST",
     ONLINE_USERS_LIST = "ONLINE_USERS_LIST",
+    NEW_CHATROOM = "NEW_CHATROOM",
+    NEW_CHATROOM_ACCEPT = "NEW_CHATROOM_ACCEPT",
+    CHATROOM_TAKEN = "CHATROOM_TAKEN",
     TEXT = "TEXT",
     USERNAME_TAKEN = "USERNAME_TAKEN",
     USERNAME_ACCEPT = "USERNAME_ACCEPT",
