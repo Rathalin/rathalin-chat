@@ -2,9 +2,9 @@
     import {
         messageFadeInPosition,
         messageFadeInDuration,
-    } from "../../../stores/config.store";
+    } from "$lib/stores/config.store";
     import { fly } from "svelte/transition";
-    import type { SystemWarningMessage } from "../../../shared/message/system/SystemWarningMessage";
+    import type { SystemWarningMessage } from "$lib/shared/message/system/SystemWarningMessage";
 
     export let warningMessage: SystemWarningMessage;
 

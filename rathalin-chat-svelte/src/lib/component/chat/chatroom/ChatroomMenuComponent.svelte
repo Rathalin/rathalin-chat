@@ -2,6 +2,7 @@
     import ErrorComponent from "$lib/component/alert/ErrorComponent.svelte";
     import { translate } from "$lib/services/i18n/i18n.service";
     import { chatService } from "$lib/services/chat/chat.service";
+    import { chatroom } from "$lib/stores/user.store";
 
     let joinRoomInput: string = "";
     let roomMaxLength: number = 30;
@@ -14,12 +15,21 @@
     }
 
     async function join(): Promise<void> {
+        console.log("joining");
         const room: string = joinRoomInput.trim();
         try {
+            console.log("Before chatroomExists?");
             if (!(await chatService.chatroomExists(room))) {
+                console.log("Chatroom doesn't exist");
                 await chatService.createChatroom(room);
+                console.log("After createChatroom");
             }
-            // chatService.joinChatroom();
+            console.log("Before joining chatroom");
+            if (await chatService.joinChatroom(room)) {
+                $chatroom = room;
+            } else {
+                console.error("Joining chatroom failed");
+            }
         } catch (e: unknown) {
             console.error(e);
         }

@@ -5,7 +5,7 @@
   "main": "src/index.ts",
   "scripts": {
     "build": "tsc",
-    "share": "rm -r ../rathalin-chat-svelte/src/shared && cp -r ./src/shared/ ../rathalin-chat-svelte/src/",
+    "share": "rm -r ../rathalin-chat-svelte/src/lib/shared && cp -r ./src/shared/ ../rathalin-chat-svelte/src/lib/",
     "start": "node dist/index.js",
     "dev": "nodemon -r dotenv/config ./src/index.ts",
     "test": "jest --watchAll --verbose"

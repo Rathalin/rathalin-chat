@@ -1,19 +1,16 @@
 <script lang="ts">
+    import { translate } from "$lib/services/i18n/i18n.service";
+    import type { LoginMessage } from "$lib/shared/message/login/LoginMessage";
+    import { getRandomInt } from "$lib/util/random";
     import {
         messageFadeInPosition,
         messageFadeInDuration,
-    } from "../../../stores/config.store";
-    import { fly } from "svelte/transition";
-    import { getRandomInt } from "../../../util/random";
+    } from "$lib/stores/config.store";
 
-    import { translate } from "../../../services/i18n/i18n.service";
-    import type { LoginMessage } from "../../../shared/message/login/LoginMessage";
+    import { fly } from "svelte/transition";
 
     export let loginMessage: LoginMessage;
-    const messageTranslateKey: string = `messages.login.${getRandomInt(
-        1,
-        10
-    )}`;
+    const messageTranslateKey: string = `messages.login.${getRandomInt(1, 10)}`;
 
     $: timestamp = loginMessage.date.toLocaleTimeString("at-AT", {
         hour: "2-digit",

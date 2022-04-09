@@ -2,11 +2,11 @@
     import {
         messageFadeInPosition,
         messageFadeInDuration,
-    } from "../../../stores/config.store";
+    } from "$lib/stores/config.store";
     import { fly } from "svelte/transition";
-    import { getRandomInt } from "../../../util/random";
-    import { translate } from "../../../services/i18n/i18n.service";
-    import type { LogoutMessage } from "../../../shared/message/logout/LogoutMessage";
+    import { getRandomInt } from "$lib/util/random";
+    import { translate } from "$lib/services/i18n/i18n.service";
+    import type { LogoutMessage } from "$lib/shared/message/logout/LogoutMessage";
 
     export let logoutMessage: LogoutMessage;
     const messageTranslateKey: string = `messages.logout.${getRandomInt(

@@ -15,9 +15,6 @@ import { SocketEvent } from "$lib/shared/SocketEvent";
 import type { Chatroom } from "$lib/shared/message/Chatroom";
 import type { ChatroomMessage } from "$lib/shared/message/room/ChatroomMessage";
 import { MessageType } from "$lib/shared/MessageType";
-import type { CreateChatroomAccept } from "$lib/shared/message/room/CreateChatroomAccept";
-import type { ChatroomTaken } from "$lib/shared/message/room/ChatroomTaken";
-import type { CreateChatroom } from "$lib/shared/message/room/CreateChatroom";
 import type { MessageListLimit } from "$lib/shared/message/message-list/MessageListLimit";
 import type { Message } from "$lib/shared/message/Message";
 
@@ -160,12 +157,12 @@ class ChatService {
 
     public chatroomExists(room: Chatroom): Promise<boolean> {
         return new Promise((resolve) => {
-            this._socket.on(SocketEvent.CLIENT_REQUESTS_CHATROOM_EXISTING, (chatroomExistsResponse: boolean) => {
-                resolve(chatroomExistsResponse);
+            this._socket.on(SocketEvent.CLIENT_REQUESTS_CHATROOM_EXISTING, () => {
+                resolve(true);
                 this._socket.removeListener(SocketEvent.CLIENT_REQUESTS_CHATROOM_EXISTING);
             });
-            this._socket.on(SocketEvent.SERVER_RESPONDS_CHATROOM_NOT_EXISTING, (chatroomExistsResponse: boolean) => {
-                resolve(chatroomExistsResponse);
+            this._socket.on(SocketEvent.SERVER_RESPONDS_CHATROOM_NOT_EXISTING, () => {
+                resolve(false);
                 this._socket.removeListener(SocketEvent.SERVER_RESPONDS_CHATROOM_NOT_EXISTING);
             });
             const chatroomMessage: ChatroomMessage = {
@@ -179,23 +176,23 @@ class ChatService {
     }
 
 
-    public createChatroom(room: Chatroom): Promise<CreateChatroomAccept> {
-        return new Promise((resolve, reject) => {
-            this._socket.on(SocketEvent.SERVER_RESPONDS_CREATE_CHATROOM_ACCEPT, (createChatroomAccept: CreateChatroomAccept) => {
-                resolve(createChatroomAccept);
+    public createChatroom(room: Chatroom): Promise<boolean> {
+        return new Promise((resolve) => {
+            this._socket.on(SocketEvent.SERVER_RESPONDS_CREATE_CHATROOM_ACCEPT, () => {
+                resolve(true);
                 this._socket.removeListener(SocketEvent.SERVER_RESPONDS_CREATE_CHATROOM_ACCEPT);
             });
-            this._socket.on(SocketEvent.SERVER_RESPONDS_CREATE_CHATROOM_TAKEN, (chatroomTaken: ChatroomTaken) => {
-                reject(new Error(`Chatroom ${chatroomTaken.name} is already taken.`));
+            this._socket.on(SocketEvent.SERVER_RESPONDS_CREATE_CHATROOM_TAKEN, () => {
+                resolve(false);
                 this._socket.removeListener(SocketEvent.SERVER_RESPONDS_CREATE_CHATROOM_TAKEN);
             });
-            const createChatroom: CreateChatroom = {
+            const chatroomMessage: ChatroomMessage = {
                 event: SocketEvent.CLIENT_REQUESTS_CREATE_CHATROOM,
-                type: MessageType.CREATE_CHATROOM,
+                type: MessageType.CHATROOM,
                 date: new Date(),
-                name: room,
+                room,
             };
-            this._socket.emit(SocketEvent.CLIENT_REQUESTS_CREATE_CHATROOM, createChatroom);
+            this._socket.emit(SocketEvent.CLIENT_REQUESTS_CREATE_CHATROOM, chatroomMessage);
         });
     }
 

@@ -1,8 +1,8 @@
 <script lang="ts">
-    import LogoutComponent from "$lib/header/LogoutComponent.svelte";
     import { translate } from "$lib/services/i18n/i18n.service";
     import ChangeChatroomComponent from "./ChangeChatroomComponent.svelte";
     import LanguageSelectionComponent from "./LanguageSelectionComponent.svelte";
+    import LogoutComponent from "./LogoutComponent.svelte";
     import ProfileMenuComponent from "./ProfileMenuComponent.svelte";
 </script>
 

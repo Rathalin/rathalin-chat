@@ -4,10 +4,10 @@
     import {
         messageFadeInPosition,
         messageFadeInDuration,
-    } from "../../../stores/config.store";
+    } from "$lib/stores/config.store";
     import { fly } from "svelte/transition";
-    import { onlineUserNames } from "../../../stores/user.store";
-    import type { TextMessage } from "../../../shared/message/content/TextMessage";
+    import { onlineUserNames } from "$lib/stores/user.store";
+    import type { TextMessage } from "$lib/shared/message/content/TextMessage";
 
     export let textMessage: TextMessage;
     export let isMyMessage: boolean;
