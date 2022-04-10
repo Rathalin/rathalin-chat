@@ -1,12 +1,15 @@
 import { config } from 'dotenv';
 import { ChatServer } from './chatserver/ChatServer';
 import type { ServerConfig } from './chatserver/interface/ServerConfig';
+import { Logger } from './logger';
 
 function loadServerConfig(): ServerConfig {
 
+    const logger: Logger = new Logger("main");
+
     const errors: string[] = [];
 
-    console.log("Parsing .env");
+    logger.log("Parsing .env");
 
     const socketIoPort: number = parseInt(process.env.SOCKET_IO_PORT || '');
     if (isNaN(socketIoPort)) {
