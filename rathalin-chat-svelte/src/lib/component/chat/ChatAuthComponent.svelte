@@ -1,12 +1,16 @@
 <script lang="ts">
 	import { chatService } from "$lib/services/chat/chat.service";
 	import { socketIoServerConnection } from "$lib/stores/config.store";
-	import { connected, lastUsername, loggedIn } from "$lib/stores/user.store";
+	import {
+		chatroom,
+		connected,
+		inChatroom,
+		lastUsername,
+		loggedIn,
+	} from "$lib/stores/user.store";
 	import ChatComponent from "./ChatComponent.svelte";
 	import ChatroomMenuComponent from "./chatroom/ChatroomMenuComponent.svelte";
 	import LoginComponent from "./login/LoginComponent.svelte";
-
-	let selectedChatroom: string | null = null;
 
 	if (typeof localStorage !== "undefined") {
 		$lastUsername = localStorage.getItem("lastUsername") ?? "";
@@ -39,7 +43,7 @@
 
 {#if !$connected || !$loggedIn}
 	<LoginComponent />
-{:else if selectedChatroom == null}
+{:else if !$inChatroom}
 	<ChatroomMenuComponent />
 {:else}
 	<ChatComponent />

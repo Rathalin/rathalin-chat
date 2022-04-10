@@ -70,6 +70,25 @@ body {
 }
 
 
+.flex-row {
+    display: flex;
+    flex-direction: row;
+}
+
+.flex-row.gap {
+    gap: 1em;
+}
+
+.flex-column {
+    display: flex;
+    flex-direction: column;
+}
+
+.flex-column.gap {
+    gap: 1em;
+}
+
+
 a {
     color: var(--secondary-light);
     text-decoration: none;

@@ -54,6 +54,7 @@ class ChatService {
     }
 
     private _socket: Socket;
+    private _room: string | null = null;
 
 
     private initConnections(): void {
@@ -82,7 +83,6 @@ class ChatService {
         this._socket.on("disconnect", () => {
             this.onDisconnect.next();
         });
-
         // Login
         this._socket.on(SocketEvent.SERVER_SENDS_LOGIN, (loginMessage: LoginMessage): void => {
             this.setDateFromDateString(loginMessage);
@@ -136,7 +136,6 @@ class ChatService {
             this.setDateFromDateString(systemErrorMessage);
             this.onSystemError.next(systemErrorMessage);
         });
-
     }
 
 
@@ -272,6 +271,9 @@ class ChatService {
     public isTextMessage(message: Message): message is TextMessage {
         return message.type === MessageType.TEXT;
     }
+
+
+    // Private Methods
 }
 
 

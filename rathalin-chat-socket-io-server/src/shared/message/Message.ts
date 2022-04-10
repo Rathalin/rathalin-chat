@@ -1,8 +1,9 @@
+import type { ClientEvent } from "../ClientEvent";
 import type { MessageType } from "../MessageType";
-import type { SocketEvent } from "../SocketEvent";
+import type { ServerEvent } from "../ServerEvent";
 
 export interface Message {
-    event: SocketEvent;
+    event: ClientEvent | ServerEvent;
     type: MessageType;
     date: Date;
 }

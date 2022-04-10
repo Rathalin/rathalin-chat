@@ -1,10 +1,17 @@
 <script lang="ts">
-    import { loggedIn, user } from "$lib/stores/user.store";
+    import { chatroom, loggedIn, user } from "$lib/stores/user.store";
 </script>
 
-{#if $loggedIn}
-    <div>{$user?.name}</div>
-{/if}
+<div class="flex-row gap">
+    {#if $loggedIn}
+        <div>{$user?.name}</div>
+    {/if}
+    {#if $chatroom}
+        <div>{$chatroom}</div>
+    {:else}
+        <div>No Room</div>
+    {/if}
+</div>
 
 <style lang="scss">
 </style>

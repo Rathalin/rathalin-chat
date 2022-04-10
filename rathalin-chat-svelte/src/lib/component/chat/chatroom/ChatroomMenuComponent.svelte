@@ -15,23 +15,20 @@
     }
 
     async function join(): Promise<void> {
-        console.log("joining");
+        console.log("join()");
         const room: string = joinRoomInput.trim();
-        try {
-            console.log("Before chatroomExists?");
-            if (!(await chatService.chatroomExists(room))) {
-                console.log("Chatroom doesn't exist");
-                await chatService.createChatroom(room);
-                console.log("After createChatroom");
-            }
-            console.log("Before joining chatroom");
-            if (await chatService.joinChatroom(room)) {
-                $chatroom = room;
-            } else {
-                console.error("Joining chatroom failed");
-            }
-        } catch (e: unknown) {
-            console.error(e);
+        console.log("Before chatroomExists?");
+        if (!(await chatService.chatroomExists(room))) {
+            console.log("Chatroom doesn't exist");
+            await chatService.createChatroom(room);
+            console.log("After createChatroom");
+        }
+        console.log("Before joining chatroom");
+        if (await chatService.joinChatroom(room)) {
+            console.log("After joining chatroom", room);
+            $chatroom = room;
+        } else {
+            console.error("Joining chatroom failed");
         }
     }
 </script>

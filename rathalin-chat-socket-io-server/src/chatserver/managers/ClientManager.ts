@@ -2,8 +2,8 @@ import type { Socket } from "socket.io";
 import type { Client } from "../interface/Client";
 import type { ClientInChatroom } from "../interface/ClientInChatroom";
 import type { User } from "../interface/User";
-import type { Chatroom } from "../../shared/message/Chatroom";
-import type { Username } from "../../shared/message/Username";
+import type { Username } from "../../shared/message/user/Username";
+import type { Chatroom } from "src/shared/message/room/Chatroom";
 
 export class ClientManager {
 
@@ -95,14 +95,28 @@ export class ClientManager {
     }
 
 
-    public addClientToChatroom(client: Client, room: Chatroom): void {
+    public addClientToChatroom(socket: Socket, room: Chatroom): void {
         if (!this.chatroomExists(room)) {
             throw new Error(`Chatroom ${room} does not exist.`);
         }
         this._clientsInChatrooms.push({
-            client,
+            client: this.getClient(socket),
             chatroom: room,
         });
+    }
+
+
+    public getChatroomsOfClient(socket: Socket): Chatroom[] {
+        return this._clientsInChatrooms
+            .filter(clientInRoom => clientInRoom.client.socket === socket)
+            .map(clientInRoom => clientInRoom.chatroom);
+    }
+
+
+    public getClientsOfChatroom(room: Chatroom): Client[] {
+        return this._clientsInChatrooms
+            .filter(clientInChatroom => clientInChatroom.chatroom === room)
+            .map(clientInChatroom => clientInChatroom.client);
     }
 
 
