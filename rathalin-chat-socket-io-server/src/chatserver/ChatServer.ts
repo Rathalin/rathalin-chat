@@ -16,6 +16,12 @@ import { MessageManager } from "./managers/MessageManager";
 import type { ChatroomMessage } from "src/shared/message/room/ChatroomMessage";
 
 
+function log(message: string, event?: string): void {
+    const context: string = event ?? "CORE"
+    const serverTag: string = "chat-server";
+    console.log(`[${new Date().toLocaleTimeString()}][${serverTag.toUpperCase()}][${context.toUpperCase()}] ${message}`);
+}
+
 export class ChatServer {
 
     // Constructor
@@ -30,14 +36,14 @@ export class ChatServer {
     // Public Methods
 
     public listen(socketIOPort: number, corsPort: number | "*"): void {
-        console.log(`Listening on port ${socketIOPort}`);
+        log(`Listening on port ${socketIOPort}`);
         const corsOrigin: string = corsPort === "*" ? corsPort : `http://localhost:${corsPort}`;
         this.server = new Server(socketIOPort, {
             cors: {
                 origin: corsOrigin,
             }
         });
-        console.log(`Allow CORS of origin ${corsOrigin}`);
+        log(`Allow CORS of origin ${corsOrigin}`);
         this.initConnections();
     }
 
@@ -49,7 +55,7 @@ export class ChatServer {
 
         this.server.on("connection", socket => {
             this.clientManager.addClient(socket);
-            console.log(`+ User (${this.clientManager.clients.length})`);
+            log(`+ User (${this.clientManager.clients.length})`, "connect");
 
             this.registerClientDisconnect(socket);
             this.registerClientRequestsLogin(socket);
@@ -66,9 +72,9 @@ export class ChatServer {
     private registerClientDisconnect(socket: Socket): void {
         socket.on("disconnect", reason => {
             const client: Client = this.clientManager.removeClient(socket);
-            console.log(`- User (${this.clientManager.clients.length})`);
+            log(`- User (${this.clientManager.clients.length})`, "disconnect");
             if (client != null) {
-                console.log(`    Logout ${JSON.stringify(client.user)}`);
+                log(`Logout ${JSON.stringify(client.user)}`, SocketEvent.SERVER_SENDS_LOGOUT);
                 if (client.user?.username?.trim().length > 0) {
                     const logoutMessage: LogoutMessage = {
                         event: SocketEvent.SERVER_SENDS_LOGOUT,
@@ -102,7 +108,7 @@ export class ChatServer {
                     username: trimmedUsername,
                 };
                 socket.emit(SocketEvent.SERVER_RESPONDS_LOGIN_USERNAME_TAKEN, takenMessage);
-                console.log(`  ! Taken Login "${takenMessage.username}"`);
+                log(`Taken Login "${takenMessage.username}"`, SocketEvent.SERVER_RESPONDS_LOGIN_USERNAME_TAKEN);
             } else {
                 const acceptMessage: UsernameAcceptMessage = {
                     event: SocketEvent.SERVER_RESPONDS_LOGIN_USERNAME_ACCEPT,
@@ -112,7 +118,7 @@ export class ChatServer {
                 };
                 this.clientManager.setUsernameOfClient(socket, trimmedUsername);
                 socket.emit(SocketEvent.SERVER_RESPONDS_LOGIN_USERNAME_ACCEPT, acceptMessage);
-                console.log(`    Accept Login "${acceptMessage.username}"`);
+                log(`Accept Login "${acceptMessage.username}"`, SocketEvent.SERVER_RESPONDS_LOGIN_USERNAME_ACCEPT);
                 const loginMessage: LoginMessage = {
                     event: SocketEvent.SERVER_SENDS_LOGIN,
                     type: MessageType.LOGIN,
@@ -162,8 +168,10 @@ export class ChatServer {
     public registerClientRequestsChatroomExisting(socket: Socket): void {
         socket.on(SocketEvent.CLIENT_REQUESTS_CHATROOM_EXISTING, (chatroomMessage: ChatroomMessage) => {
             if (this.clientManager.chatroomExists(chatroomMessage.room)) {
+                log(`Sending chatroom "${chatroomMessage.room}" does not exist.`, SocketEvent.SERVER_RESPONDS_CHATROOM_EXISTING);
                 socket.emit(SocketEvent.SERVER_RESPONDS_CHATROOM_EXISTING);
             } else {
+                log(`Sending chatroom "${chatroomMessage.room}" does exist.`, SocketEvent.SERVER_RESPONDS_CHATROOM_NOT_EXISTING);
                 socket.emit(SocketEvent.SERVER_RESPONDS_CHATROOM_NOT_EXISTING);
             }
         });
@@ -175,9 +183,11 @@ export class ChatServer {
             if (!this.clientManager.authUser(socket)) return;
             const room: Chatroom = chatroomMessage.room.trim();
             if (this.clientManager.chatroomExists(room)) {
+                log(`Sending chatroom "${chatroomMessage.room}" can't be created.`, SocketEvent.SERVER_RESPONDS_CREATE_CHATROOM_TAKEN);
                 socket.emit(SocketEvent.SERVER_RESPONDS_CREATE_CHATROOM_TAKEN);
             } else {
                 this.clientManager.addChatroom(room);
+                log(`Sending chatroom "${chatroomMessage.room}" was created.`, SocketEvent.SERVER_RESPONDS_CREATE_CHATROOM_ACCEPT);
                 socket.emit(SocketEvent.SERVER_RESPONDS_CREATE_CHATROOM_ACCEPT);
             }
         });
@@ -190,8 +200,10 @@ export class ChatServer {
             const room: Chatroom = chatroomMessage.room.trim();
             if (this.clientManager.chatroomExists(room)) {
                 this.clientManager.addClientToChatroom(this.clientManager.getClient(socket), room);
+                log(`Sending join chatroom "${chatroomMessage.room}" accept.`, SocketEvent.SERVER_RESPONDS_JOIN_CHATROOM_ACCEPT);
                 socket.emit(SocketEvent.SERVER_RESPONDS_JOIN_CHATROOM_ACCEPT);
             } else {
+                log(`Sending join chatroom "${chatroomMessage.room}" not accept.`, SocketEvent.SERVER_RESPONDS_JOIN_CHATROOM_NOT_EXISTING);
                 socket.emit(SocketEvent.SERVER_RESPONDS_JOIN_CHATROOM_NOT_EXISTING);
             }
         });
@@ -206,7 +218,7 @@ export class ChatServer {
         } else {
             messages = existingMessage;
         }
-        console.log(`  Sending message in sequence (${existingMessage.length})`);
+        log(`Sending message in sequence (${existingMessage.length})`, "SERVER_SENDS_MESSAGES");
         messages
             .filter(msg => msg.type === MessageType.TEXT)
             .forEach(msg => socket.emit(msg.event, msg));
@@ -228,7 +240,7 @@ export class ChatServer {
             date: new Date(),
             users: this.clientManager.clients.map(c => c.user.username),
         };
+        log(`Sending online users (${onlineUsers.users.length})`, SocketEvent.SERVER_RESPONDS_ONLINE_USERS);
         socket.emit(SocketEvent.SERVER_RESPONDS_ONLINE_USERS, onlineUsers);
     }
-
 }
