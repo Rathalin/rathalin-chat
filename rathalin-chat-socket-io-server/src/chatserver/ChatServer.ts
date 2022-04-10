@@ -1,19 +1,18 @@
-import type { LoginMessage } from "../shared/message/user/UsernameMessagessage";
-import type { LogoutMessage } from "../shared/message/logout/LogoutMessage";
 import type { Message } from "../shared/message/Message";
-import type { UsernameAcceptMessage } from "../shared/message/login/UsernameAcceptMessage";
-import type { UsernameTakenMessage } from "../shared/message/login/UsernameTakenMessage";
 import { Server, Socket } from "socket.io";
 import type { TextMessage } from "../shared/message/content/TextMessage";
 import { MessageType } from "../shared/MessageType";
 import type { Client } from "./interface/Client";
-import { SocketEvent } from "../shared/SocketEvent";
-import type { MessageListLimit } from "../shared/message/message-list/MessageListLimit";
-import type { OnlineUserList } from "../shared/message/user/UsernameList";
-import type { Chatroom } from "../shared/message/room/Chatroomtroom";
 import { ClientManager } from "./managers/ClientManager";
 import { MessageManager } from "./managers/MessageManager";
 import type { ChatroomMessage } from "src/shared/message/room/ChatroomMessage";
+import { ServerEvent } from "src/shared/ServerEvent";
+import type { UsernameMessage } from "src/shared/message/user/UsernameMessage";
+import { ClientEvent } from "src/shared/ClientEvent";
+import type { Username } from "src/shared/message/user/Username";
+import type { Chatroom } from "src/shared/message/room/Chatroom";
+import type { MessageListMessage } from "src/shared/message/content/MessageList";
+import type { UsernameListMessage } from "src/shared/message/user/UsernameList";
 
 
 function log(message: string, event?: string): void {
@@ -71,16 +70,16 @@ export class ChatServer {
             const client: Client = this.clientManager.removeClient(socket);
             log(`- User (${this.clientManager.clients.length})`, "disconnect");
             if (client != null) {
-                log(`Logout ${JSON.stringify(client.user)}`, SocketEvent.SERVER_SENDS_LOGOUT);
+                log(`Logout ${JSON.stringify(client.user)}`, ServerEvent.SEND_LOGOUT);
                 if (client.user?.username?.trim().length > 0) {
-                    const logoutMessage: LogoutMessage = {
-                        event: SocketEvent.SERVER_SENDS_LOGOUT,
-                        type: MessageType.LOGOUT,
+                    const usernameMessage: UsernameMessage = {
+                        event: ServerEvent.SEND_LOGOUT,
+                        type: MessageType.USERNAME,
                         username: client.user.username,
-                        date: new Date(),
+                        date: new Date().toString(),
                     };
-                    socket.broadcast.emit(SocketEvent.SERVER_SENDS_LOGOUT, logoutMessage);
-                    this.messageManager.messages.push(logoutMessage);
+                    socket.broadcast.emit(ServerEvent.SEND_LOGOUT, usernameMessage);
+                    this.messageManager.messages.push(usernameMessage);
                 }
             }
         });
@@ -90,41 +89,27 @@ export class ChatServer {
 
 
     private registerClientRequestsLogin(socket: Socket): void {
-        socket.on(SocketEvent.CLIENT_REQUESTS_LOGIN, (clientLoginMessage: LoginMessage): void => {
-            if (clientLoginMessage.username.trim().length === 0) return;
-
+        socket.on(ClientEvent.REQUEST_LOGIN, (usernameMessage: UsernameMessage): void => {
             const usernameMaxLength: number = 100;
-            const trimmedUsername: string = clientLoginMessage.username.trim().substring(0, usernameMaxLength);
-            if (trimmedUsername.length === 0) return;
+            const username: Username = usernameMessage.username.trim().substring(0, usernameMaxLength);
+            if (username.length === 0) return;
 
-            if (this.clientManager.usernameTaken(trimmedUsername)) {
-                const takenMessage: UsernameTakenMessage = {
-                    event: SocketEvent.SERVER_RESPONDS_LOGIN_USERNAME_TAKEN,
-                    type: MessageType.USERNAME_TAKEN,
-                    date: new Date(),
-                    username: trimmedUsername,
-                };
-                socket.emit(SocketEvent.SERVER_RESPONDS_LOGIN_USERNAME_TAKEN, takenMessage);
-                log(`Taken Login "${takenMessage.username}"`, SocketEvent.SERVER_RESPONDS_LOGIN_USERNAME_TAKEN);
+            if (this.clientManager.usernameTaken(username)) {
+                socket.emit(ServerEvent.RESPONSE_LOGIN_USERNAME_TAKEN);
+                log(`Taken Login "${username}"`, ServerEvent.RESPONSE_LOGIN_USERNAME_TAKEN);
             } else {
-                const acceptMessage: UsernameAcceptMessage = {
-                    event: SocketEvent.SERVER_RESPONDS_LOGIN_USERNAME_ACCEPT,
-                    type: MessageType.USERNAME_ACCEPT,
-                    date: new Date(),
-                    username: trimmedUsername,
+                this.clientManager.setUsernameOfClient(socket, username);
+                socket.emit(ServerEvent.RESPONSE_LOGIN_USERNAME_ACCEPT);
+                log(`Accept Login "${username}"`, ServerEvent.RESPONSE_LOGIN_USERNAME_ACCEPT);
+                const loginMessage: UsernameMessage = {
+                    event: ServerEvent.SEND_LOGIN,
+                    type: MessageType.USERNAME,
+                    date: new Date().toString(),
+                    username,
                 };
-                this.clientManager.setUsernameOfClient(socket, trimmedUsername);
-                socket.emit(SocketEvent.SERVER_RESPONDS_LOGIN_USERNAME_ACCEPT, acceptMessage);
-                log(`Accept Login "${acceptMessage.username}"`, SocketEvent.SERVER_RESPONDS_LOGIN_USERNAME_ACCEPT);
-                const loginMessage: LoginMessage = {
-                    event: SocketEvent.SERVER_SENDS_LOGIN,
-                    type: MessageType.LOGIN,
-                    date: new Date(),
-                    username: trimmedUsername,
-                };
-                this.clientManager.addUserToClient(socket, { username: trimmedUsername });
+                this.clientManager.addUserToClient(socket, { username });
                 this.messageManager.addMessage(loginMessage);
-                socket.broadcast.emit(SocketEvent.SERVER_SENDS_LOGIN, loginMessage);
+                socket.broadcast.emit(ServerEvent.SEND_LOGIN, loginMessage);
             }
         });
     }
@@ -139,31 +124,31 @@ export class ChatServer {
 
 
     private registerClientSendsTextMessage(socket: Socket, room: Chatroom): void {
-        socket.on(SocketEvent.CLIENT_SENDS_TEXT_MESSAGE, (clientTextMessage: TextMessage) => {
+        socket.on(ClientEvent.SEND_TEXT_MESSAGE, (clientTextMessage: TextMessage) => {
             if (!this.clientManager.authUser(socket)) return;
             const textMessage: TextMessage = {
-                event: SocketEvent.SERVER_SENDS_TEXT_MESSAGE,
+                event: ServerEvent.SEND_TEXT_MESSAGE,
                 type: MessageType.TEXT,
-                date: new Date(),
+                date: clientTextMessage.date,
                 sender: clientTextMessage.sender,
                 text: clientTextMessage.text,
             };
-            socket.broadcast.to(room).emit(SocketEvent.SERVER_SENDS_TEXT_MESSAGE, textMessage);
+            socket.broadcast.to(room).emit(ServerEvent.SEND_TEXT_MESSAGE, textMessage);
             this.messageManager.addMessage(textMessage);
         });
     }
 
 
     private registerClientRequestsMessages(socket: Socket, room: Chatroom): void {
-        socket.on(SocketEvent.CLIENT_REQUESTS_MESSAGE_LIST, (limit: MessageListLimit) => {
+        socket.on(ClientEvent.REQUEST_MESSAGE_LIST, (limit?: number) => {
             if (!this.clientManager.authUser(socket)) return;
-            this.sendMessageListToClient(socket, room, limit.limit);
+            this.sendMessageListToClient(socket, room, limit);
         });
     }
 
 
     private registerClientRequestsOnlineUsers(socket: Socket, room: Chatroom): void {
-        socket.on(SocketEvent.CLIENT_REQUESTS_ONLINE_USERS, () => {
+        socket.on(ClientEvent.REQUEST_ONLINE_USERS, () => {
             if (!this.clientManager.authUser(socket)) return;
             this.sendOnlineUsersToClient(socket, room);
         });
@@ -176,47 +161,48 @@ export class ChatServer {
 
 
     public registerClientRequestsChatroomExisting(socket: Socket): void {
-        socket.on(SocketEvent.CLIENT_REQUESTS_CHATROOM_EXISTS, (chatroomMessage: ChatroomMessage) => {
+        socket.on(ClientEvent.REQUEST_CHATROOM_EXISTS, (chatroomMessage: ChatroomMessage) => {
             if (this.clientManager.chatroomExists(chatroomMessage.room)) {
-                log(`Sending chatroom "${chatroomMessage.room}" does not exist.`, SocketEvent.SERVER_RESPONDS_CHATROOM_EXISTS);
-                socket.emit(SocketEvent.SERVER_RESPONDS_CHATROOM_EXISTS);
+                socket.emit(ServerEvent.RESPONSE_CHATROOM_EXISTS);
+                log(`Chatroom "${chatroomMessage.room}" does not exist.`, ServerEvent.RESPONSE_CHATROOM_EXISTS);
             } else {
-                log(`Sending chatroom "${chatroomMessage.room}" does exist.`, SocketEvent.SERVER_RESPONDS_CHATROOM_NOT_EXISTS);
-                socket.emit(SocketEvent.SERVER_RESPONDS_CHATROOM_NOT_EXISTS);
+                socket.emit(ServerEvent.RESPONSE_CHATROOM_NOT_EXISTS);
+                log(`Chatroom "${chatroomMessage.room}" does exist.`, ServerEvent.RESPONSE_CHATROOM_NOT_EXISTS);
             }
         });
     }
 
 
     private registerClientRequestsNewChatroom(socket: Socket): void {
-        socket.on(SocketEvent.CLIENT_REQUESTS_CREATE_CHATROOM, (chatroomMessage: ChatroomMessage) => {
+        socket.on(ClientEvent.REQUEST_CREATE_CHATROOM, (chatroomMessage: ChatroomMessage) => {
             if (!this.clientManager.authUser(socket)) return;
             const room: Chatroom = chatroomMessage.room.trim();
-            if (this.clientManager.chatroomExists(room)) {
-                log(`Sending chatroom "${chatroomMessage.room}" can't be created.`, SocketEvent.SERVER_RESPONDS_CREATE_CHATROOM_TAKEN);
-                socket.emit(SocketEvent.SERVER_RESPONDS_CREATE_CHATROOM_TAKEN);
+            if (!this.clientManager.chatroomExists(room)) {
+                socket.emit(ServerEvent.RESPONSE_CREATE_CHATROOM_ACCEPT);
+                log(`Chatroom "${chatroomMessage.room}" was created.`, ServerEvent.RESPONSE_CREATE_CHATROOM_ACCEPT);
             } else {
                 this.clientManager.addChatroom(room);
-                log(`Sending chatroom "${chatroomMessage.room}" was created.`, SocketEvent.SERVER_RESPONDS_CREATE_CHATROOM_ACCEPT);
-                socket.emit(SocketEvent.SERVER_RESPONDS_CREATE_CHATROOM_ACCEPT);
+                socket.emit(ServerEvent.RESPONSE_CREATE_CHATROOM_TAKEN);
+                log(`Chatroom "${chatroomMessage.room}" not created because taken.`, ServerEvent.RESPONSE_CREATE_CHATROOM_TAKEN);
             }
         });
     }
 
 
     private registerClientRequestsJoinChatroom(socket: Socket): void {
-        socket.on(SocketEvent.CLIENT_REQUESTS_JOIN_CHATROOM, (chatroomMessage: ChatroomMessage) => {
+        socket.on(ClientEvent.REQUEST_JOIN_CHATROOM, (chatroomMessage: ChatroomMessage) => {
             if (!this.clientManager.authUser(socket)) return;
             const room: Chatroom = chatroomMessage.room.trim();
             if (this.clientManager.chatroomExists(room)) {
                 this.clientManager.addClientToChatroom(socket, room);
-                log(`Sending join chatroom "${chatroomMessage.room}" accept.`, SocketEvent.SERVER_RESPONDS_JOIN_CHATROOM_ACCEPT);
-                socket.emit(SocketEvent.SERVER_RESPONDS_JOIN_CHATROOM_ACCEPT);
+                socket.emit(ServerEvent.RESPONSE_JOIN_CHATROOM_ACCEPT);
+                log(`Join chatroom "${chatroomMessage.room}" accept.`, ServerEvent.RESPONSE_JOIN_CHATROOM_ACCEPT);
             } else {
-                log(`Sending join chatroom "${chatroomMessage.room}" not accept.`, SocketEvent.SERVER_RESPONDS_JOIN_CHATROOM_NOT_EXISTING);
-                socket.emit(SocketEvent.SERVER_RESPONDS_JOIN_CHATROOM_NOT_EXISTING);
                 socket.join(room);
                 this.registerClientToRoom(socket, room);
+                socket.emit(ServerEvent.RESPONSE_JOIN_CHATROOM_NOT_EXISTING);
+                log(`Join chatroom "${chatroomMessage.room}" not accepted, because not existing.`, ServerEvent.RESPONSE_JOIN_CHATROOM_NOT_EXISTING);
+
             }
         });
     }
@@ -231,28 +217,34 @@ export class ChatServer {
             messages = existingMessage;
         }
         log(`Sending message in sequence (${existingMessage.length})`, "SERVER_SENDS_MESSAGES");
-        messages
-            .filter(msg => msg.type === MessageType.TEXT)
-            .forEach(msg => socket.to(room).emit(msg.event, msg));
-        // Send login 
-        const loginMessage: LoginMessage = {
-            event: SocketEvent.SERVER_SENDS_LOGIN,
-            type: MessageType.LOGIN,
-            date: new Date(),
+        const allTextMessages: TextMessage[] = messages.filter(msg => msg.type === MessageType.TEXT) as TextMessage[];
+        const loginMessageOfClient: UsernameMessage = {
+            event: ServerEvent.SEND_LOGIN,
+            type: MessageType.USERNAME,
+            date: new Date().toString(),
             username: this.clientManager.getClient(socket).user.username,
         }
-        socket.to(room).emit(SocketEvent.SERVER_SENDS_LOGIN, loginMessage);
+        const messageList: MessageListMessage = {
+            event: ServerEvent.RESPONSE_MESSAGE_LIST,
+            type: MessageType.MESSAGE_LIST,
+            date: new Date().toString(),
+            messages: [
+                ...allTextMessages,
+                loginMessageOfClient
+            ],
+        }
+        socket.to(room).emit(ServerEvent.RESPONSE_MESSAGE_LIST, messageList);
     }
 
 
     private sendOnlineUsersToClient(socket: Socket, room: Chatroom): void {
-        const onlineUsers: OnlineUserList = {
-            event: SocketEvent.SERVER_RESPONDS_ONLINE_USERS,
-            type: MessageType.ONLINE_USERS_LIST,
-            date: new Date(),
+        const onlineUsersMessage: UsernameListMessage = {
+            event: ServerEvent.RESPONSE_ONLINE_USERS,
+            type: MessageType.USERNAME_LIST,
+            date: new Date().toString(),
             users: this.clientManager.clients.map(c => c.user.username),
         };
-        log(`Sending online users (${onlineUsers.users.length})`, SocketEvent.SERVER_RESPONDS_ONLINE_USERS);
-        socket.to(room).emit(SocketEvent.SERVER_RESPONDS_ONLINE_USERS, onlineUsers);
+        log(`Online users (${onlineUsersMessage.users.length})`, ServerEvent.RESPONSE_ONLINE_USERS);
+        socket.to(room).emit(ServerEvent.RESPONSE_ONLINE_USERS, onlineUsersMessage);
     }
 }

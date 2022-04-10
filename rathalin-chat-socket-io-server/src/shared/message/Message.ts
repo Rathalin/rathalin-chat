@@ -5,5 +5,5 @@ import type { ServerEvent } from "../ServerEvent";
 export interface Message {
     event: ClientEvent | ServerEvent;
     type: MessageType;
-    date: Date;
+    date: string;
 }

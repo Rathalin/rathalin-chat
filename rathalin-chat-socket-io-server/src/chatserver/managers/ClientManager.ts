@@ -9,10 +9,6 @@ export class ClientManager {
 
     // Constructor
 
-    constructor() {
-
-    }
-
     // Members and Properties
 
     private _clients: Client[] = [];
