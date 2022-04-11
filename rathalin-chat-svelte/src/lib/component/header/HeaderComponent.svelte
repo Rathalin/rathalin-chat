@@ -16,18 +16,10 @@
         </div>
         <div class="nav-content nav-right-content">
             <div />
-            <div class="vertical-center">
-                <ChangeChatroomComponent />
-            </div>
-            <div class="vertical-center">
-                <ProfileMenuComponent />
-            </div>
-            <div class="vertical-center">
-                <LogoutComponent />
-            </div>
-            <div class="vertical-center">
-                <LanguageSelectionComponent />
-            </div>
+            <ProfileMenuComponent />
+            <ChangeChatroomComponent />
+            <LogoutComponent />
+            <LanguageSelectionComponent />
         </div>
     </nav>
 </header>

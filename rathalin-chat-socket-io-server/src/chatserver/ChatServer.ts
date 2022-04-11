@@ -15,8 +15,6 @@ import type { MessageListMessage } from "../shared/message/content/MessageList";
 import type { UsernameListMessage } from "../shared/message/user/UsernameList";
 import { Logger } from "../logger";
 
-
-
 export class ChatServer {
 
     // Constructor
@@ -56,7 +54,7 @@ export class ChatServer {
             this.registerClientDisconnect(socket);
             this.registerClientRequestsLogin(socket);
             this.registerClientRequestsChatroomExisting(socket);
-            this.registerClientRequestsNewChatroom(socket);
+            this.registerClientRequestsCreateChatroom(socket);
             this.registerClientRequestsJoinChatroom(socket);
         });
     }
@@ -170,15 +168,15 @@ export class ChatServer {
     }
 
 
-    private registerClientRequestsNewChatroom(socket: Socket): void {
+    private registerClientRequestsCreateChatroom(socket: Socket): void {
         socket.on(ClientEvent.REQUEST_CREATE_CHATROOM, (chatroomMessage: ChatroomMessage) => {
             if (!this.clientManager.authUser(socket)) return;
             const room: Chatroom = chatroomMessage.room.trim();
             if (!this.clientManager.chatroomExists(room)) {
+                this.clientManager.addChatroom(room);
                 socket.emit(ServerEvent.RESPONSE_CREATE_CHATROOM_ACCEPT);
                 this.logger.log(`Chatroom "${chatroomMessage.room}" was created.`, ServerEvent.RESPONSE_CREATE_CHATROOM_ACCEPT);
             } else {
-                this.clientManager.addChatroom(room);
                 socket.emit(ServerEvent.RESPONSE_CREATE_CHATROOM_TAKEN);
                 this.logger.log(`Chatroom "${chatroomMessage.room}" not created because taken.`, ServerEvent.RESPONSE_CREATE_CHATROOM_TAKEN);
             }
@@ -192,11 +190,11 @@ export class ChatServer {
             const room: Chatroom = chatroomMessage.room.trim();
             if (this.clientManager.chatroomExists(room)) {
                 this.clientManager.addClientToChatroom(socket, room);
+                socket.join(room);
+                this.registerClientToRoom(socket, room);
                 socket.emit(ServerEvent.RESPONSE_JOIN_CHATROOM_ACCEPT);
                 this.logger.log(`Join chatroom "${chatroomMessage.room}" accept.`, ServerEvent.RESPONSE_JOIN_CHATROOM_ACCEPT);
             } else {
-                socket.join(room);
-                this.registerClientToRoom(socket, room);
                 socket.emit(ServerEvent.RESPONSE_JOIN_CHATROOM_NOT_EXISTING);
                 this.logger.log(`Join chatroom "${chatroomMessage.room}" not accepted, because not existing.`, ServerEvent.RESPONSE_JOIN_CHATROOM_NOT_EXISTING);
 

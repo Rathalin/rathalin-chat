@@ -2,15 +2,16 @@
     import { chatroom, loggedIn, user } from "$lib/stores/user.store";
 </script>
 
-<div class="flex-row gap">
-    {#if $loggedIn}
-        <div>{$user?.name}</div>
-    {/if}
-    {#if $chatroom}
-        <div>{$chatroom}</div>
-    {:else}
-        <div>No Room</div>
-    {/if}
+<div class="flex-row">
+    <div>
+        {#if $loggedIn}
+            <span>{$user?.name}</span>
+        {/if}
+        {#if $chatroom}
+            <span>in</span>
+            <span>{$chatroom}</span>
+        {/if}
+    </div>
 </div>
 
 <style lang="scss">

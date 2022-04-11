@@ -1,8 +1,8 @@
 <script lang="ts">
     import type { TextMessage } from "$lib/shared/message/content/TextMessage";
-    import type { Username } from "$lib/shared/message/Username";
+import type { Username } from "$lib/shared/message/user/Username";
     import { MessageType } from "$lib/shared/MessageType";
-    import { SocketEvent } from "$lib/shared/SocketEvent";
+import { ServerEvent } from "$lib/shared/ServerEvent";
     import { user } from "$lib/stores/user.store";
 
     import { createEventDispatcher, onDestroy, onMount } from "svelte";
@@ -22,13 +22,12 @@
 
         if (messageText.length > 0) {
             const message: TextMessage = {
-                event: SocketEvent.CLIENT_SENDS_TEXT_MESSAGE,
-                date: new Date(),
+                event: ServerEvent.SEND_TEXT_MESSAGE,
                 type: MessageType.TEXT,
+                date: new Date().toString(),
                 sender: myUsername,
                 text: messageText,
             };
-
             dispatch("message", message);
         }
 

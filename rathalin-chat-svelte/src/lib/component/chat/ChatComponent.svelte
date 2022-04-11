@@ -1,25 +1,19 @@
 <script lang="ts">
     import TextMessageComponent from "./messages/TextMessageComponent.svelte";
-    import SystemInfoMessageComponent from "./messages/SystemInfoMessageComponent.svelte";
-    import SystemWarningMessageComponent from "./messages/SystemWarningMessageComponent.svelte";
-    import SystemErrorMessageComponent from "./messages/SystemErrorMessageComponent.svelte";
     import LoginMessageComponent from "./messages/LoginMessageComponent.svelte";
     import LogoutMessageComponent from "./messages/LogoutMessageComponent.svelte";
     import ChatInputBarComponent from "./ChatInputBarComponent.svelte";
     import { onDestroy, onMount, tick } from "svelte";
     import type { Subscription } from "rxjs";
     import type { TextMessage } from "$lib/shared/message/content/TextMessage";
-    import type { Username } from "$lib/shared/message/Username";
+    import SystemMessageComponent from "$lib/component/chat/messages/SystemMessageComponent.svelte";
     import { onlineUserNames, user } from "$lib/stores/user.store";
     import type { Message } from "$lib/shared/message/Message";
     import { chatService } from "$lib/services/chat/chat.service";
-    import type { LoginMessage } from "$lib/shared/message/login/LoginMessage";
-    import type { LogoutMessage } from "$lib/shared/message/logout/LogoutMessage";
-    import type { OnlineUserList } from "$lib/shared/message/online-user-list/OnlineUserList";
-    import type { SystemInfoMessage } from "$lib/shared/message/system/SystemInfoMessage";
-    import type { SystemWarningMessage } from "$lib/shared/message/system/SystemWarningMessage";
-    import type { SystemErrorMessage } from "$lib/shared/message/system/SystemErrorMessage";
     import { messageListLimit } from "$lib/stores/config.store";
+    import type { Username } from "$lib/shared/message/user/Username";
+    import type { MessageListMessage } from "$lib/shared/message/content/MessageList";
+    import { ServerEvent } from "$lib/shared/ServerEvent";
 
     const subscriptions: Subscription[] = [];
     let lastWindowHeight: number = 0;
@@ -30,58 +24,36 @@
     let myUsername: Username = $user?.name ?? "";
     let messages: Message[] = [];
 
-    onMount(() => {
+    onMount(async () => {
         subscriptions.push(
-            chatService.onLogin.subscribe(
-                async (loginMessage: LoginMessage) => {
-                    await addMessageToChat(loginMessage);
-                    $onlineUserNames = [
-                        ...$onlineUserNames,
-                        loginMessage.username,
-                    ];
-                    if (loginMessage.username === myUsername) {
-                        await scrollToBottom();
-                    }
+            chatService.onLoginMessage.subscribe(async (loginMessage) => {
+                await addMessageToChat(loginMessage);
+                $onlineUserNames = [...$onlineUserNames, loginMessage.username];
+                if (loginMessage.username === myUsername) {
+                    await scrollToBottom();
                 }
-            ),
-            chatService.onLogout.subscribe(
-                async (logoutMessage: LogoutMessage) => {
-                    await addMessageToChat(logoutMessage);
-                    $onlineUserNames = $onlineUserNames.filter(
-                        (username) => username !== logoutMessage.username
-                    );
-                }
-            ),
-            chatService.onOnlineUsers.subscribe(
-                (onlineUsers: OnlineUserList) => {
-                    $onlineUserNames = [...onlineUsers.users];
-                }
-            ),
-            chatService.onTextMessage.subscribe(
-                async (textMessage: TextMessage) => {
-                    await addMessageToChat(textMessage);
-                    lastTextMessage = textMessage;
-                }
-            ),
-            chatService.onSystemInfo.subscribe(
-                async (systemInfoMessage: SystemInfoMessage) => {
-                    await addMessageToChat(systemInfoMessage);
-                }
-            ),
-            chatService.onSystemWarning.subscribe(
-                async (systemWarningMessage: SystemWarningMessage) => {
-                    await addMessageToChat(systemWarningMessage);
-                }
-            ),
-            chatService.onSystemError.subscribe(
-                async (systemErrorMessage: SystemErrorMessage) => {
-                    await addMessageToChat(systemErrorMessage);
-                }
-            )
+            }),
+            chatService.onLogoutMessage.subscribe(async (logoutMessage) => {
+                await addMessageToChat(logoutMessage);
+                $onlineUserNames = $onlineUserNames.filter(
+                    (username) => username !== logoutMessage.username
+                );
+            }),
+            chatService.onTextMessage.subscribe(async (textMessage) => {
+                await addMessageToChat(textMessage);
+                lastTextMessage = textMessage;
+            }),
+            chatService.onSystemMessage.subscribe(async (systemMessage) => {
+                await addMessageToChat(systemMessage);
+            })
         );
 
-        chatService.requestMessageList($messageListLimit);
-        chatService.requestOnlineUsers();
+        const result = await Promise.all([
+            chatService.requestMessageList($messageListLimit),
+            chatService.requestOnlineUsers(),
+        ]);
+        messages = [...messages, ...result[0].messages];
+        $onlineUserNames = [...result[1].users];
     });
 
     onDestroy(() => {
@@ -97,10 +69,11 @@
     }
 
     async function sendTextMessage(event: any): Promise<void> {
-        const textMessage: TextMessage = event.detail;
-        chatService.sendTextMessage(textMessage);
-        addMessageToChat(textMessage);
-        await scrollToBottom();
+        console.log(event);
+        // const { text, sender } = event.detail;
+        // chatService.sendTextMessage(textMessage);
+        // await addMessageToChat();
+        // await scrollToBottom();
     }
 
     async function scrollToBottom(): Promise<void> {
@@ -163,16 +136,14 @@
                     isMyMessage={message.sender === myUsername}
                     isFollowUpMessage={textMessageIsFollowUp(message)}
                 />
-            {:else if chatService.isSystemInfoMessage(message)}
-                <SystemInfoMessageComponent infoMessage={message} />
-            {:else if chatService.isSystemWarningMessage(message)}
-                <SystemWarningMessageComponent warningMessage={message} />
-            {:else if chatService.isSystemErrorMessage(message)}
-                <SystemErrorMessageComponent errorMessage={message} />
-            {:else if chatService.isLoginMessage(message)}
-                <LoginMessageComponent loginMessage={message} />
-            {:else if chatService.isLogoutMessage(message)}
-                <LogoutMessageComponent logoutMessage={message} />
+            {:else if chatService.isSystemMessage(message)}
+                <SystemMessageComponent systemMessage={message} />
+            {:else if chatService.isUsernameMessage(message)}
+                {#if message.event === ServerEvent.SEND_LOGIN}
+                    <LoginMessageComponent loginMessage={message} />
+                {:else if message.event === ServerEvent.SEND_LOGOUT}
+                    <LogoutMessageComponent logoutMessage={message} />
+                {/if}
             {/if}
         {/each}
     </ul>

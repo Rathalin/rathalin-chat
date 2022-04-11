@@ -6,15 +6,15 @@
     import { fly } from "svelte/transition";
     import { getRandomInt } from "$lib/util/random";
     import { translate } from "$lib/services/i18n/i18n.service";
-    import type { LogoutMessage } from "$lib/shared/message/logout/LogoutMessage";
+import type { UsernameMessage } from "$lib/shared/message/user/UsernameMessage";
 
-    export let logoutMessage: LogoutMessage;
+    export let logoutMessage: UsernameMessage;
     const messageTranslateKey: string = `messages.logout.${getRandomInt(
         1,
         10
     )}`;
 
-    $: timestamp = logoutMessage.date.toLocaleTimeString("at-AT", {
+    $: timestamp = new Date(logoutMessage.date).toLocaleTimeString("at-AT", {
         hour: "2-digit",
         minute: "2-digit",
     });

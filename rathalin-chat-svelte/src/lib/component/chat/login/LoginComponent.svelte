@@ -4,9 +4,6 @@
     import { onDestroy, onMount } from "svelte";
     import { lastUsername, loggedIn, user } from "$lib/stores/user.store";
     import { chatService } from "$lib/services/chat/chat.service";
-    import type { UsernameAcceptMessage } from "$lib/shared/message/login/UsernameAcceptMessage";
-    import type { UsernameTakenMessage } from "$lib/shared/message/login/UsernameTakenMessage";
-    import { SocketEvent } from "$lib/shared/SocketEvent";
     import { MessageType } from "$lib/shared/MessageType";
     import ErrorComponent from "$lib/component/alert/ErrorComponent.svelte";
     import LoadComponent from "$lib/component/alert/LoadComponent.svelte";
@@ -22,29 +19,16 @@
 
     onMount(() => {
         subscriptions.push(
-            chatService.onError.subscribe((error) => {
+            chatService.onConnectError.subscribe(() => {
                 showConnectionError = true;
                 $loggedIn = false;
                 loginPending = false;
             }),
-            chatService.onLoginUsernameAccept.subscribe(
-                (acceptMessage: UsernameAcceptMessage) => {
-                    const { username: usrname } = acceptMessage;
-                    console.log(`Username ${usrname} accepted!`);
-                    $user = { name: usrname };
-                    $loggedIn = true;
-                    loginPending = false;
-                }
-            ),
-            chatService.onLoginUsernameTaken.subscribe(
-                (takenMessage: UsernameTakenMessage) => {
-                    const { username } = takenMessage;
-                    console.log(`Username ${username} rejected!`);
-                    showDuplicateUsernameError = true;
-                    $loggedIn = false;
-                    loginPending = false;
-                }
-            )
+            chatService.onReconnectError.subscribe(() => {
+                showConnectionError = true;
+                $loggedIn = false;
+                loginPending = false;
+            })
         );
     });
 
@@ -52,19 +36,23 @@
         subscriptions.forEach((subscription) => subscription.unsubscribe());
     });
 
-    function login(): void {
+    async function login(): Promise<void> {
         const username: string = usernameInput.trim();
         if (!username || username.length === 0) return;
 
         clearErrors();
         chatService.connect();
-        chatService.login({
-            event: SocketEvent.CLIENT_REQUESTS_LOGIN,
-            type: MessageType.LOGIN,
-            username,
-            date: new Date(),
-        });
         loginPending = true;
+        if (await chatService.login(username)) {
+            console.log(`Username ${username} accepted!`);
+            $user = { name: username };
+            $loggedIn = true;
+        } else {
+            console.log(`Username ${username} rejected!`);
+            showDuplicateUsernameError = true;
+            $loggedIn = false;
+        }
+        loginPending = false;
     }
 
     function clearErrors(): void {
@@ -72,9 +60,9 @@
         showDuplicateUsernameError = false;
     }
 
-    function onUsernameInputKeyDown(event: any): void {
+    async function onUsernameInputKeyDown(event: any): Promise<void> {
         if (event.key !== "Enter") return;
-        login();
+        await login();
     }
 </script>
 

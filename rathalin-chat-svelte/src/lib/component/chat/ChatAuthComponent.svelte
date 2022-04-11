@@ -33,7 +33,7 @@
 		$loggedIn = false;
 	});
 
-	chatService.onError.subscribe((error) => {
+	chatService.onConnectError.subscribe((error) => {
 		console.log(`Failed connecting to ${$socketIoServerConnection}`);
 		console.error(error);
 		$connected = false;

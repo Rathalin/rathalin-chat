@@ -1,14 +1,15 @@
 <script lang="ts">
+import type { SystemMessage } from "$lib/shared/message/system/SystemMessage";
+
     import {
         messageFadeInPosition,
         messageFadeInDuration,
     } from "$lib/stores/config.store";
     import { fly } from "svelte/transition";
-    import type { SystemErrorMessage } from "$lib/shared/message/system/SystemErrorMessage";
 
-    export let errorMessage: SystemErrorMessage;
+    export let systemMessage: SystemMessage;
 
-    $: timestamp = errorMessage.date.toLocaleTimeString("at-AT", {
+    $: timestamp = new Date(systemMessage.date).toLocaleTimeString("at-AT", {
         hour: "2-digit",
         minute: "2-digit",
     });
@@ -17,7 +18,7 @@
 <li in:fly={{ x: $messageFadeInPosition, duration: $messageFadeInDuration }}>
     <blockquote>
         <span class="text">
-            {errorMessage.text}
+            {systemMessage.text}
         </span>
         <span class="timestamp">
             {timestamp}

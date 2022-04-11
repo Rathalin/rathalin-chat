@@ -15,7 +15,7 @@
     let hover: boolean = false;
     let onlineIndicatorHidden: boolean = true;
 
-    $: timestamp = textMessage.date.toLocaleTimeString("at-AT", {
+    $: timestamp = new Date(textMessage.date).toLocaleTimeString("at-AT", {
         hour: "2-digit",
         minute: "2-digit",
     });
