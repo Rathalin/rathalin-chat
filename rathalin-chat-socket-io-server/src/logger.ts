@@ -8,7 +8,8 @@ export class Logger {
 
     log(message: string, context?: string): void {
         let output: string = "";
-        output += `[${new Date().toLocaleTimeString()}]`;
+        const now: Date = new Date();
+        output += `[${now.toLocaleTimeString("en-GB")}.${now.getMilliseconds()}]`;
         if (this.tag != null) {
             output += `[${this.tag}]`;
         }
