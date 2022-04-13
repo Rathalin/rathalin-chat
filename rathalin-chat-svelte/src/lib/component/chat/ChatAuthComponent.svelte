@@ -30,14 +30,12 @@
 	chatService.onDisconnect.subscribe(() => {
 		console.log(`Disconnected from to ${$socketIoServerConnection}`);
 		$connected = false;
-		$loggedIn = false;
 	});
 
 	chatService.onConnectError.subscribe((error) => {
 		console.log(`Failed connecting to ${$socketIoServerConnection}`);
 		console.error(error);
 		$connected = false;
-		$loggedIn = false;
 	});
 </script>
 

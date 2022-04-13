@@ -1,6 +1,0 @@
-{"level":"info","message":"Listening on port 5001","service":"user-service"}
-{"level":"info","message":"Allow CORS of origin *","service":"user-service"}
-{"level":"info","message":"Listening on port 5001","service":"ChatServer"}
-{"level":"info","message":"Allow CORS of origin *","service":"ChatServer"}
-{"level":"info","message":"Listening on port 5001","service":"chat-server","timestamp":"2022-04-10 10:53:05"}
-{"level":"info","message":"Allow CORS of origin *","service":"chat-server","timestamp":"2022-04-10 10:53:05"}

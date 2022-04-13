@@ -52,6 +52,8 @@
             chatService.requestMessageList($messageListLimit),
             chatService.requestOnlineUsers(),
         ]);
+        console.log("Result:");
+        console.log(result);
         messages = [...messages, ...result[0].messages];
         $onlineUserNames = [...result[1].users];
     });

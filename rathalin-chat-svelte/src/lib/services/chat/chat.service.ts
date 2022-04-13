@@ -1,5 +1,5 @@
 import { Manager, Socket } from "socket.io-client";
-import { Subject } from "rxjs";
+import { Subject, timestamp } from "rxjs";
 import { socketIoServerConnection } from "$lib/stores/config.store";
 import { get } from "svelte/store";
 import type { Username } from "$lib/shared/message/user/Username";
@@ -29,6 +29,7 @@ class ChatService {
     public readonly onTextMessage: Subject<TextMessage> = new Subject();
     public readonly onSystemMessage: Subject<SystemMessage> = new Subject();
 
+
     // Construtor
 
     constructor() {
@@ -40,16 +41,19 @@ class ChatService {
         this.initConnections();
     }
 
+
     // Members and Properties
 
     private _socket: Socket;
     private _room: string | null = null;
 
+
     // Public methods
     
     public connect(): void {
         this._socket.connect();
-    }
+    }    
+
 
     public disconnect(): void {
         this._socket.disconnect();
@@ -140,6 +144,25 @@ class ChatService {
     }
 
 
+    public leaveChatroom(room: Chatroom): Promise<boolean> {
+        return new Promise((resolve, reject) => {
+            this._socket.on(ServerEvent.RESPONSE_LEAVE_CHATROOM_ACCEPT, () => {
+                resolve(true);
+            });
+            this._socket.on(ServerEvent.RESPONSE_LEAVE_CHATROOM_NOT_JOINED, () => {
+                resolve(false);
+            });
+            const chatroomMessage: ChatroomMessage = {
+                event: ClientEvent.REQUEST_LEAVE_CHATROOM,
+                type: MessageType.CHATROOM,
+                date: new Date().toString(),
+                room,
+            };
+            this._socket.emit(ClientEvent.REQUEST_LEAVE_CHATROOM, chatroomMessage);
+        });
+    }
+
+
     public requestMessageList(limit?: number): Promise<MessageListMessage> {
         return new Promise((resolve) => {
             this._socket.on(ServerEvent.RESPONSE_MESSAGE_LIST, (messageListMessage: MessageListMessage) => {
@@ -187,6 +210,7 @@ class ChatService {
     public isSystemMessage(message: Message): message is SystemMessage {
         return message.type === MessageType.SYSTEM;
     }
+
 
     // Private Methods
 

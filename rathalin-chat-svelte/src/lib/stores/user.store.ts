@@ -11,9 +11,19 @@ export const lastUsername: Writable<string> = writable<string>("", function star
 });
 export const connected: Writable<boolean> = writable<boolean>(false);
 export const loggedIn: Writable<boolean> = writable<boolean>(false);
+connected.subscribe((value) => {
+    if (!value) {
+        loggedIn.set(false);
+    }
+});
 
 // Chatroom
 export const chatroom: Writable<string | null> = writable<string | null>(null);
+loggedIn.subscribe((value) => {
+    if (!value) {
+        chatroom.set(null);
+    }
+});
 export const inChatroom: Readable<boolean> = readable(false, function start(set: Subscriber<boolean>) {
     const unsubscribe: Unsubscriber = chatroom.subscribe((value: string | null) => {
         if (value != null) {
