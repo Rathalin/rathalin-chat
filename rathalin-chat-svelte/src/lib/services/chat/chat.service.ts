@@ -185,14 +185,7 @@ class ChatService {
     }
 
 
-    public sendTextMessage(text: string, sender: Username, date: Date = new Date()): void {
-        const textMessage: TextMessage = {
-            event: ClientEvent.SEND_TEXT_MESSAGE,
-            type: MessageType.TEXT,
-            date: date.toString(),
-            text,
-            sender,
-        };
+    public sendTextMessage(textMessage: TextMessage): void {
         this._socket.emit(ClientEvent.SEND_TEXT_MESSAGE, textMessage);
     }
 

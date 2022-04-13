@@ -70,12 +70,10 @@
         }
     }
 
-    async function sendTextMessage(event: any): Promise<void> {
-        console.log(event);
-        // const { text, sender } = event.detail;
-        // chatService.sendTextMessage(textMessage);
-        // await addMessageToChat();
-        // await scrollToBottom();
+    async function sendTextMessage(event: CustomEvent<TextMessage>): Promise<void> {
+        chatService.sendTextMessage(event.detail);
+        await addMessageToChat(event.detail);
+        await scrollToBottom();
     }
 
     async function scrollToBottom(): Promise<void> {

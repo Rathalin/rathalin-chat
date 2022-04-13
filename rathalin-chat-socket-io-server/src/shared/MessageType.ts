@@ -6,7 +6,7 @@ export enum MessageType {
 
     // ALIASES
     USERNAME = "USERNAME",
-    CHATROOM = "CHATROOM",
+    CHATROOMNAME = "CHATROOMNAME",
 
     // INTERFACES
     TEXT = "TEXT",

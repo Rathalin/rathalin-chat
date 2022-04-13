@@ -1,7 +1,7 @@
-import type { Chatroom } from "src/shared/message/room/Chatroom";
+import type { ChatroomName } from "src/shared/message/room/ChatroomName";
 import type { Client } from "./Client";
 
 export interface ClientInChatroom {
     client: Client;
-    chatroom: Chatroom;
+    roomName: ChatroomName;
 }

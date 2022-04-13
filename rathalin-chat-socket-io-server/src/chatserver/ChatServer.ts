@@ -2,7 +2,6 @@ import type { Message } from "../shared/message/Message";
 import { Server, Socket } from "socket.io";
 import type { Client } from "./interface/Client";
 import { ClientManager } from "./managers/ClientManager";
-import { MessageManager } from "./managers/MessageManager";
 import { ClientEvent } from "../shared/ClientEvent";
 import { ServerEvent } from "../shared/ServerEvent";
 import { MessageType } from "../shared/MessageType";
@@ -10,7 +9,7 @@ import type { TextMessage } from "../shared/message/content/TextMessage";
 import type { ChatroomMessage } from "../shared/message/room/ChatroomMessage";
 import type { UsernameMessage } from "../shared/message/user/UsernameMessage";
 import type { Username } from "../shared/message/user/Username";
-import type { Chatroom } from "../shared/message/room/Chatroom";
+import type { ChatroomName } from "../shared/message/room/ChatroomName";
 import type { MessageListMessage } from "../shared/message/content/MessageList";
 import type { UsernameListMessage } from "../shared/message/user/UsernameList";
 import { Logger } from "../logger";
@@ -23,7 +22,6 @@ export class ChatServer {
 
     private server: Server | null = null;
     private readonly clientManager: ClientManager = new ClientManager();
-    private readonly messageManager: MessageManager = new MessageManager();
     private readonly logger: Logger = new Logger("chat-server");
 
 
@@ -49,7 +47,7 @@ export class ChatServer {
 
         this.server.on("connection", socket => {
             this.clientManager.addClient(socket);
-            this.logger.log(`+ User (${this.clientManager.clients.length})`, "connect");
+            this.logger.log(`+ User (${this.clientManager.numberOfClients})`, "connect");
 
             this.registerClientDisconnect(socket);
             this.registerClientRequestsLogin(socket);
@@ -64,20 +62,7 @@ export class ChatServer {
     private registerClientDisconnect(socket: Socket): void {
         socket.on("disconnect", reason => {
             const client: Client = this.clientManager.removeClient(socket);
-            this.logger.log(`- User (${this.clientManager.clients.length})`, "disconnect");
-            if (client != null) {
-                this.logger.log(`Logout ${JSON.stringify(client.user)}`, ServerEvent.SEND_LOGOUT);
-                if (client.user?.username?.trim().length > 0) {
-                    const usernameMessage: UsernameMessage = {
-                        event: ServerEvent.SEND_LOGOUT,
-                        type: MessageType.USERNAME,
-                        username: client.user.username,
-                        date: new Date().toString(),
-                    };
-                    socket.broadcast.emit(ServerEvent.SEND_LOGOUT, usernameMessage);
-                    this.messageManager.messages.push(usernameMessage);
-                }
-            }
+            this.logger.log(`- User (${this.clientManager.numberOfClients})`, "disconnect");
         });
     }
 
@@ -95,28 +80,20 @@ export class ChatServer {
                 this.clientManager.setUsernameOfClient(socket, username);
                 socket.emit(ServerEvent.RESPONSE_LOGIN_USERNAME_ACCEPT);
                 this.logger.log(`Accept Login "${username}"`, ServerEvent.RESPONSE_LOGIN_USERNAME_ACCEPT);
-                const loginMessage: UsernameMessage = {
-                    event: ServerEvent.SEND_LOGIN,
-                    type: MessageType.USERNAME,
-                    date: new Date().toString(),
-                    username,
-                };
                 this.clientManager.addUserToClient(socket, { username });
-                this.messageManager.addMessage(loginMessage);
-                socket.broadcast.emit(ServerEvent.SEND_LOGIN, loginMessage);
             }
         });
     }
 
 
-    private registerClientToRoom(socket: Socket, room: Chatroom): void {
-        this.registerClientRequestsOnlineUserList(socket, room);
-        this.registerClientRequestsMessageList(socket, room);
-        this.registerClientSendsTextMessage(socket, room);
+    private registerClientToRoom(socket: Socket, roomName: ChatroomName): void {
+        this.registerClientRequestsOnlineUserList(socket, roomName);
+        this.registerClientRequestsMessageList(socket, roomName);
+        this.registerClientSendsTextMessage(socket, roomName);
     }
 
 
-    private registerClientSendsTextMessage(socket: Socket, room: Chatroom): void {
+    private registerClientSendsTextMessage(socket: Socket, roomName: ChatroomName): void {
         socket.on(ClientEvent.SEND_TEXT_MESSAGE, (clientTextMessage: TextMessage) => {
             if (!this.clientManager.authUser(socket)) return;
             const textMessage: TextMessage = {
@@ -126,24 +103,24 @@ export class ChatServer {
                 sender: clientTextMessage.sender,
                 text: clientTextMessage.text,
             };
-            socket.broadcast.to(room).emit(ServerEvent.SEND_TEXT_MESSAGE, textMessage);
-            this.messageManager.addMessage(textMessage);
+            socket.broadcast.to(roomName).emit(ServerEvent.SEND_TEXT_MESSAGE, textMessage);
+            this.clientManager.addMessageToChatroom(roomName, textMessage);
         });
     }
 
 
-    private registerClientRequestsMessageList(socket: Socket, room: Chatroom): void {
+    private registerClientRequestsMessageList(socket: Socket, roomName: ChatroomName): void {
         socket.on(ClientEvent.REQUEST_MESSAGE_LIST, (limit?: number) => {
             if (!this.clientManager.authUser(socket)) return;
-            this.sendMessageListToClient(socket, room, limit);
+            this.sendMessageListToClient(socket, roomName, limit);
         });
     }
 
 
-    private registerClientRequestsOnlineUserList(socket: Socket, room: Chatroom): void {
+    private registerClientRequestsOnlineUserList(socket: Socket, roomName: ChatroomName): void {
         socket.on(ClientEvent.REQUEST_ONLINE_USERS, () => {
             if (!this.clientManager.authUser(socket)) return;
-            this.sendOnlineUsersToClient(socket, room);
+            this.sendOnlineUsersToClient(socket, roomName);
         });
     }
 
@@ -164,9 +141,9 @@ export class ChatServer {
     private registerClientRequestsCreateChatroom(socket: Socket): void {
         socket.on(ClientEvent.REQUEST_CREATE_CHATROOM, (chatroomMessage: ChatroomMessage) => {
             if (!this.clientManager.authUser(socket)) return;
-            const room: Chatroom = chatroomMessage.room.trim();
-            if (!this.clientManager.chatroomExists(room)) {
-                this.clientManager.addChatroom(room);
+            const roomName: ChatroomName = chatroomMessage.room.trim();
+            if (!this.clientManager.chatroomExists(roomName)) {
+                this.clientManager.addChatroom(roomName);
                 socket.emit(ServerEvent.RESPONSE_CREATE_CHATROOM_ACCEPT);
                 this.logger.log(`Chatroom "${chatroomMessage.room}" was created.`, ServerEvent.RESPONSE_CREATE_CHATROOM_ACCEPT);
             } else {
@@ -180,11 +157,11 @@ export class ChatServer {
     private registerClientRequestsJoinChatroom(socket: Socket): void {
         socket.on(ClientEvent.REQUEST_JOIN_CHATROOM, (chatroomMessage: ChatroomMessage) => {
             if (!this.clientManager.authUser(socket)) return;
-            const room: Chatroom = chatroomMessage.room.trim();
-            if (this.clientManager.chatroomExists(room)) {
-                this.clientManager.addClientToChatroom(socket, room);
-                socket.join(room);
-                this.registerClientToRoom(socket, room);
+            const roomName: ChatroomName = chatroomMessage.room.trim();
+            if (this.clientManager.chatroomExists(roomName)) {
+                this.clientManager.addClientToChatroom(socket, roomName);
+                socket.join(roomName);
+                this.registerClientToRoom(socket, roomName);
                 socket.emit(ServerEvent.RESPONSE_JOIN_CHATROOM_ACCEPT);
                 this.logger.log(`Join chatroom "${chatroomMessage.room}" accept.`, ServerEvent.RESPONSE_JOIN_CHATROOM_ACCEPT);
             } else {
@@ -198,9 +175,9 @@ export class ChatServer {
     private registerClientRequestsLeaveChatroom(socket: Socket): void {
         socket.on(ClientEvent.REQUEST_LEAVE_CHATROOM, (chatroomMessage: ChatroomMessage) => {
             if (!this.clientManager.authUser(socket)) return;
-            const room: Chatroom = chatroomMessage.room.trim();
-            if (this.clientManager.isClientInChatroom(socket, room)) {
-                this.clientManager.removeClientFromChatroom(socket, room);
+            const roomName: ChatroomName = chatroomMessage.room.trim();
+            if (this.clientManager.isClientInChatroom(socket, roomName)) {
+                this.clientManager.removeClientFromChatroom(socket, roomName);
                 socket.emit(ServerEvent.RESPONSE_LEAVE_CHATROOM_ACCEPT);
             } else {                
                 socket.emit(ServerEvent.RESPONSE_LEAVE_CHATROOM_NOT_JOINED);
@@ -209,9 +186,9 @@ export class ChatServer {
     }
 
 
-    private sendMessageListToClient(socket: Socket, room: Chatroom, limit?: number): void {
+    private sendMessageListToClient(socket: Socket, roomName: ChatroomName, limit?: number): void {
         let messages: Message[];
-        const existingMessage: Message[] = this.messageManager.messages;
+        const existingMessage: Message[] = this.clientManager.getMessagesOfChatroom(roomName);
         if (limit != null) {
             messages = existingMessage.slice(Math.max(0, existingMessage.length - limit), existingMessage.length);
         } else {
@@ -220,10 +197,10 @@ export class ChatServer {
         this.logger.log(`MessageList(${existingMessage.length})`, ServerEvent.RESPONSE_MESSAGE_LIST);
         const allTextMessages: TextMessage[] = messages.filter(msg => msg.type === MessageType.TEXT) as TextMessage[];
         const loginMessageOfClient: UsernameMessage = {
-            event: ServerEvent.SEND_LOGIN,
+            event: ServerEvent.SEND_JOIN_CHATROOM,
             type: MessageType.USERNAME,
             date: new Date().toString(),
-            username: this.clientManager.getClient(socket).user.username,
+            username: this.clientManager.getClientBySocket(socket).user.username,
         }
         const messageList: MessageListMessage = {
             event: ServerEvent.RESPONSE_MESSAGE_LIST,
@@ -234,18 +211,20 @@ export class ChatServer {
                 loginMessageOfClient
             ],
         }
-        socket.to(room).emit(ServerEvent.RESPONSE_MESSAGE_LIST, messageList);
+        socket.to(roomName).emit(ServerEvent.RESPONSE_MESSAGE_LIST, messageList);
     }
 
 
-    private sendOnlineUsersToClient(socket: Socket, room: Chatroom): void {
+    private sendOnlineUsersToClient(socket: Socket, roomName: ChatroomName): void {
         const onlineUsersMessage: UsernameListMessage = {
             event: ServerEvent.RESPONSE_ONLINE_USERS,
             type: MessageType.USERNAME_LIST,
             date: new Date().toString(),
-            users: this.clientManager.clients.map(c => c.user.username),
+            users: this.clientManager.getClientsOfChatroom(roomName)
+                .map(c => c.user.username)
+                .filter(name => name !== ""),
         };
         this.logger.log(`Online users (${onlineUsersMessage.users.length})`, ServerEvent.RESPONSE_ONLINE_USERS);
-        socket.to(room).emit(ServerEvent.RESPONSE_ONLINE_USERS, onlineUsersMessage);
+        socket.to(roomName).emit(ServerEvent.RESPONSE_ONLINE_USERS, onlineUsersMessage);
     }
 }
