@@ -63,6 +63,13 @@ export class ChatServer {
         socket.on("disconnect", reason => {
             const client: Client = this.clientManager.removeClient(socket);
             this.logger.log(`- User (${this.clientManager.numberOfClients})`, "disconnect");
+            const userLeavingChatroomMessage: UsernameMessage = {
+                event: ServerEvent.SEND_LEAVE_CHATROOM,
+                type: MessageType.USERNAME,
+                date: new Date().toString(),
+                username: client.user.username,
+            }
+            socket.broadcast.emit(ServerEvent.SEND_LEAVE_CHATROOM, userLeavingChatroomMessage);
         });
     }
 
