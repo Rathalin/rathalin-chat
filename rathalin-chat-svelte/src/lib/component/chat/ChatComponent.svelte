@@ -12,7 +12,6 @@
     import { chatService } from "$lib/services/chat/chat.service";
     import { messageListLimit } from "$lib/stores/config.store";
     import type { Username } from "$lib/shared/message/user/Username";
-    import type { MessageListMessage } from "$lib/shared/message/content/MessageList";
     import { ServerEvent } from "$lib/shared/ServerEvent";
 
     const subscriptions: Subscription[] = [];
@@ -49,13 +48,12 @@
                 await addMessageToChat(systemMessage);
             })
         );
-
         const result = await Promise.all([
             chatService.requestMessageList($messageListLimit),
             chatService.requestOnlineUsers(),
         ]);
-        messages = [...messages, ...result[0].messages];
-        $onlineUserNames = [...result[1].users];
+        addMessagesToChat(...result[0].messages);
+        setOnlineUsernames(...result[1].users);
     });
 
     onDestroy(() => {
@@ -70,12 +68,20 @@
         }
     }
 
+    function addMessagesToChat(...newMessages: Message[]): void {
+        console.table(newMessages);
+        messages = [...messages, ...newMessages];
+    }
+
+    function setOnlineUsernames(...newOnlineUsernames: Username[]): void {
+        $onlineUserNames = [...newOnlineUsernames];
+    }
+
     async function sendTextMessage(
-        event: CustomEvent<TextMessage>
+        event: CustomEvent<{ text: string; sender: Username }>
     ): Promise<void> {
-        chatService.sendTextMessage(event.detail);
-        await addMessageToChat(event.detail);
-        await scrollToBottom();
+        const { text, sender } = event.detail;
+        await addMessageToChat(chatService.sendTextMessage(text, sender));
     }
 
     async function scrollToBottom(): Promise<void> {

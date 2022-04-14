@@ -58,7 +58,7 @@
             flex: 1;
         }
 
-        @media (max-width: 600px) {
+        @media (max-width: 1200px) {
             .nav-left-content {
                 display: none;
             }

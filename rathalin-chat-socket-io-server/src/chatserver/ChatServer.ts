@@ -93,6 +93,13 @@ export class ChatServer {
     }
 
 
+    private unregisterClientFromRoom(socket: Socket): void {
+        this.unregisterClientRequestsOnlineUserList(socket);
+        this.unregisterClientRequestsMessageList(socket);
+        this.unregisterClientSendsTextMessage(socket);
+    }
+
+
     private registerClientSendsTextMessage(socket: Socket, roomName: ChatroomName): void {
         socket.on(ClientEvent.SEND_TEXT_MESSAGE, (clientTextMessage: TextMessage) => {
             if (!this.clientManager.authUser(socket)) return;
@@ -109,11 +116,21 @@ export class ChatServer {
     }
 
 
+    private unregisterClientSendsTextMessage(socket: Socket): void {
+        socket.removeAllListeners(ClientEvent.SEND_TEXT_MESSAGE);
+    }
+
+
     private registerClientRequestsMessageList(socket: Socket, roomName: ChatroomName): void {
         socket.on(ClientEvent.REQUEST_MESSAGE_LIST, (limit?: number) => {
             if (!this.clientManager.authUser(socket)) return;
             this.sendMessageListToClient(socket, roomName, limit);
         });
+    }
+
+
+    private unregisterClientRequestsMessageList(socket: Socket): void {
+        socket.removeAllListeners(ClientEvent.REQUEST_MESSAGE_LIST);
     }
 
 
@@ -125,14 +142,19 @@ export class ChatServer {
     }
 
 
-    public registerClientRequestsChatroomExisting(socket: Socket): void {
+    private unregisterClientRequestsOnlineUserList(socket: Socket): void {
+        socket.removeAllListeners(ClientEvent.REQUEST_ONLINE_USERS);
+    }
+
+
+    private registerClientRequestsChatroomExisting(socket: Socket): void {
         socket.on(ClientEvent.REQUEST_CHATROOM_EXISTS, (chatroomMessage: ChatroomMessage) => {
             if (this.clientManager.chatroomExists(chatroomMessage.room)) {
                 socket.emit(ServerEvent.RESPONSE_CHATROOM_EXISTS);
-                this.logger.log(`Chatroom "${chatroomMessage.room}" does not exist.`, ServerEvent.RESPONSE_CHATROOM_EXISTS);
+                this.logger.log(`Chatroom "${chatroomMessage.room}" does exist.`, ServerEvent.RESPONSE_CHATROOM_EXISTS);
             } else {
                 socket.emit(ServerEvent.RESPONSE_CHATROOM_NOT_EXISTS);
-                this.logger.log(`Chatroom "${chatroomMessage.room}" does exist.`, ServerEvent.RESPONSE_CHATROOM_NOT_EXISTS);
+                this.logger.log(`Chatroom "${chatroomMessage.room}" does not exist.`, ServerEvent.RESPONSE_CHATROOM_NOT_EXISTS);
             }
         });
     }
@@ -164,6 +186,14 @@ export class ChatServer {
                 this.registerClientToRoom(socket, roomName);
                 socket.emit(ServerEvent.RESPONSE_JOIN_CHATROOM_ACCEPT);
                 this.logger.log(`Join chatroom "${chatroomMessage.room}" accept.`, ServerEvent.RESPONSE_JOIN_CHATROOM_ACCEPT);
+                const userJoiningChatroomMessage: UsernameMessage = {
+                    event: ServerEvent.SEND_JOIN_CHATROOM,
+                    type: MessageType.USERNAME,
+                    date: new Date().toString(),
+                    username: this.clientManager.getClientBySocket(socket).user.username,
+                }
+                socket.broadcast.to(roomName).emit(ServerEvent.SEND_JOIN_CHATROOM, userJoiningChatroomMessage);
+                this.logger.log(`'${userJoiningChatroomMessage.username}' is joining '${roomName}'`, ServerEvent.SEND_JOIN_CHATROOM);
             } else {
                 socket.emit(ServerEvent.RESPONSE_JOIN_CHATROOM_NOT_EXISTING);
                 this.logger.log(`Join chatroom "${chatroomMessage.room}" not accepted, because not existing.`, ServerEvent.RESPONSE_JOIN_CHATROOM_NOT_EXISTING);
@@ -177,10 +207,22 @@ export class ChatServer {
             if (!this.clientManager.authUser(socket)) return;
             const roomName: ChatroomName = chatroomMessage.room.trim();
             if (this.clientManager.isClientInChatroom(socket, roomName)) {
+                this.unregisterClientFromRoom(socket);
+                socket.leave(roomName);
                 this.clientManager.removeClientFromChatroom(socket, roomName);
                 socket.emit(ServerEvent.RESPONSE_LEAVE_CHATROOM_ACCEPT);
-            } else {                
+                this.logger.log(`Leave chatroom "${chatroomMessage.room}" accept.`, ServerEvent.RESPONSE_LEAVE_CHATROOM_ACCEPT);
+                const userLeavingChatroomMessage: UsernameMessage = {
+                    event: ServerEvent.SEND_LEAVE_CHATROOM,
+                    type: MessageType.USERNAME,
+                    date: new Date().toString(),
+                    username: this.clientManager.getClientBySocket(socket).user.username,
+                };
+                socket.broadcast.to(roomName).emit(ServerEvent.SEND_LEAVE_CHATROOM, userLeavingChatroomMessage);
+                this.logger.log(`'${userLeavingChatroomMessage.username}' is leaving '${roomName}'`, ServerEvent.SEND_LEAVE_CHATROOM);
+            } else {
                 socket.emit(ServerEvent.RESPONSE_LEAVE_CHATROOM_NOT_JOINED);
+                this.logger.log(`Leave chatroom "${chatroomMessage.room}" not accept, because not joined!`, ServerEvent.RESPONSE_LEAVE_CHATROOM_NOT_JOINED)
             }
         });
     }

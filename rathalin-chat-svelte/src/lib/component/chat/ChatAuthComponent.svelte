@@ -7,7 +7,7 @@
 		loggedIn,
 	} from "$lib/stores/user.store";
 	import ChatComponent from "./ChatComponent.svelte";
-	import ChatroomMenuComponent from "./chatroom/ChatroomMenuComponent.svelte";
+	import ChatroomInputComponent from "./chatroom/ChatroomInputComponent.svelte";
 	import LoginComponent from "./login/LoginComponent.svelte";
 
 	chatService.onConnect.subscribe(() => {
@@ -30,7 +30,7 @@
 {#if !$connected || !$loggedIn}
 	<LoginComponent />
 {:else if !$inChatroom}
-	<ChatroomMenuComponent />
+	<ChatroomInputComponent />
 {:else}
 	<ChatComponent />
 {/if}

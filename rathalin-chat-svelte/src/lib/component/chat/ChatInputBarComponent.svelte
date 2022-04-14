@@ -7,7 +7,7 @@ import { ServerEvent } from "$lib/shared/ServerEvent";
 
     import { createEventDispatcher, onDestroy, onMount } from "svelte";
 
-    let dispatch = createEventDispatcher<{ message: TextMessage }>();
+    let dispatch = createEventDispatcher<{ message: { text: string, sender: Username } }>();
 
     let text: string = "";
     let inputEl: HTMLInputElement;
@@ -21,10 +21,7 @@ import { ServerEvent } from "$lib/shared/ServerEvent";
         const messageText: string = text.trim();
 
         if (messageText.length > 0) {
-            const message: TextMessage = {
-                event: ServerEvent.SEND_TEXT_MESSAGE,
-                type: MessageType.TEXT,
-                date: new Date().toString(),
+            const message: { text: string, sender: Username } = {
                 sender: myUsername,
                 text: messageText,
             };
