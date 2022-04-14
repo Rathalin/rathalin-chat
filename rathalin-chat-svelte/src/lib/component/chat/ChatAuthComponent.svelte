@@ -2,25 +2,13 @@
 	import { chatService } from "$lib/services/chat/chat.service";
 	import { socketIoServerConnection } from "$lib/stores/config.store";
 	import {
-		chatroom,
 		connected,
 		inChatroom,
-		lastUsername,
 		loggedIn,
 	} from "$lib/stores/user.store";
 	import ChatComponent from "./ChatComponent.svelte";
 	import ChatroomMenuComponent from "./chatroom/ChatroomMenuComponent.svelte";
 	import LoginComponent from "./login/LoginComponent.svelte";
-
-	if (typeof localStorage !== "undefined") {
-		$lastUsername = localStorage.getItem("lastUsername") ?? "";
-		lastUsername.subscribe((username) => {
-			if (username?.trim()?.length > 0) {
-				localStorage.setItem("lastUsername", username);
-				console.log("Set username in local storage to " + username);
-			}
-		});
-	}
 
 	chatService.onConnect.subscribe(() => {
 		console.log(`Connected to ${$socketIoServerConnection}`);
@@ -46,6 +34,3 @@
 {:else}
 	<ChatComponent />
 {/if}
-
-<style lang="scss">
-</style>

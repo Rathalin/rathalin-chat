@@ -2,9 +2,9 @@
     import ErrorComponent from "$lib/component/alert/ErrorComponent.svelte";
     import { translate } from "$lib/services/i18n/i18n.service";
     import { chatService } from "$lib/services/chat/chat.service";
-    import { chatroom } from "$lib/stores/user.store";
+    import { chatroom, lastChatroom } from "$lib/stores/user.store";
 
-    let joinRoomInput: string = "";
+    let joinRoomInput: string = $lastChatroom;
     let roomMaxLength: number = 30;
     let joinPending: boolean = false;
     let showChatroomNotExistingError: boolean = false;

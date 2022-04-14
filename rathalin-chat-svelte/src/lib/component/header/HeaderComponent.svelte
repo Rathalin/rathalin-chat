@@ -38,6 +38,7 @@
         .nav-content {
             padding: 0.5em 0em;
             gap: 1em;
+            align-items: center;
         }
 
         .nav-left-content {
@@ -55,14 +56,6 @@
 
         .nav-right-content div:first-child {
             flex: 1;
-        }
-
-        .vertical-center {
-            padding: 0em;
-            margin: 0em;
-            display: flex;
-            flex-direction: column;
-            justify-content: center;
         }
 
         @media (max-width: 600px) {

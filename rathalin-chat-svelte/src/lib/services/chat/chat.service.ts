@@ -11,9 +11,9 @@ import type { TextMessage } from "$lib/shared/message/content/TextMessage";
 import type { ChatroomMessage } from "$lib/shared/message/room/ChatroomMessage";
 import type { UsernameMessage } from "$lib/shared/message/user/UsernameMessage";
 import type { SystemMessage } from "$lib/shared/message/system/SystemMessage";
-import type { Chatroom } from "$lib/shared/message/room/Chatroom";
 import type { MessageListMessage } from "$lib/shared/message/content/MessageList";
 import type { UsernameListMessage } from "$lib/shared/message/user/UsernameList";
+import type { ChatroomName } from "$lib/shared/message/room/ChatroomName";
 
 class ChatService {
 
@@ -24,8 +24,8 @@ class ChatService {
     public readonly onReconnect: Subject<void> = new Subject();
     public readonly onReconnectError: Subject<Error> = new Subject();
     public readonly onDisconnect: Subject<void> = new Subject();
-    public readonly onLoginMessage: Subject<UsernameMessage> = new Subject();
-    public readonly onLogoutMessage: Subject<UsernameMessage> = new Subject();
+    public readonly onJoinChatroomMessage: Subject<UsernameMessage> = new Subject();
+    public readonly onLeaveChatroomMessage: Subject<UsernameMessage> = new Subject();
     public readonly onTextMessage: Subject<TextMessage> = new Subject();
     public readonly onSystemMessage: Subject<SystemMessage> = new Subject();
 
@@ -81,7 +81,7 @@ class ChatService {
     }
 
 
-    public chatroomExists(room: Chatroom): Promise<boolean> {
+    public chatroomExists(room: ChatroomName): Promise<boolean> {
         return new Promise((resolve) => {
             this._socket.on(ServerEvent.RESPONSE_CHATROOM_EXISTS, () => {
                 resolve(true);
@@ -93,7 +93,7 @@ class ChatService {
             });
             const chatroomMessage: ChatroomMessage = {
                 event: ClientEvent.REQUEST_CHATROOM_EXISTS,
-                type: MessageType.CHATROOM,
+                type: MessageType.CHATROOM_NAME,
                 date: new Date().toString(),
                 room,
             };
@@ -102,7 +102,7 @@ class ChatService {
     }
 
 
-    public createChatroom(room: Chatroom): Promise<boolean> {
+    public createChatroom(room: ChatroomName): Promise<boolean> {
         return new Promise((resolve) => {
             this._socket.on(ServerEvent.RESPONSE_CREATE_CHATROOM_ACCEPT, () => {
                 resolve(true);
@@ -114,7 +114,7 @@ class ChatService {
             });
             const chatroomMessage: ChatroomMessage = {
                 event: ClientEvent.REQUEST_CREATE_CHATROOM,
-                type: MessageType.CHATROOM,
+                type: MessageType.CHATROOM_NAME,
                 date: new Date().toString(),
                 room,
             };
@@ -123,7 +123,7 @@ class ChatService {
     }
 
 
-    public joinChatroom(room: Chatroom): Promise<boolean> {
+    public joinChatroom(room: ChatroomName): Promise<boolean> {
         return new Promise((resolve) => {
             this._socket.on(ServerEvent.RESPONSE_JOIN_CHATROOM_ACCEPT, () => {
                 resolve(true);
@@ -135,7 +135,7 @@ class ChatService {
             });
             const chatroomMessage: ChatroomMessage = {
                 event: ClientEvent.REQUEST_JOIN_CHATROOM,
-                type: MessageType.CHATROOM,
+                type: MessageType.CHATROOM_NAME,
                 date: new Date().toString(),
                 room,
             };
@@ -144,7 +144,7 @@ class ChatService {
     }
 
 
-    public leaveChatroom(room: Chatroom): Promise<boolean> {
+    public leaveChatroom(room: ChatroomName): Promise<boolean> {
         return new Promise((resolve, reject) => {
             this._socket.on(ServerEvent.RESPONSE_LEAVE_CHATROOM_ACCEPT, () => {
                 resolve(true);
@@ -154,7 +154,7 @@ class ChatService {
             });
             const chatroomMessage: ChatroomMessage = {
                 event: ClientEvent.REQUEST_LEAVE_CHATROOM,
-                type: MessageType.CHATROOM,
+                type: MessageType.CHATROOM_NAME,
                 date: new Date().toString(),
                 room,
             };
@@ -234,14 +234,14 @@ class ChatService {
             this.onDisconnect.next();
         });
 
-        // Login
-        this._socket.on(ServerEvent.SEND_LOGIN, (usernameMessage: UsernameMessage): void => {
-            this.onLoginMessage.next(usernameMessage);
+        // Join Chatroom
+        this._socket.on(ServerEvent.SEND_JOIN_CHATROOM, (usernameMessage: UsernameMessage): void => {
+            this.onJoinChatroomMessage.next(usernameMessage);
         });
 
-        // Logout
-        this._socket.on(ServerEvent.SEND_LOGOUT, (usernameMessage: UsernameMessage): void => {
-            this.onLogoutMessage.next(usernameMessage);
+        // Leave Chatroom
+        this._socket.on(ServerEvent.SEND_LEAVE_CHATROOM, (usernameMessage: UsernameMessage): void => {
+            this.onLeaveChatroomMessage.next(usernameMessage);
         });
 
         // Text Message

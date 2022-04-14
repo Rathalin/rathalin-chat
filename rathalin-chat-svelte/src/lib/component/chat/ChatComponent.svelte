@@ -26,19 +26,21 @@
 
     onMount(async () => {
         subscriptions.push(
-            chatService.onLoginMessage.subscribe(async (loginMessage) => {
-                await addMessageToChat(loginMessage);
-                $onlineUserNames = [...$onlineUserNames, loginMessage.username];
-                if (loginMessage.username === myUsername) {
+            chatService.onJoinChatroomMessage.subscribe(async (joinMessage) => {
+                await addMessageToChat(joinMessage);
+                $onlineUserNames = [...$onlineUserNames, joinMessage.username];
+                if (joinMessage.username === myUsername) {
                     await scrollToBottom();
                 }
             }),
-            chatService.onLogoutMessage.subscribe(async (logoutMessage) => {
-                await addMessageToChat(logoutMessage);
-                $onlineUserNames = $onlineUserNames.filter(
-                    (username) => username !== logoutMessage.username
-                );
-            }),
+            chatService.onLeaveChatroomMessage.subscribe(
+                async (leaveMessage) => {
+                    await addMessageToChat(leaveMessage);
+                    $onlineUserNames = $onlineUserNames.filter(
+                        (username) => username !== leaveMessage.username
+                    );
+                }
+            ),
             chatService.onTextMessage.subscribe(async (textMessage) => {
                 await addMessageToChat(textMessage);
                 lastTextMessage = textMessage;
@@ -52,8 +54,6 @@
             chatService.requestMessageList($messageListLimit),
             chatService.requestOnlineUsers(),
         ]);
-        console.log("Result:");
-        console.log(result);
         messages = [...messages, ...result[0].messages];
         $onlineUserNames = [...result[1].users];
     });
@@ -70,7 +70,9 @@
         }
     }
 
-    async function sendTextMessage(event: CustomEvent<TextMessage>): Promise<void> {
+    async function sendTextMessage(
+        event: CustomEvent<TextMessage>
+    ): Promise<void> {
         chatService.sendTextMessage(event.detail);
         await addMessageToChat(event.detail);
         await scrollToBottom();
@@ -139,9 +141,9 @@
             {:else if chatService.isSystemMessage(message)}
                 <SystemMessageComponent systemMessage={message} />
             {:else if chatService.isUsernameMessage(message)}
-                {#if message.event === ServerEvent.SEND_LOGIN}
+                {#if message.event === ServerEvent.SEND_JOIN_CHATROOM}
                     <LoginMessageComponent loginMessage={message} />
-                {:else if message.event === ServerEvent.SEND_LOGOUT}
+                {:else if message.event === ServerEvent.SEND_LEAVE_CHATROOM}
                     <LogoutMessageComponent logoutMessage={message} />
                 {/if}
             {/if}

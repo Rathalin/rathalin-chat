@@ -194,7 +194,6 @@ export class ChatServer {
         } else {
             messages = existingMessage;
         }
-        this.logger.log(`MessageList(${existingMessage.length})`, ServerEvent.RESPONSE_MESSAGE_LIST);
         const allTextMessages: TextMessage[] = messages.filter(msg => msg.type === MessageType.TEXT) as TextMessage[];
         const loginMessageOfClient: UsernameMessage = {
             event: ServerEvent.SEND_JOIN_CHATROOM,
@@ -202,7 +201,7 @@ export class ChatServer {
             date: new Date().toString(),
             username: this.clientManager.getClientBySocket(socket).user.username,
         }
-        const messageList: MessageListMessage = {
+        const messageListMessage: MessageListMessage = {
             event: ServerEvent.RESPONSE_MESSAGE_LIST,
             type: MessageType.MESSAGE_LIST,
             date: new Date().toString(),
@@ -211,7 +210,8 @@ export class ChatServer {
                 loginMessageOfClient
             ],
         }
-        socket.to(roomName).emit(ServerEvent.RESPONSE_MESSAGE_LIST, messageList);
+        this.logger.log(`MessageList(${messageListMessage.messages.length})`, ServerEvent.RESPONSE_MESSAGE_LIST);
+        socket.emit(ServerEvent.RESPONSE_MESSAGE_LIST, messageListMessage);
     }
 
 
@@ -225,6 +225,6 @@ export class ChatServer {
                 .filter(name => name !== ""),
         };
         this.logger.log(`Online users (${onlineUsersMessage.users.length})`, ServerEvent.RESPONSE_ONLINE_USERS);
-        socket.to(roomName).emit(ServerEvent.RESPONSE_ONLINE_USERS, onlineUsersMessage);
+        socket.emit(ServerEvent.RESPONSE_ONLINE_USERS, onlineUsersMessage);
     }
 }
