@@ -1,4 +1,4 @@
-import { ChatServer } from "src/ChatServer";
+import { ChatServer } from "src/chatserver/ChatServer";
 
 describe('Connect', () => {
 

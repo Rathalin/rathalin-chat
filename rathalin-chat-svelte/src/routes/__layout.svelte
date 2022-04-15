@@ -1,7 +1,4 @@
 <script lang="ts" context="module">
-    import { locale, setupI18n } from "../services/i18n/i18n.service";
-    import { selectedLocale } from "../stores/config.store";
-
     export async function load() {
         setupI18n();
         selectedLocale.subscribe((lang) => locale.set(lang));
@@ -10,8 +7,10 @@
 </script>
 
 <script lang="ts">
-    import HeaderComponent from "$lib/header/HeaderComponent.svelte";
-    import "../styles/app.scss";
+    import HeaderComponent from "$lib/component/header/HeaderComponent.svelte";
+    import { locale, setupI18n } from "$lib/services/i18n/i18n.service";
+    import { selectedLocale } from "$lib/stores/config.store";
+    import "$lib/styles/app.scss";
 </script>
 
 <HeaderComponent />

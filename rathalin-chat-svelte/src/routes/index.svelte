@@ -1,8 +1,7 @@
 <script lang="ts">
-	import { translate } from "../services/i18n/i18n.service";
-
-	import ChatAuthComponent from "../lib/chat/ChatAuthComponent.svelte";
-	import { selectedLocale } from "../stores/config.store";
+	import ChatAuthComponent from "$lib/component/chat/ChatAuthComponent.svelte";
+	import { translate } from "$lib/services/i18n/i18n.service";
+	import { selectedLocale } from "$lib/stores/config.store";
 </script>
 
 <svelte:head>
