@@ -4,10 +4,10 @@
 	import { selectedLocale } from "$lib/stores/config.store";
 </script>
 
-<svelte:head>
+<!-- <svelte:head>
 	<title>{$translate("app.name")}</title>
 	<html lang={$selectedLocale} />
-</svelte:head>
+</svelte:head> -->
 
 <ChatAuthComponent />
 
