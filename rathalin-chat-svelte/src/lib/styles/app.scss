@@ -41,6 +41,10 @@
     --duration-short: 100ms;
     --duration-normal: 150ms;
     --duration-long: 300ms;
+
+    --border-radius-s: 0.2em;
+    --border-radius-m: 0.5em;
+    --border-radius-l: 0.7em;
 }
 
 html,
@@ -166,7 +170,7 @@ textarea {
     margin: 0 0 0.5em 0;
     box-sizing: border-box;
     border: 1px solid #ccc;
-    border-radius: 2px;
+    border-radius: var(--border-radius-s);
     transition-property: border, background-color, color;
     transition-duration: var(--duration-normal);
     background-color: var(--primary-light);
@@ -204,7 +208,7 @@ textarea {
     ::-webkit-scrollbar-thumb {
         background: #e1e1e1;
         border: 0px none #ffffff;
-        border-radius: 0px;
+        border-radius: 0;
     }
 
     ::-webkit-scrollbar-thumb:hover {
@@ -218,7 +222,7 @@ textarea {
     ::-webkit-scrollbar-track {
         background: #666666;
         border: 0px none #ffffff;
-        border-radius: 0px;
+        border-radius: 0;
     }
 
     ::-webkit-scrollbar-track:hover {

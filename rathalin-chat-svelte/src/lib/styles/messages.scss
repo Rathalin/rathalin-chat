@@ -19,7 +19,7 @@ li {
 
     blockquote {
         margin: 0px;
-        border-radius: 8px;
+        border-radius: var(--border-radius-m);
         position: relative;
     }
 }
