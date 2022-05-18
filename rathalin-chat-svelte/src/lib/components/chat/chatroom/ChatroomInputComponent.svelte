@@ -3,6 +3,7 @@
     import { _ } from "$lib/services/i18n/i18n.service";
     import { chatService } from "$lib/services/chat/chat.service";
     import { chatroom, lastChatroom } from "$lib/stores/user.store";
+    import { goto } from "$app/navigation";
 
     export let disabled: boolean = false;
 
@@ -27,6 +28,7 @@
         if (await chatService.joinChatroom(room)) {
             console.log(`Joining chatroom '${room}'`);
             $chatroom = room;
+            goto("/");
         }
         joinPending = false;
     }
@@ -35,9 +37,7 @@
 <div id="join-chatroom">
     {#if showChatroomNotExistingError}
         <div class="error">
-            <ErrorComponent
-                text={$_("chatroom.error.not_existing.label")}
-            />
+            <ErrorComponent text={$_("chatroom.error.not_existing.label")} />
         </div>
     {/if}
     <!-- svelte-ignore a11y-autofocus -->
