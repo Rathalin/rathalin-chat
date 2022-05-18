@@ -1,0 +1,81 @@
+{
+  "error": {
+    "page404": {
+      "heading": "Ja, den här sidan finns inte",
+      "text": "Du är en förlorad själ, även för Jesus.",
+      "link": {
+        "text": "Tillbaka till huvudsidan"
+      }
+    }
+  },
+  "connection": {
+    "connect": {
+      "label": "Ansluta"
+    },
+    "disconnect": {
+      "label": "Koppla ifrån"
+    },
+    "input": {
+      "username": {
+        "label": "Användarnamn"
+      },
+      "email": {
+        "label": "E-post"
+      },
+      "password": {
+        "label": "Lösenord"
+      }
+    },
+    "enter": {
+      "label": "Stiga på"
+    },
+    "exit": {
+      "label": "Utgång"
+    },
+    "login": {
+      "label": "Logga in"
+    },
+    "logout": {
+      "label": "Logga ut"
+    },
+    "error": {
+      "username": {
+        "taken": {
+          "label": "Det här användarnamnet är upptaget"
+        }
+      },
+      "connection": {
+        "error": {
+          "label": "Det gick inte att upprätta en anslutning till servern"
+        },
+        "lost": {
+          "label": "Anslutning förlorad"
+        }
+      }
+    }
+  },
+  "chatroom": {
+    "input": {
+      "room": {
+        "placeholder": "Chattrum"
+      }
+    },
+    "join": {
+      "label": "Ansluta sig"
+    },
+    "change": {
+      "label": "Byt chattrum"
+    },
+    "error": {
+      "not_existing": {
+        "label": "Detta chattrum finns inte"
+      }
+    }
+  },
+  "header": {
+    "view_on": "Syn på"
+  },
+  "app": {
+    "name": "Rathalin Messenger"
+  }
+}

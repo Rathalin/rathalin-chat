@@ -8,10 +8,12 @@ import {
 
 import en from "./en.json";
 import de from "./de.json";
+import sv from "./sv.json";
 
 function setupI18n() {
     addMessages("en", en);
     addMessages("de", de);
+    addMessages("sv", sv);
     const fallbackLocale: string = "en";
     init({
         fallbackLocale,
