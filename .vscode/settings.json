@@ -1,7 +1,0 @@
-{
-    "i18n-ally.localesPaths": [
-        "rathalin-chat-svelte/src/lib/services/i18n",
-        "rathalin-chat-svelte/src/lib/components/chat/messages"
-    ],
-    "i18n-ally.keystyle": "nested"
-}
