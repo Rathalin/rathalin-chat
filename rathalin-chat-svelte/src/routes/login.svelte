@@ -1,3 +1,13 @@
+<script context="module">
+	import { isAuthorized } from "$lib/guards/chat.guard";
+	export async function load() {
+		if (isAuthorized()) {
+			chatService.disconnect();
+		}
+		return {};
+	}
+</script>
+
 <script lang="ts">
 	import ChatroomInputComponent from "$lib/components/chat/chatroom/ChatroomInputComponent.svelte";
 	import LoginComponent from "$lib/components/chat/login/LoginComponent.svelte";

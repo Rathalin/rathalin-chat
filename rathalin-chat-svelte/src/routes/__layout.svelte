@@ -20,6 +20,7 @@
 
 <style lang="scss">
     main {
+        overflow: auto;
         flex: 1;
         display: flex;
         flex-direction: column;

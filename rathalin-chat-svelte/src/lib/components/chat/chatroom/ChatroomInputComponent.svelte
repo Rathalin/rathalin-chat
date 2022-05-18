@@ -28,7 +28,7 @@
         if (await chatService.joinChatroom(room)) {
             console.log(`Joining chatroom '${room}'`);
             $chatroom = room;
-            goto("/");
+            goto("/chat");
         }
         joinPending = false;
     }
