@@ -1,13 +1,15 @@
 <script lang="ts">
     import type { TextMessage } from "$lib/shared/message/content/TextMessage";
-import type { Username } from "$lib/shared/message/user/Username";
+    import type { Username } from "$lib/shared/message/user/Username";
     import { MessageType } from "$lib/shared/MessageType";
-import { ServerEvent } from "$lib/shared/ServerEvent";
+    import { ServerEvent } from "$lib/shared/ServerEvent";
     import { user } from "$lib/stores/user.store";
 
     import { createEventDispatcher, onDestroy, onMount } from "svelte";
 
-    let dispatch = createEventDispatcher<{ message: { text: string, sender: Username } }>();
+    let dispatch = createEventDispatcher<{
+        message: { text: string; sender: Username };
+    }>();
 
     let text: string = "";
     let inputEl: HTMLInputElement;
@@ -21,7 +23,7 @@ import { ServerEvent } from "$lib/shared/ServerEvent";
         const messageText: string = text.trim();
 
         if (messageText.length > 0) {
-            const message: { text: string, sender: Username } = {
+            const message: { text: string; sender: Username } = {
                 sender: myUsername,
                 text: messageText,
             };
@@ -88,6 +90,7 @@ import { ServerEvent } from "$lib/shared/ServerEvent";
 
     input {
         font-family: var(--font-secondary);
+        padding: 0em 0.5em;
         font-size: 11pt;
         margin: 0em;
         flex-grow: 1;

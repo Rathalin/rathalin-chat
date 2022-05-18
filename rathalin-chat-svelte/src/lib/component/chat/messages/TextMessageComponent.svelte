@@ -70,7 +70,7 @@
             max-width: 95%;
             padding: 0.2em 0.8em 0.2em 0.8em;
             color: white;
-            border-radius: 0px 8px 8px 8px;
+            border-radius: 0px var(--border-radius-m) var(--border-radius-m) var(--border-radius-m);
             background-color: var(--primary-light);
 
             .name {
@@ -146,7 +146,7 @@
     }
 
     li.follow-up-text-message blockquote {
-        border-radius: 8px 8px 8px 8px;
+        border-radius: var(--border-radius-m);
 
         &::before {
             border: none;

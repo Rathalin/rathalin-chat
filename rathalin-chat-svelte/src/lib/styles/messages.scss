@@ -19,7 +19,7 @@ li {
 
     blockquote {
         margin: 0px;
-        border-radius: 8px;
+        border-radius: var(--border-radius-m);
         position: relative;
     }
 }
@@ -33,6 +33,7 @@ li.connect-message {
         padding: 0.2em 0.8em;
         font-size: 10pt;
         background-color: var(--primary-lighter);
+        border-radius: var(--border-radius-l);
         color: white;
 
         .timestamp {

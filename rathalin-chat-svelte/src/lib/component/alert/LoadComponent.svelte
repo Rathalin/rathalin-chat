@@ -26,7 +26,7 @@
         justify-content: center;
         gap: 1em;
         color: white;
-        border-radius: 2px;
+        border-radius: var(--border-radius-s);
         background-color: var(--alert-primary);
         padding: 1em 1.5em;
         margin-bottom: 1em;

@@ -161,6 +161,7 @@
 <style lang="scss">
     .chat-wrapper {
         flex: 1;
+        overflow-y: auto;
         display: flex;
         flex-direction: column;
         justify-content: stretch;
