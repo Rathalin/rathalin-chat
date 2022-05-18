@@ -1,14 +1,11 @@
 <script lang="ts">
+	import ChatroomInputComponent from "$lib/components/chat/chatroom/ChatroomInputComponent.svelte";
+	import LoginComponent from "$lib/components/chat/login/LoginComponent.svelte";
+
 	import { chatService } from "$lib/services/chat/chat.service";
 	import { socketIoServerConnection } from "$lib/stores/config.store";
-	import {
-		connected,
-		inChatroom,
-		loggedIn,
-	} from "$lib/stores/user.store";
+	import { connected, inChatroom, loggedIn } from "$lib/stores/user.store";
 	import ChatComponent from "./ChatComponent.svelte";
-	import ChatroomInputComponent from "./chatroom/ChatroomInputComponent.svelte";
-	import LoginComponent from "./login/LoginComponent.svelte";
 
 	chatService.onConnect.subscribe(() => {
 		console.log(`Connected to ${$socketIoServerConnection}`);
@@ -27,10 +24,9 @@
 	});
 </script>
 
-{#if !$connected || !$loggedIn}
-	<LoginComponent />
-{:else if !$inChatroom}
-	<ChatroomInputComponent />
+{#if !$connected || !$loggedIn || !$inChatroom}
+	<LoginComponent disabled={$connected && $loggedIn} />
+	<ChatroomInputComponent disabled={!$connected || !$loggedIn} />
 {:else}
 	<ChatComponent />
 {/if}

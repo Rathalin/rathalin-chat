@@ -6,7 +6,7 @@
     import { onDestroy, onMount, tick } from "svelte";
     import type { Subscription } from "rxjs";
     import type { TextMessage } from "$lib/shared/message/content/TextMessage";
-    import SystemMessageComponent from "$lib/component/chat/messages/SystemMessageComponent.svelte";
+    import SystemMessageComponent from "$lib/components/chat/messages/SystemMessageComponent.svelte";
     import { onlineUserNames, user } from "$lib/stores/user.store";
     import type { Message } from "$lib/shared/message/Message";
     import { chatService } from "$lib/services/chat/chat.service";
@@ -18,7 +18,7 @@
     let lastWindowHeight: number = 0;
     let messageListEl: HTMLUListElement;
     let lastTextMessage: TextMessage | null = null;
-    let scrollIsAtBottom: boolean = false;
+    let scrollIsAtBottom: boolean = true;
 
     let myUsername: Username = $user?.name ?? "";
     let messages: Message[] = [];

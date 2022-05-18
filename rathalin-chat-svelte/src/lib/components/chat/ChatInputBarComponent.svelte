@@ -1,8 +1,5 @@
 <script lang="ts">
-    import type { TextMessage } from "$lib/shared/message/content/TextMessage";
     import type { Username } from "$lib/shared/message/user/Username";
-    import { MessageType } from "$lib/shared/MessageType";
-    import { ServerEvent } from "$lib/shared/ServerEvent";
     import { user } from "$lib/stores/user.store";
 
     import { createEventDispatcher, onDestroy, onMount } from "svelte";
@@ -49,11 +46,13 @@
     }
 
     onMount(() => {
-        window.addEventListener("keydown", focusInput);
+        // TODO
+        // window.addEventListener("keydown", focusInput);
     });
 
     onDestroy(() => {
-        window.removeEventListener("keydown", focusInput);
+        // TODO
+        // window.removeEventListener("keydown", focusInput);
     });
 </script>
 

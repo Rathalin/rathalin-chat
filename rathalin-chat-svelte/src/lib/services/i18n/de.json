@@ -94,5 +94,14 @@
   },
   "header": {
     "view_on": "Ansehen auf"
+  },
+  "error": {
+    "page404": {
+      "heading": "Eh, die Seite gibt's nicht",
+      "link": {
+        "text": "Zurück zur Hauptseite"
+      },
+      "text": "Was genau wolltest du bitte finden?"
+    }
   }
 }

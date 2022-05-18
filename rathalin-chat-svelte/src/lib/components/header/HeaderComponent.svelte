@@ -1,5 +1,5 @@
 <script lang="ts">
-    import { translate } from "$lib/services/i18n/i18n.service";
+    import { _ } from "$lib/services/i18n/i18n.service";
     import ChangeChatroomComponent from "./ChangeChatroomComponent.svelte";
     import LanguageSelectionComponent from "./LanguageSelectionComponent.svelte";
     import LogoutComponent from "./LogoutComponent.svelte";
@@ -9,9 +9,9 @@
 <header>
     <nav>
         <div class="nav-content nav-left-content">
-            <div>{$translate("app.name")}</div>
+            <div>{$_("app.name")}</div>
             <a href="https://github.com/Rathalin/rathalin-chat" target="_blank"
-                >{`${$translate("header.view_on")} Github`}</a
+                >{`${$_("header.view_on")} Github`}</a
             >
         </div>
         <div class="nav-content nav-right-content">

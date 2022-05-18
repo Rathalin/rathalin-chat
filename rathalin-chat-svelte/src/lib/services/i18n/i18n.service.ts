@@ -10,8 +10,6 @@ import en from "./en.json";
 import de from "./de.json";
 
 function setupI18n() {
-    // register('en', () => import('./en.json'));
-    // register('de', () => import('./de.json'));
     addMessages("en", en);
     addMessages("de", de);
     const fallbackLocale: string = "en";
@@ -24,7 +22,7 @@ function setupI18n() {
 }
 
 export {
-    _ as translate,
+    _,
     setupI18n,
     i18n_locale as locale,
 };

@@ -7,7 +7,7 @@
 </script>
 
 <script lang="ts">
-    import HeaderComponent from "$lib/component/header/HeaderComponent.svelte";
+    import HeaderComponent from "$lib/components/header/HeaderComponent.svelte";
     import { locale, setupI18n } from "$lib/services/i18n/i18n.service";
     import { selectedLocale } from "$lib/stores/config.store";
     import "$lib/styles/app.scss";
@@ -21,9 +21,7 @@
 <style lang="scss">
     main {
         flex: 1;
-        overflow-y: auto;
         display: flex;
         flex-direction: column;
-        justify-content: center;
     }
 </style>

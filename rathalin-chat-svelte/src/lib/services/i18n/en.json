@@ -94,5 +94,14 @@
   },
   "header": {
     "view_on": "View on"
+  },
+  "error": {
+    "page404": {
+      "heading": "Ye, this page doesn't exist",
+      "link": {
+        "text": "Back to the main page"
+      },
+      "text": "What exactly where you trying to find, tho?"
+    }
   }
 }

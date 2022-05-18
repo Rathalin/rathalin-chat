@@ -1,20 +1,18 @@
 <script lang="ts">
+    import { _ } from "$lib/services/i18n/i18n.service";
+    import { getRandomInt } from "$lib/util/random";
     import {
         messageFadeInPosition,
         messageFadeInDuration,
     } from "$lib/stores/config.store";
+
     import { fly } from "svelte/transition";
-    import { getRandomInt } from "$lib/util/random";
-    import { translate } from "$lib/services/i18n/i18n.service";
-    import type { UsernameMessage } from "$lib/shared/message/user/UsernameMessage";
+import type { UsernameMessage } from "$lib/shared/message/user/UsernameMessage";
 
-    export let logoutMessage: UsernameMessage;
-    const messageTranslateKey: string = `messages.logout.${getRandomInt(
-        1,
-        10
-    )}`;
+    export let loginMessage: UsernameMessage;
+    const messageTranslateKey: string = `messages.login.${getRandomInt(1, 10)}`;
 
-    $: timestamp = new Date(logoutMessage.date).toLocaleTimeString("at-AT", {
+    $: timestamp = new Date(loginMessage.date).toLocaleTimeString("at-AT", {
         hour: "2-digit",
         minute: "2-digit",
     });
@@ -26,8 +24,8 @@
 >
     <blockquote>
         <span class="text">
-            {$translate(messageTranslateKey, {
-                values: { username: logoutMessage.username },
+            {$_(messageTranslateKey, {
+                values: { username: loginMessage.username },
             })}
         </span>
         <span class="timestamp">

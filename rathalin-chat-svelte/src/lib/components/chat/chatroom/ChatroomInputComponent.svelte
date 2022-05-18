@@ -1,8 +1,10 @@
 <script lang="ts">
-    import ErrorComponent from "$lib/component/alert/ErrorComponent.svelte";
-    import { translate } from "$lib/services/i18n/i18n.service";
+    import ErrorComponent from "$lib/components/alert/ErrorComponent.svelte";
+    import { _ } from "$lib/services/i18n/i18n.service";
     import { chatService } from "$lib/services/chat/chat.service";
     import { chatroom, lastChatroom } from "$lib/stores/user.store";
+
+    export let disabled: boolean = false;
 
     let joinRoomInput: string = $lastChatroom;
     let roomMaxLength: number = 30;
@@ -34,7 +36,7 @@
     {#if showChatroomNotExistingError}
         <div class="error">
             <ErrorComponent
-                text={$translate("chatroom.error.not_existing.label")}
+                text={$_("chatroom.error.not_existing.label")}
             />
         </div>
     {/if}
@@ -43,10 +45,10 @@
         bind:value={joinRoomInput}
         on:keydown={onJoinRoomInputKeyDown}
         maxlength={roomMaxLength}
-        disabled={joinPending}
+        disabled={joinPending || disabled}
         type="text"
         id="join-chatroom-input"
-        placeholder={$translate("chatroom.input.room.placeholder")}
+        placeholder={$_("chatroom.input.room.placeholder")}
         autocomplete="off"
         autofocus
     />
@@ -54,9 +56,9 @@
         id="join-chatroom-button"
         class="primary"
         on:click={join}
-        disabled={joinPending}
+        disabled={joinPending || disabled}
     >
-        <span>{$translate("chatroom.join.label")}</span>
+        <span>{$_("chatroom.join.label")}</span>
     </button>
 </div>
 
@@ -64,7 +66,6 @@
     #join-chatroom {
         font-family: "Cairo", sans-serif;
         min-width: 300px;
-        margin: auto;
         display: flex;
         flex-direction: column;
 

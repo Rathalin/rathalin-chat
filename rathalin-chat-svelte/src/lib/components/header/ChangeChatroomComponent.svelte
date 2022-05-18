@@ -1,16 +1,20 @@
 <script lang="ts">
     import { chatService } from "$lib/services/chat/chat.service";
-    import { translate } from "$lib/services/i18n/i18n.service";
-    import { loggedIn } from "$lib/stores/user.store";
+    import { _ } from "$lib/services/i18n/i18n.service";
+    import { chatroom, inChatroom } from "$lib/stores/user.store";
 
-    function exit(): void {
-        chatService.disconnect();
+    async function exit(): Promise<void> {
+        console.log(`Leaving chatroom '${$chatroom}`);
+        if ($chatroom != null) {
+            await chatService.leaveChatroom($chatroom);
+        }
+        $chatroom = null;
     }
 </script>
 
-{#if $loggedIn}
+{#if $inChatroom}
     <button id="exit-button" on:click={exit}
-        >{$translate("connection.disconnect.label")}</button
+        >{$_("chatroom.change.label")}</button
     >
 {/if}
 

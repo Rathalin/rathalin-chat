@@ -4,10 +4,11 @@
     import { onDestroy, onMount } from "svelte";
     import { lastUsername, loggedIn, user } from "$lib/stores/user.store";
     import { chatService } from "$lib/services/chat/chat.service";
-    import { MessageType } from "$lib/shared/MessageType";
-    import ErrorComponent from "$lib/component/alert/ErrorComponent.svelte";
-    import LoadComponent from "$lib/component/alert/LoadComponent.svelte";
-    import { translate } from "$lib/services/i18n/i18n.service";
+    import ErrorComponent from "$lib/components/alert/ErrorComponent.svelte";
+    import LoadComponent from "$lib/components/alert/LoadComponent.svelte";
+    import { _ } from "$lib/services/i18n/i18n.service";
+
+    export let disabled: boolean = false;
 
     const subscriptions: Subscription[] = [];
 
@@ -16,6 +17,7 @@
     let showConnectionError: boolean = false;
     let showDuplicateUsernameError: boolean = false;
     let loginPending: boolean = false;
+    const loginPendingDelay: number = 100;
 
     onMount(() => {
         subscriptions.push(
@@ -41,8 +43,13 @@
         if (!username || username.length === 0) return;
 
         clearErrors();
+        let loginDone: boolean = false;
         chatService.connect();
-        loginPending = true;
+        setTimeout(() => {
+            if (!loginDone) {
+                loginPending = true;
+            }
+        }, loginPendingDelay);
         if (await chatService.login(username)) {
             console.log(`Username ${username} accepted!`);
             $user = { name: username };
@@ -52,6 +59,7 @@
             showDuplicateUsernameError = true;
             $loggedIn = false;
         }
+        loginDone = true;
         loginPending = false;
     }
 
@@ -70,20 +78,20 @@
     {#if showConnectionError}
         <div class="error" in:fade>
             <ErrorComponent
-                text={$translate("connection.error.connection.error.label")}
+                text={$_("connection.error.connection.error.label")}
             />
         </div>
     {/if}
     {#if showDuplicateUsernameError}
         <div class="error" in:fade>
             <ErrorComponent
-                text={$translate("connection.error.username.taken.label")}
+                text={$_("connection.error.username.taken.label")}
             />
         </div>
     {/if}
     {#if loginPending}
         <div class="loading" in:fade>
-            <LoadComponent text={$translate("connection.connect.label")} />
+            <LoadComponent text={$_("connection.connect.label")} />
         </div>
     {/if}
     <!-- svelte-ignore a11y-autofocus -->
@@ -91,10 +99,10 @@
         bind:value={usernameInput}
         on:keydown={onUsernameInputKeyDown}
         maxlength={usernameMaxInputLength}
-        disabled={loginPending}
+        disabled={loginPending || disabled}
         type="text"
         id="login-username"
-        placeholder={$translate("connection.input.username.label")}
+        placeholder={$_("connection.input.username.label")}
         autocomplete="off"
         autofocus
     />
@@ -102,9 +110,9 @@
         id="login-button"
         class="primary"
         on:click={login}
-        disabled={loginPending}
+        disabled={loginPending || disabled}
     >
-        <span>{$translate("connection.connect.label")}</span>
+        <span>{$_("connection.connect.label")}</span>
     </button>
 </div>
 
@@ -112,7 +120,6 @@
     #login {
         font-family: "Cairo", sans-serif;
         min-width: 300px;
-        margin: auto;
         display: flex;
         flex-direction: column;
 
