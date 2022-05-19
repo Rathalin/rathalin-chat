@@ -46,13 +46,11 @@
     }
 
     onMount(() => {
-        // TODO
-        // window.addEventListener("keydown", focusInput);
+        window.addEventListener("keydown", focusInput);
     });
 
     onDestroy(() => {
-        // TODO
-        // window.removeEventListener("keydown", focusInput);
+        window.removeEventListener("keydown", focusInput);
     });
 </script>
 
@@ -80,6 +78,7 @@
 
 <style lang="scss">
     #chat-input-wrapper {
+        box-shadow: 0px 12px 14px 5px #000000;
         padding: 5px;
         display: flex;
         flex-direction: row;
@@ -109,7 +108,10 @@
 
         i {
             margin: 8px;
-            color: var(--c-text-inverse-prime);
+        }
+
+        @media (prefers-color-scheme: dark) {
+            color: var(--c-prime);
         }
     }
 </style>

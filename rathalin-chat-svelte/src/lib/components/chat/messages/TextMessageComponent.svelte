@@ -70,7 +70,6 @@
             padding: 0.2em 0.8em 0.2em 0.8em;
             border-radius: 0 var(--border-radius-m) var(--border-radius-m)
                 var(--border-radius-m);
-            color: var(--c-text-inverse-second);
             background-color: var(--c-msg-text);
 
             .name {

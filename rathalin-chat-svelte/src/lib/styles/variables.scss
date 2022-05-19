@@ -34,11 +34,11 @@
     --c-prime-dim-1: hwb(22 29% 0%);
     --c-prime-dim-2: hwb(22 45% 0%);
 
-    --c-second-acc-2: hwb(240 33% 63%);
-    --c-second-acc-1: rgb(108, 108, 121);
-    --c-second: hwb(240 61% 31%);
-    --c-second-dim-1: hwb(240 68% 23%);
-    --c-second-dim-2: hwb(240 78% 11%);
+    --c-second-acc-2: hwb(240 38% 57%);
+    --c-second-acc-1: hwb(240 47% 45%);
+    --c-second: hwb(240 57% 35%);
+    --c-second-dim-1: hwb(240 65% 25%);
+    --c-second-dim-2: hwb(240 76% 13%);
 
     --c-flash-acc-1: hwb(204 14% 15%);
     --c-flash: hwb(204 25% 0%);
@@ -50,10 +50,10 @@
 
     --c-error: hwb(0 9% 43%);
 
-    --c-msg-system: hwb(203 57% 29%);
-    --c-msg-text: hwb(196 14% 80%);
-    --c-msg-text-me: hwb(204 25% 33%);
-    --c-msg-input: hwb(200 15% 81%);
+    --c-msg-text: hwb(240 68% 23%);
+    --c-msg-text-me: hwb(22 38% 0%);
+    --c-msg-system: hwb(240 61% 18%);
+    --c-msg-input: hwb(240 56% 37%);
 }
 
 @media (prefers-color-scheme: dark) {
@@ -90,9 +90,9 @@
 
         --c-error: hwb(0 9% 43%);
 
-        --c-msg-system: hwb(203 57% 29%);
-        --c-msg-text: hwb(196 14% 80%);
-        --c-msg-text-me: hwb(204 25% 33%);
-        --c-msg-input: hwb(200 15% 81%);
+        --c-msg-system: hwb(0 35% 65%);
+        --c-msg-text: hwb(0 18% 82%);
+        --c-msg-text-me: hwb(0 35% 65%);
+        --c-msg-input: hwb(0 18% 82%);
     }
 }

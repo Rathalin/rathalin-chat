@@ -4,15 +4,16 @@
     import LanguageSelectionComponent from "./LanguageSelectionComponent.svelte";
     import LogoutComponent from "./LogoutComponent.svelte";
     import ProfileMenuComponent from "./ProfileMenuComponent.svelte";
+    import Github from "svelte-material-icons/Github.svelte";
 </script>
 
 <header>
     <nav>
         <div class="nav-content nav-left-content">
             <div>{$_("app.name")}</div>
-            <a href="https://github.com/Rathalin/rathalin-chat" target="_blank"
-                >{`${$_("header.view_on")} Github`}</a
-            >
+            <a href="https://github.com/Rathalin/rathalin-chat" target="_blank">
+                <Github size="1.7em" />
+            </a>
         </div>
         <div class="nav-content nav-right-content">
             <div />
