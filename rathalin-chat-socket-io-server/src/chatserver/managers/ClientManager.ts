@@ -11,6 +11,10 @@ export class ClientManager {
 
     // Constructor
 
+    constructor(
+        public readonly messageLimitPerChatroom: number = 1000
+    ) { }
+
     // Members and Properties
 
     private _clients: Client[] = [];
@@ -104,6 +108,10 @@ export class ClientManager {
     public addMessageToChatroom(roomName: ChatroomName, ...messages: Message[]): void {
         const room: Chatroom = this.getChatroomByName(roomName);
         room.messages.push(...messages);
+        // Delete old messages
+        if (room.messages.length > this.messageLimitPerChatroom) {
+            room.messages.splice(0, room.messages.length - this.messageLimitPerChatroom);
+        }
     }
 
 

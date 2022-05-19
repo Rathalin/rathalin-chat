@@ -8,9 +8,9 @@
         console.log(`Leaving chatroom '${$chatroom}`);
         if ($chatroom != null) {
             await chatService.leaveChatroom($chatroom);
-            goto("/login");
         }
         $chatroom = null;
+        goto("/login");
     }
 </script>
 
