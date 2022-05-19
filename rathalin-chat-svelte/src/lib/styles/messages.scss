@@ -18,29 +18,25 @@ li {
     }
 
     blockquote {
-        margin: 0px;
         border-radius: var(--border-radius-m);
-        position: relative;
     }
 }
 
 li.connect-message {
-    font-family: var(--font-secondary);
-    font-weight: 400;
     align-self: center;
 
     blockquote {
         padding: 0.2em 0.8em;
         font-size: 10pt;
-        background-color: var(--primary-lighter);
+        background-color: var(--c-msg-system);
         border-radius: var(--border-radius-l);
-        color: white;
+        color: var(--c-text-prime);
 
         .timestamp {
             align-self: flex-end;
             font-size: 8pt;
             margin-left: 0.5em;
-            color: rgba(255, 255, 255, 0.6);
+            opacity: 0.8;
         }
     }
 }

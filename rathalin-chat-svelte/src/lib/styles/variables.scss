@@ -1,0 +1,98 @@
+:root {
+    $device-min-small: 0px;
+    $device-min-medium: 600px;
+    $device-min-large: 992px;
+    $device-min-xlarge: 1200px;
+
+    --font-prime: "Cairo", -apple-system, Ubuntu, Tahoma, Geneva, Verdana, sans-serif;
+    --font-second: "Segoe UI", -apple-system, Ubuntu, Tahoma, Geneva, Verdana, sans-serif;
+    --font-weight-normal: 400;
+    --font-weight-light: 300;
+    --font-size-normal: 18pt;
+
+    --duration-short: 100ms;
+    --duration-normal: 150ms;
+    --duration-long: 300ms;
+
+    --border-radius-s: 0.2em;
+    --border-radius-m: 0.3em;
+    --border-radius-l: 0.7em;
+
+    --c-back-acc-1: hwb(210 88% 8%);
+    --c-back: hwb(207 81% 12%);
+    --c-back-dim-1: hwb(208 72% 23%);
+
+    --c-text-prime: hwb(0 10% 90%);
+    --c-text-prime-acc-1: hwb(0 50% 50%);
+    --c-text-second: hwb(0 21% 79%);
+    --c-text-inverse-prime: hwb(0 100% 0%);
+    --c-text-inverse-second: hwb(0 90% 10%);
+
+    --c-prime-acc-2: hwb(22 9% 30%);
+    --c-prime-acc-1: hwb(22 10% 18%);
+    --c-prime: hwb(22 17% 0%);
+    --c-prime-dim-1: hwb(22 29% 0%);
+    --c-prime-dim-2: hwb(22 45% 0%);
+
+    --c-second-acc-2: hwb(240 33% 63%);
+    --c-second-acc-1: rgb(108, 108, 121);
+    --c-second: hwb(240 61% 31%);
+    --c-second-dim-1: hwb(240 68% 23%);
+    --c-second-dim-2: hwb(240 78% 11%);
+
+    --c-flash-acc-1: hwb(204 14% 15%);
+    --c-flash: hwb(204 25% 0%);
+    --c-flash-dim-1: hwb(204 47% 6%);
+
+    --c-highlight-acc-1: hwb(60 29% 0%);
+    --c-highlight: hwb(60 51% 0%);
+    --c-highlight-dim-1: hwb(60 69% 0%);
+
+    --c-error: hwb(0 9% 43%);
+
+    --c-msg-system: hwb(203 57% 29%);
+    --c-msg-text: hwb(196 14% 80%);
+    --c-msg-text-me: hwb(204 25% 33%);
+    --c-msg-input: hwb(200 15% 81%);
+}
+
+@media (prefers-color-scheme: dark) {
+    :root {
+        --c-back-acc-1: hwb(0 9% 91%);
+        --c-back: hwb(0 13% 87%);
+        --c-back-dim-1: hwb(0 21% 79%);
+
+        --c-text-prime: hwb(0 100% 0%);
+        --c-text-prime-acc-1: hwb(0 50% 50%);
+        --c-text-second: hwb(0 68% 32%);
+        --c-text-inverse-prime: hwb(0 10% 90%);
+        --c-text-inverse-second: hwb(0 20% 80%);
+
+        --c-prime-acc-2: hwb(22 14% 9%);
+        --c-prime-acc-1: hwb(22 14% 19%);
+        --c-prime: hwb(22 12% 29%);
+        --c-prime-dim-1: hwb(22 11% 41%);
+        --c-prime-dim-2: hwb(22 8% 53%);
+
+        --c-second-acc-2: hwb(0 47% 53%);
+        --c-second-acc-1: hwb(0 29% 71%);
+        --c-second: hwb(0 18% 82%);
+        --c-second-dim-1: hwb(0 13% 87%);
+        --c-second-dim-2: hwb(0 4% 96%);
+
+        --c-flash-acc-1: hwb(204 14% 15%);
+        --c-flash: hwb(204 25% 0%);
+        --c-flash-dim-1: hwb(204 47% 6%);
+
+        --c-highlight-acc-1: hwb(60 29% 0%);
+        --c-highlight: hwb(60 51% 0%);
+        --c-highlight-dim-1: hwb(60 69% 0%);
+
+        --c-error: hwb(0 9% 43%);
+
+        --c-msg-system: hwb(203 57% 29%);
+        --c-msg-text: hwb(196 14% 80%);
+        --c-msg-text-me: hwb(204 25% 33%);
+        --c-msg-input: hwb(200 15% 81%);
+    }
+}

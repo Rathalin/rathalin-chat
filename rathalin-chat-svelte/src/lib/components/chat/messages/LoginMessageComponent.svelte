@@ -33,6 +33,3 @@ import type { UsernameMessage } from "$lib/shared/message/user/UsernameMessage";
         </span>
     </blockquote>
 </li>
-
-<style lang="scss">
-</style>

@@ -108,12 +108,7 @@
     </div>
     <div class="row">
         {#if !loginPending}
-            <button
-                id="login-button"
-                class="primary"
-                on:click={login}
-                {disabled}
-            >
+            <button id="login-button" on:click={login} {disabled}>
                 <span>{$_("connection.connect.label")}</span>
                 <Account size="1.3em" />
             </button>

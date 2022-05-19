@@ -33,13 +33,13 @@ import type { SystemMessage } from "$lib/shared/message/system/SystemMessage";
         blockquote {
             padding: 0.3em 0.8em;
             font-size: 10pt;
-            background-color: red;
-            color: white;
+            background-color: var(--c-second);
+            color: var(--c-text-prime);
 
             .timestamp {
                 font-size: 8pt;
                 margin-left: 0.5em;
-                color: rgba(255, 255, 255, 0.5);
+                opacity: 0.5;
             }
         }
     }

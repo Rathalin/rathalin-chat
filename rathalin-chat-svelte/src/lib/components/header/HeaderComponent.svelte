@@ -26,14 +26,13 @@
 
 <style lang="scss">
     nav {
-        font-family: var(--font-secondary);
         padding: 0em 1em;
         width: 100%;
-        font-weight: 300;
         font-size: large;
-        background-color: var(--primary-dark);
         display: flex;
         flex-direction: row;
+        box-shadow: 0px -12px 14px 5px #000000;
+        background-color: var(--c-back-acc-1);
 
         .nav-content {
             padding: 0.5em 0em;

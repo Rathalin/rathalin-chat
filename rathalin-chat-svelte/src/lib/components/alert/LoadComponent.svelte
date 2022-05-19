@@ -25,10 +25,9 @@
         display: flex;
         justify-content: center;
         gap: 1em;
-        color: white;
-        border-radius: var(--border-radius-s);
-        background-color: var(--alert-primary);
         padding: 1em 1.5em;
         text-transform: uppercase;
+        border-radius: var(--border-radius-s);
+        background-color: var(--c-flash);
     }
 </style>

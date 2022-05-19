@@ -81,21 +81,18 @@
 <style lang="scss">
     #chat-input-wrapper {
         padding: 5px;
-        width: 100%;
-        background-color: var(--primary-light);
         display: flex;
         flex-direction: row;
+        background-color: var(--c-msg-input);
     }
 
     input {
-        font-family: var(--font-secondary);
         padding: 0em 0.5em;
         font-size: 11pt;
         margin: 0em;
         flex-grow: 1;
         border-width: 0px;
         background-color: transparent;
-        color: white;
         outline: none;
     }
 
@@ -112,7 +109,7 @@
 
         i {
             margin: 8px;
-            color: var(--secondary-light);
+            color: var(--c-text-inverse-prime);
         }
     }
 </style>

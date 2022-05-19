@@ -13,6 +13,3 @@
         {/if}
     </div>
 </div>
-
-<style lang="scss">
-</style>

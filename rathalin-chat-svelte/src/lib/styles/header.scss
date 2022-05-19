@@ -1,0 +1,22 @@
+header {
+
+    button {
+        cursor: pointer;
+        background-color: transparent;
+        border: none;
+        padding: 0em;
+        margin: 0em;
+        text-transform: uppercase;
+        color: var(--c-text-prime);
+
+        &:hover,
+        &:focus,
+        &:focus-visible {
+            &:not([disabled]) {
+                color: var(--c-text-prime-acc-1);
+                cursor: pointer;
+                background-color: transparent;
+            }
+        }
+    }
+}

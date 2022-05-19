@@ -62,21 +62,19 @@
 
 <style lang="scss">
     li {
-        font-family: var(--font-secondary);
-        font-weight: 400;
         display: flex;
 
         blockquote {
+            position: relative;
             max-width: 95%;
             padding: 0.2em 0.8em 0.2em 0.8em;
-            color: white;
-            border-radius: 0px var(--border-radius-m) var(--border-radius-m) var(--border-radius-m);
-            background-color: var(--primary-light);
+            border-radius: 0 var(--border-radius-m) var(--border-radius-m)
+                var(--border-radius-m);
+            color: var(--c-text-inverse-second);
+            background-color: var(--c-msg-text);
 
             .name {
-                font-family: var(--font-secondary);
                 font-size: 10pt;
-                color: var(--secondary-light);
                 display: flex;
                 flex-direction: row;
                 align-items: center;
@@ -94,10 +92,9 @@
             }
 
             .timestamp {
-                font-family: var(--font-secondary);
                 font-size: 8pt;
                 margin-left: 0.5em;
-                color: rgba(255, 255, 255, 0.5);
+                opacity: 0.8;
             }
 
             .text {
@@ -121,16 +118,17 @@
                 height: 0;
                 top: 0em;
                 left: -0.4em;
-                border: 0.4em solid var(--primary-light);
-                border-color: var(--primary-light) var(--primary-light)
-                    transparent transparent;
+                border-width: 0.4em;
+                border-style: solid;
+                border-color: var(--c-msg-text) var(--c-msg-text) transparent
+                    transparent;
             }
 
             &.msg-me {
-                background-color: var(--primary-lighter);
+                background-color: var(--c-msg-text-me);
 
                 &::before {
-                    border-color: var(--primary-lighter) var(--primary-lighter)
+                    border-color: var(--c-msg-text-me) var(--c-msg-text-me)
                         transparent transparent;
                 }
             }

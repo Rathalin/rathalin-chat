@@ -35,6 +35,3 @@
         </span>
     </blockquote>
 </li>
-
-<style lang="scss">
-</style>

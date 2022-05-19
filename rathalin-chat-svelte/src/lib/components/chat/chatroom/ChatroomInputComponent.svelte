@@ -70,7 +70,6 @@
         {#if !joinPending}
             <button
                 id="join-chatroom-button"
-                class="primary"
                 on:click={join}
                 disabled={joinPending || disabled}
             >
