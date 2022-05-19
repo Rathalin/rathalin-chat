@@ -72,6 +72,16 @@ body {
 }
 
 
+
+.row {
+    display: flex;
+    flex-direction: column;
+
+    &:not(:last-child) {
+        margin-bottom: 1em;
+    }
+}
+
 .flex-row {
     display: flex;
     flex-direction: row;
@@ -110,7 +120,6 @@ input {
     border: none;
     color: white;
     padding: 0.8em 0.8em;
-    margin-bottom: 1em;
     border: transparent solid 1px;
 
     &:focus-visible {
@@ -129,8 +138,12 @@ button {
     color: #333;
     background-color: #f4f4f4;
     outline: none;
-
     text-transform: uppercase;
+    display: flex;
+    flex-direction: row;
+    justify-content: center;
+    align-items: center;
+    gap: 0.4em;
 
     &:hover {
         &:not([disabled]) {
@@ -138,10 +151,6 @@ button {
             cursor: pointer;
             color: white;
         }
-    }
-
-    &:disabled {
-        opacity: 0.5;
     }
 }
 
@@ -156,6 +165,10 @@ button.primary {
     }
 }
 
+label {
+    padding-left: 0.2em;
+}
+
 input,
 select,
 button,
@@ -164,7 +177,6 @@ textarea {
     font-size: inherit;
     -webkit-padding: 0.4em 0;
     padding: 0.4em;
-    margin: 0 0 0.5em 0;
     box-sizing: border-box;
     border: 1px solid #ccc;
     border-radius: var(--border-radius-s);
@@ -174,7 +186,6 @@ textarea {
     border: none;
     color: white;
     padding: 0.8em 0.8em;
-    margin-bottom: 1em;
     border: transparent solid 1px;
 
     &:focus-visible {
@@ -187,7 +198,8 @@ textarea {
     }
 
     &:disabled {
-        color: #ccc;
+        color: white;
+        opacity: 0.5;
     }
 }
 

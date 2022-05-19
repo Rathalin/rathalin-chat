@@ -27,6 +27,7 @@
   "dependencies": {
     "rxjs": "^7.5.5",
     "socket.io-client": "^4.4.1",
-    "svelte-i18n": "^3.3.13"
+    "svelte-i18n": "^3.3.13",
+    "svelte-material-icons": "^2.0.2"
   }
 }

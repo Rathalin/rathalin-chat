@@ -4,13 +4,17 @@
     import { chatService } from "$lib/services/chat/chat.service";
     import { chatroom, lastChatroom } from "$lib/stores/user.store";
     import { goto } from "$app/navigation";
+    import Chat from "svelte-material-icons/Chat.svelte";
+    import { fade } from "svelte/transition";
+    import LoadComponent from "$lib/components/alert/LoadComponent.svelte";
 
     export let disabled: boolean = false;
 
     let joinRoomInput: string = $lastChatroom;
     let roomMaxLength: number = 30;
-    let joinPending: boolean = false;
     let showChatroomNotExistingError: boolean = false;
+    let joinPending: boolean = false;
+    const joinPendingDelay: number = 100;
 
     function onJoinRoomInputKeyDown(event: KeyboardEvent): void {
         if (event.key !== "Enter") return;
@@ -20,7 +24,12 @@
     async function join(): Promise<void> {
         const room: string = joinRoomInput.trim();
         if (room.length === 0) return;
-        joinPending = true;
+        let joinDone: boolean = false;
+        setTimeout(() => {
+            if (!joinDone) {
+                joinPending = true;
+            }
+        }, joinPendingDelay);
         if (!(await chatService.chatroomExists(room))) {
             console.log(`Creating Chatroom '${room}'`);
             await chatService.createChatroom(room);
@@ -28,38 +37,51 @@
         if (await chatService.joinChatroom(room)) {
             console.log(`Joining chatroom '${room}'`);
             $chatroom = room;
-            goto("/chat");
         }
         joinPending = false;
+        joinDone = true;
+        goto("/chat");
     }
 </script>
 
 <div id="join-chatroom">
     {#if showChatroomNotExistingError}
-        <div class="error">
+        <div class="row error">
             <ErrorComponent text={$_("chatroom.error.not_existing.label")} />
         </div>
     {/if}
-    <!-- svelte-ignore a11y-autofocus -->
-    <input
-        bind:value={joinRoomInput}
-        on:keydown={onJoinRoomInputKeyDown}
-        maxlength={roomMaxLength}
-        disabled={joinPending || disabled}
-        type="text"
-        id="join-chatroom-input"
-        placeholder={$_("chatroom.input.room.placeholder")}
-        autocomplete="off"
-        autofocus
-    />
-    <button
-        id="join-chatroom-button"
-        class="primary"
-        on:click={join}
-        disabled={joinPending || disabled}
-    >
-        <span>{$_("chatroom.join.label")}</span>
-    </button>
+    {#if joinPending}
+        <div in:fade>
+            <LoadComponent text={$_("chatroom.join.label")} />
+        </div>
+    {/if}
+    <div class="row">
+        <label for="join-chatroom-input"
+            >{$_("chatroom.input.room.placeholder")}</label
+        >
+        <!-- svelte-ignore a11y-autofocus -->
+        <input
+            bind:value={joinRoomInput}
+            on:keydown={onJoinRoomInputKeyDown}
+            maxlength={roomMaxLength}
+            disabled={joinPending || disabled}
+            type="text"
+            id="join-chatroom-input"
+            autocomplete="off"
+            autofocus
+        />
+    </div>
+    <div class="row">
+        <button
+            id="join-chatroom-button"
+            class="primary"
+            on:click={join}
+            disabled={joinPending || disabled}
+        >
+            <span>{$_("chatroom.join.label")}</span>
+            <Chat size="1.3em" />
+        </button>
+    </div>
 </div>
 
 <style lang="scss">

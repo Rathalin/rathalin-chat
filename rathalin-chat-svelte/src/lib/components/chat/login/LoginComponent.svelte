@@ -7,6 +7,7 @@
     import ErrorComponent from "$lib/components/alert/ErrorComponent.svelte";
     import LoadComponent from "$lib/components/alert/LoadComponent.svelte";
     import { _ } from "$lib/services/i18n/i18n.service";
+    import Account from "svelte-material-icons/Account.svelte";
 
     export let disabled: boolean = false;
 
@@ -90,30 +91,37 @@
         </div>
     {/if}
     {#if loginPending}
-        <div class="loading" in:fade>
+        <div in:fade>
             <LoadComponent text={$_("connection.connect.label")} />
         </div>
     {/if}
-    <!-- svelte-ignore a11y-autofocus -->
-    <input
-        bind:value={usernameInput}
-        on:keydown={onUsernameInputKeyDown}
-        maxlength={usernameMaxInputLength}
-        disabled={loginPending || disabled}
-        type="text"
-        id="login-username"
-        placeholder={$_("connection.input.username.label")}
-        autocomplete="off"
-        autofocus
-    />
-    <button
-        id="login-button"
-        class="primary"
-        on:click={login}
-        disabled={loginPending || disabled}
-    >
-        <span>{$_("connection.connect.label")}</span>
-    </button>
+    <div class="row">
+        <label for="login-username"
+            >{$_("connection.input.username.label")}</label
+        >
+        <!-- svelte-ignore a11y-autofocus -->
+        <input
+            bind:value={usernameInput}
+            on:keydown={onUsernameInputKeyDown}
+            maxlength={usernameMaxInputLength}
+            disabled={loginPending || disabled}
+            type="text"
+            id="login-username"
+            autocomplete="off"
+            autofocus
+        />
+    </div>
+    <div class="row">
+        <button
+            id="login-button"
+            class="primary"
+            on:click={login}
+            disabled={loginPending || disabled}
+        >
+            <span>{$_("connection.connect.label")}</span>
+            <Account size="1.3em" />
+        </button>
+    </div>
 </div>
 
 <style lang="scss">
@@ -126,10 +134,6 @@
         @media (min-width: 600px) {
             width: 450px;
         }
-    }
-
-    div {
-        display: flex;
     }
 
     .error,

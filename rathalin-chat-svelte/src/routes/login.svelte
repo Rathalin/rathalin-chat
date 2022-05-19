@@ -38,10 +38,14 @@
 </svelte:head>
 
 <div class="wrapper">
-	<LoginComponent disabled={$connected && $loggedIn} />
-	<ChatroomInputComponent
-		disabled={!$connected || !$loggedIn || $inChatroom}
-	/>
+	<div class="row">
+		<LoginComponent disabled={$connected && $loggedIn} />
+	</div>
+	{#if $connected && $loggedIn}
+		<div class="row">
+			<ChatroomInputComponent />
+		</div>
+	{/if}
 </div>
 
 <style lang="scss">
