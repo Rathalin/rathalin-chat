@@ -47,7 +47,7 @@
         let loginDone: boolean = false;
         chatService.connect();
         setTimeout(() => {
-            if (!loginDone) {
+            if (!loginDone && !showConnectionError) {
                 loginPending = true;
             }
         }, loginPendingDelay);
@@ -90,11 +90,6 @@
             />
         </div>
     {/if}
-    {#if loginPending}
-        <div in:fade>
-            <LoadComponent text={$_("connection.connect.label")} />
-        </div>
-    {/if}
     <div class="row">
         <label for="login-username"
             >{$_("connection.input.username.label")}</label
@@ -112,15 +107,21 @@
         />
     </div>
     <div class="row">
-        <button
-            id="login-button"
-            class="primary"
-            on:click={login}
-            disabled={loginPending || disabled}
-        >
-            <span>{$_("connection.connect.label")}</span>
-            <Account size="1.3em" />
-        </button>
+        {#if !loginPending}
+            <button
+                id="login-button"
+                class="primary"
+                on:click={login}
+                {disabled}
+            >
+                <span>{$_("connection.connect.label")}</span>
+                <Account size="1.3em" />
+            </button>
+        {:else}
+            <div in:fade>
+                <LoadComponent text={$_("connection.connect.label")} />
+            </div>
+        {/if}
     </div>
 </div>
 

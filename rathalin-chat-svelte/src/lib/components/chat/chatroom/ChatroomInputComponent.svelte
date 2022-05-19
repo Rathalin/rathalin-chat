@@ -50,11 +50,6 @@
             <ErrorComponent text={$_("chatroom.error.not_existing.label")} />
         </div>
     {/if}
-    {#if joinPending}
-        <div in:fade>
-            <LoadComponent text={$_("chatroom.join.label")} />
-        </div>
-    {/if}
     <div class="row">
         <label for="join-chatroom-input"
             >{$_("chatroom.input.room.placeholder")}</label
@@ -72,15 +67,21 @@
         />
     </div>
     <div class="row">
-        <button
-            id="join-chatroom-button"
-            class="primary"
-            on:click={join}
-            disabled={joinPending || disabled}
-        >
-            <span>{$_("chatroom.join.label")}</span>
-            <Chat size="1.3em" />
-        </button>
+        {#if !joinPending}
+            <button
+                id="join-chatroom-button"
+                class="primary"
+                on:click={join}
+                disabled={joinPending || disabled}
+            >
+                <span>{$_("chatroom.join.label")}</span>
+                <Chat size="1.3em" />
+            </button>
+        {:else}
+            <div in:fade>
+                <LoadComponent text={$_("chatroom.join.label")} />
+            </div>
+        {/if}
     </div>
 </div>
 
