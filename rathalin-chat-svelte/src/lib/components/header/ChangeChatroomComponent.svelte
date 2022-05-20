@@ -3,6 +3,7 @@
     import { chatService } from "$lib/services/chat/chat.service";
     import { _ } from "$lib/services/i18n/i18n.service";
     import { chatroom, inChatroom } from "$lib/stores/user.store";
+    import Pencil from "svelte-material-icons/Pencil.svelte";
 
     async function exit(): Promise<void> {
         console.log(`Leaving chatroom '${$chatroom}`);
@@ -15,7 +16,8 @@
 </script>
 
 {#if $inChatroom}
-    <button id="exit-button" on:click={exit}
-        >{$_("chatroom.change.label")}</button
-    >
+    <button id="exit-button" class="link" on:click={exit}>
+        <span class="wrap">{$chatroom}</span>
+        <Pencil />
+    </button>
 {/if}

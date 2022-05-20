@@ -1,4 +1,5 @@
 @use './variables.scss';
+@use './flex.scss';
 @use './header.scss';
 @use './messages.scss';
 @import url('https://fonts.googleapis.com/css2?family=Cairo:wght@200;300;400;500;600;700;800;900&family=Montserrat:ital,wght@0,100;0,200;0,300;0,400;0,500;0,600;0,700;0,800;0,900;1,100;1,200;1,300;1,400;1,500;1,600;1,700;1,800;1,900&family=Roboto:wght@100&display=swap');
@@ -16,9 +17,10 @@ body {
     display: flex;
     flex-direction: column;
     font-family: var(--font-prime);
+    font-weight: var(--font-weight-normal);
     color: var(--c-text-prime);
     background-color: var(--c-back);
-    
+
 }
 
 *,
@@ -31,8 +33,6 @@ body {
     color: inherit;
 }
 
-
-
 .row {
     display: flex;
     flex-direction: column;
@@ -42,24 +42,9 @@ body {
     }
 }
 
-.flex-row {
-    display: flex;
-    flex-direction: row;
+.wrap {
+    overflow-wrap: anywhere;
 }
-
-.flex-row.gap {
-    gap: 1em;
-}
-
-.flex-column {
-    display: flex;
-    flex-direction: column;
-}
-
-.flex-column.gap {
-    gap: 1em;
-}
-
 
 a {
     text-decoration: none;
@@ -90,6 +75,7 @@ button {
     border-radius: var(--border-radius-s);
     color: var(--c-text-prime);
     background-color: var(--c-prime);
+    font-weight: var(--font-weight-normal);
 
     &:hover:not([disabled]) {
         cursor: pointer;
@@ -104,6 +90,28 @@ button.second {
     &:hover {
         &:not([disabled]) {
             background-color: var(--c-second-acc-1);
+        }
+    }
+}
+
+
+
+button.link {
+    cursor: pointer;
+    background-color: transparent;
+    border: none;
+    padding: 0em;
+    margin: 0em;
+    text-transform: uppercase;
+    font-size: inherit;
+    color: var(--c-text-prime);
+
+    &:hover,
+    &:focus-visible {
+        &:not([disabled]) {
+            color: var(--c-prime-acc-1);
+            cursor: pointer;
+            background-color: transparent;
         }
     }
 }
@@ -136,6 +144,7 @@ input,
 button,
 label {
     font-size: initial;
+
     &:disabled {
         opacity: 0.5;
     }

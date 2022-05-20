@@ -1,19 +1,21 @@
 <script lang="ts">
     import { browser } from "$app/env";
     import { onMount } from "svelte";
-    import CellphoneLink from "svelte-material-icons/CellphoneLink.svelte";
     import WhiteBalanceSunny from "svelte-material-icons/WhiteBalanceSunny.svelte";
     import MoonWaningCrescent from "svelte-material-icons/MoonWaningCrescent.svelte";
+    import ThemeLightDark from "svelte-material-icons/ThemeLightDark.svelte";
+    import {
+        type ThemePreference,
+        isThemePreference,
+    } from "$lib/types/ThemePreference";
+    import type { Theme } from "$lib/types/Theme";
+    import { iconSize, theme } from "$lib/stores/theme.store";
 
     export const storageKey: string = "theme-preference";
-    export const iconSize: string = "1.3em";
-
-    type ThemeValue = "light" | "dark";
-    type ThemePreference = "system" | ThemeValue;
 
     const attributeKey: string = "data-theme";
+    let themePreference: ThemePreference = "system";
     const themePreferences: ThemePreference[] = ["system", "light", "dark"];
-    let themePreference: ThemePreference = "light";
     onMount(() => {
         themePreference = getThemePreference();
         reflectPreference();
@@ -45,7 +47,7 @@
         return "light";
     }
 
-    function getThemeValue(): ThemeValue {
+    function getTheme(): Theme {
         if (themePreference === "system") {
             if (window.matchMedia("(prefers-color-scheme: dark)").matches) {
                 console.log("dark");
@@ -66,20 +68,18 @@
     }
 
     function reflectPreference(): void {
-        document.firstElementChild?.setAttribute(attributeKey, getThemeValue());
-    }
-
-    function isThemePreference(str: string): str is ThemePreference {
-        return ["system", "light", "dark"].includes(str);
+        const themeValue: Theme = getTheme();
+        $theme = themeValue;
+        document.firstElementChild?.setAttribute(attributeKey, themeValue);
     }
 </script>
 
-<button on:click={onClick} aria-label={themePreference}>
+<button on:click={onClick} class="link" aria-label={themePreference}>
     {#if themePreference === "system"}
-        <CellphoneLink size={iconSize} />
+        <ThemeLightDark size={$iconSize} />
     {:else if themePreference === "light"}
-        <WhiteBalanceSunny size={iconSize} />
+        <WhiteBalanceSunny size={$iconSize} />
     {:else}
-        <MoonWaningCrescent size={iconSize} />
+        <MoonWaningCrescent size={$iconSize} />
     {/if}
 </button>

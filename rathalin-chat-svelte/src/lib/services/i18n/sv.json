@@ -76,6 +76,14 @@
     "view_on": "Syn på"
   },
   "app": {
-    "name": "Rathalin Messenger"
+    "name": "Rathalin Messenger",
+    "github": {
+      "url": "https://github.com/Rathalin/rathalin-chat"
+    }
+  },
+  "chat": {
+    "input": {
+      "placeholder": "Meddelande"
+    }
   }
 }

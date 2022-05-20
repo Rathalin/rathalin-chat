@@ -78,7 +78,7 @@ export class ChatServer {
 
     private registerClientRequestsLogin(socket: Socket): void {
         socket.on(ClientEvent.REQUEST_LOGIN, (usernameMessage: UsernameMessage): void => {
-            const usernameMaxLength: number = 20;
+            const usernameMaxLength: number = 30;
             const username: Username = usernameMessage.username.trim().substring(0, usernameMaxLength);
             if (username.length === 0) return;
 
@@ -188,7 +188,7 @@ export class ChatServer {
     private registerClientRequestsJoinChatroom(socket: Socket): void {
         socket.on(ClientEvent.REQUEST_JOIN_CHATROOM, (chatroomMessage: ChatroomMessage) => {
             if (!this.clientManager.authUser(socket)) return;
-            const roomNameMaxLength: number = 20;
+            const roomNameMaxLength: number = 30;
             const roomName: ChatroomName = chatroomMessage.room.trim().substring(0, roomNameMaxLength);
             if (roomName.length === 0) return;
             if (this.clientManager.chatroomExists(roomName)) {

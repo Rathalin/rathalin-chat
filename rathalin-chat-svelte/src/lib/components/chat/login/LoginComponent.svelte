@@ -8,6 +8,7 @@
     import LoadComponent from "$lib/components/alert/LoadComponent.svelte";
     import { _ } from "$lib/services/i18n/i18n.service";
     import Account from "svelte-material-icons/Account.svelte";
+    import { iconSize } from "$lib/stores/theme.store";
 
     export let disabled: boolean = false;
 
@@ -110,7 +111,7 @@
         {#if !loginPending}
             <button id="login-button" on:click={login} {disabled}>
                 <span>{$_("connection.connect.label")}</span>
-                <Account size="1.3em" />
+                <Account size={$iconSize} />
             </button>
         {:else}
             <div in:fade>

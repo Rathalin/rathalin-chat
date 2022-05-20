@@ -1,9 +1,9 @@
 <script lang="ts">
-import { goto } from "$app/navigation";
-
+    import { goto } from "$app/navigation";
     import { chatService } from "$lib/services/chat/chat.service";
     import { _ } from "$lib/services/i18n/i18n.service";
-    import { loggedIn } from "$lib/stores/user.store";
+    import { loggedIn, user } from "$lib/stores/user.store";
+    import Pencil from "svelte-material-icons/Pencil.svelte";
 
     function exit(): void {
         chatService.disconnect();
@@ -12,8 +12,8 @@ import { goto } from "$app/navigation";
 </script>
 
 {#if $loggedIn}
-    <button id="exit-button" on:click={exit}
-        >{$_("connection.disconnect.label")}</button
-    >
+    <button id="exit-button" class="link" on:click={exit}>
+        <span class="wrap">{$user?.name}</span>
+        <Pencil />
+    </button>
 {/if}
-

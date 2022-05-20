@@ -3,25 +3,22 @@
     import ChangeChatroomComponent from "./ChangeChatroomComponent.svelte";
     import LanguageSelectionComponent from "./LanguageSelectionComponent.svelte";
     import LogoutComponent from "./LogoutComponent.svelte";
-    import ProfileMenuComponent from "./ProfileMenuComponent.svelte";
     import Github from "svelte-material-icons/Github.svelte";
-import ThemeToggle from "../theme/ThemeToggle.svelte";
+    import ThemeToggle from "../theme/ThemeToggle.svelte";
 </script>
 
 <header>
     <nav>
-        <div class="nav-content nav-left-content">
+        <div class="left flex-row gap align-items-center">
             <div>{$_("app.name")}</div>
-            <a href="https://github.com/Rathalin/rathalin-chat" target="_blank">
+            <a href={$_("app.github.url")} target="_blank">
                 <Github size="1.7em" />
             </a>
         </div>
-        <div class="nav-content nav-right-content">
-            <div />
-            <ThemeToggle />
-            <ProfileMenuComponent />
+        <div class="right flex-row flex-wrap gap align-items-center">
             <ChangeChatroomComponent />
             <LogoutComponent />
+            <ThemeToggle />
             <LanguageSelectionComponent />
         </div>
     </nav>
@@ -29,41 +26,25 @@ import ThemeToggle from "../theme/ThemeToggle.svelte";
 
 <style lang="scss">
     nav {
-        padding: 0em 1em;
-        width: 100%;
-        font-size: large;
+        padding: 0.8em;
         display: flex;
         flex-direction: row;
+        justify-content: space-between;
         box-shadow: 0px -12px 14px 5px #000000;
         background-color: var(--c-back-acc-1);
+    }
 
-        .nav-content {
-            padding: 0.5em 0em;
-            gap: 1em;
-            align-items: center;
+    .right.flex-row {
+        gap: 1.6em;
+    }
+
+    @media (max-width: 600px) {
+        nav {
+            justify-content: flex-end;
         }
 
-        .nav-left-content {
-            text-transform: uppercase;
-            display: flex;
-            flex-direction: row;
-        }
-
-        .nav-right-content {
-            flex: 1;
-            justify-self: flex-end;
-            display: flex;
-            flex-direction: row;
-        }
-
-        .nav-right-content div:first-child {
-            flex: 1;
-        }
-
-        @media (max-width: 1200px) {
-            .nav-left-content {
-                display: none;
-            }
+        .left {
+            display: none;
         }
     }
 </style>

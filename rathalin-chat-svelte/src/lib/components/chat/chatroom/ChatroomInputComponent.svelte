@@ -7,6 +7,7 @@
     import Chat from "svelte-material-icons/Chat.svelte";
     import { fade } from "svelte/transition";
     import LoadComponent from "$lib/components/alert/LoadComponent.svelte";
+import { iconSize } from "$lib/stores/theme.store";
 
     export let disabled: boolean = false;
 
@@ -74,7 +75,7 @@
                 disabled={joinPending || disabled}
             >
                 <span>{$_("chatroom.join.label")}</span>
-                <Chat size="1.3em" />
+                <Chat size={$iconSize} />
             </button>
         {:else}
             <div in:fade>

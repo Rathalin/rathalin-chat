@@ -1,6 +1,9 @@
 {
   "app": {
-    "name": "Rathalin Messenger"
+    "name": "Rathalin Messenger",
+    "github": {
+      "url": "https://github.com/Rathalin/rathalin-chat"
+    }
   },
   "connection": {
     "connect": {
@@ -102,6 +105,11 @@
         "text": "Zurück zur Hauptseite"
       },
       "text": "Du bist eine verlorene Seele, selbst für Jesus."
+    }
+  },
+  "chat": {
+    "input": {
+      "placeholder": "Nachricht"
     }
   }
 }

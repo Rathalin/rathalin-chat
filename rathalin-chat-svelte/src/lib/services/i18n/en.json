@@ -1,6 +1,9 @@
 {
   "app": {
-    "name": "Rathalin Messenger"
+    "name": "Rathalin Messenger",
+    "github": {
+      "url": "https://github.com/Rathalin/rathalin-chat"
+    }
   },
   "connection": {
     "connect": {
@@ -64,6 +67,11 @@
       "not_existing": {
         "label": "This Chatroom does not exist"
       }
+    }
+  },
+  "chat": {
+    "input": {
+      "placeholder": "Message"
     }
   },
   "messages": {
