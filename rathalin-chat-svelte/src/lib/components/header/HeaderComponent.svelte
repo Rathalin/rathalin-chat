@@ -5,6 +5,7 @@
     import LogoutComponent from "./LogoutComponent.svelte";
     import ProfileMenuComponent from "./ProfileMenuComponent.svelte";
     import Github from "svelte-material-icons/Github.svelte";
+import ThemeToggle from "../theme/ThemeToggle.svelte";
 </script>
 
 <header>
@@ -17,6 +18,7 @@
         </div>
         <div class="nav-content nav-right-content">
             <div />
+            <ThemeToggle />
             <ProfileMenuComponent />
             <ChangeChatroomComponent />
             <LogoutComponent />

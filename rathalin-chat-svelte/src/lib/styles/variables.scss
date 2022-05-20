@@ -17,47 +17,50 @@
     --border-radius-s: 0.2em;
     --border-radius-m: 0.3em;
     --border-radius-l: 0.7em;
-
-    --c-back-acc-1: hwb(210 88% 8%);
-    --c-back: hwb(207 81% 12%);
-    --c-back-dim-1: hwb(208 72% 23%);
-
-    --c-text-prime: hwb(0 10% 90%);
-    --c-text-prime-acc-1: hwb(0 50% 50%);
-    --c-text-second: hwb(0 21% 79%);
-    --c-text-inverse-prime: hwb(0 100% 0%);
-    --c-text-inverse-second: hwb(0 90% 10%);
-
-    --c-prime-acc-2: hwb(22 9% 30%);
-    --c-prime-acc-1: hwb(22 10% 18%);
-    --c-prime: hwb(22 17% 0%);
-    --c-prime-dim-1: hwb(22 29% 0%);
-    --c-prime-dim-2: hwb(22 45% 0%);
-
-    --c-second-acc-2: hwb(240 38% 57%);
-    --c-second-acc-1: hwb(240 47% 45%);
-    --c-second: hwb(240 57% 35%);
-    --c-second-dim-1: hwb(240 65% 25%);
-    --c-second-dim-2: hwb(240 76% 13%);
-
-    --c-flash-acc-1: hwb(204 14% 15%);
-    --c-flash: hwb(204 25% 0%);
-    --c-flash-dim-1: hwb(204 47% 6%);
-
-    --c-highlight-acc-1: hwb(60 29% 0%);
-    --c-highlight: hwb(60 51% 0%);
-    --c-highlight-dim-1: hwb(60 69% 0%);
-
-    --c-error: hwb(0 9% 43%);
-
-    --c-msg-text: hwb(240 68% 23%);
-    --c-msg-text-me: hwb(22 38% 0%);
-    --c-msg-system: hwb(240 61% 18%);
-    --c-msg-input: hwb(240 56% 37%);
 }
 
-@media (prefers-color-scheme: dark) {
-    :root {
+html {
+    &[data-theme="light"] {
+        --c-back-acc-1: hwb(210 88% 8%);
+        --c-back: hwb(207 81% 12%);
+        --c-back-dim-1: hwb(208 72% 23%);
+
+        --c-text-prime: hwb(0 10% 90%);
+        --c-text-prime-acc-1: hwb(0 50% 50%);
+        --c-text-second: hwb(0 21% 79%);
+        --c-text-inverse-prime: hwb(0 100% 0%);
+        --c-text-inverse-second: hwb(0 90% 10%);
+
+        --c-prime-acc-2: hwb(22 9% 30%);
+        --c-prime-acc-1: hwb(22 10% 18%);
+        --c-prime: hwb(22 17% 0%);
+        --c-prime-dim-1: hwb(22 29% 0%);
+        --c-prime-dim-2: hwb(22 45% 0%);
+
+        --c-second-acc-2: hwb(240 38% 57%);
+        --c-second-acc-1: hwb(240 47% 45%);
+        --c-second: hwb(240 57% 35%);
+        --c-second-dim-1: hwb(240 65% 25%);
+        --c-second-dim-2: hwb(240 76% 13%);
+
+        --c-flash-acc-1: hwb(204 14% 15%);
+        --c-flash: hwb(204 25% 0%);
+        --c-flash-dim-1: hwb(204 47% 6%);
+
+        --c-highlight-acc-1: hwb(60 29% 0%);
+        --c-highlight: hwb(60 51% 0%);
+        --c-highlight-dim-1: hwb(60 69% 0%);
+
+        --c-error: hwb(0 9% 43%);
+
+        --c-msg-text: hwb(240 68% 23%);
+        --c-msg-text-me: hwb(22 38% 0%);
+        --c-msg-system: hwb(240 61% 18%);
+        --c-msg-input: hwb(240 56% 37%);
+
+    }
+
+    &[data-theme="dark"] {
         --c-back-acc-1: hwb(0 9% 91%);
         --c-back: hwb(0 13% 87%);
         --c-back-dim-1: hwb(0 21% 79%);
