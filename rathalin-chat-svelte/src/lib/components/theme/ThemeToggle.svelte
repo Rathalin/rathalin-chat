@@ -1,8 +1,12 @@
 <script lang="ts">
     import { browser } from "$app/env";
     import { onMount } from "svelte";
+    import CellphoneLink from "svelte-material-icons/CellphoneLink.svelte";
+    import WhiteBalanceSunny from "svelte-material-icons/WhiteBalanceSunny.svelte";
+    import MoonWaningCrescent from "svelte-material-icons/MoonWaningCrescent.svelte";
 
     export const storageKey: string = "theme-preference";
+    export const iconSize: string = "1.3em";
 
     type ThemeValue = "light" | "dark";
     type ThemePreference = "system" | ThemeValue;
@@ -70,6 +74,12 @@
     }
 </script>
 
-<button on:click={onClick} aria-label={themePreference}
-    >{themePreference}</button
->
+<button on:click={onClick} aria-label={themePreference}>
+    {#if themePreference === "system"}
+        <CellphoneLink size={iconSize} />
+    {:else if themePreference === "light"}
+        <WhiteBalanceSunny size={iconSize} />
+    {:else}
+        <MoonWaningCrescent size={iconSize} />
+    {/if}
+</button>
