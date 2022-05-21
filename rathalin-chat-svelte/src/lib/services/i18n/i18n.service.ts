@@ -7,9 +7,9 @@ import {
 } from "svelte-i18n";
 import { defaultLocale } from "$lib/stores/locale.store";
 
-import en from "$lib/i18n/en.json";
-import de from "$lib/i18n/de.json";
-import sv from "$lib/i18n/sv.json";
+import en from "./en.json";
+import de from "./de.json";
+import sv from "./sv.json";
 
 function setupI18n() {
     addMessages("en", en);

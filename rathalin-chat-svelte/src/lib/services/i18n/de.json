@@ -3,7 +3,9 @@
     "name": "Rathalin Messenger",
     "github": {
       "url": "https://github.com/Rathalin/rathalin-chat"
-    }
+    },
+    "description": "Rathalin Messenger ist eine kostenlose Chatapplikation, entwickelt und gewartet von Daniel Flockert",
+    "keywords": "Chat App Rathalin Daniel Flockert Kostenlos Modern Desktop Mobil Design Svelte SvelteKit SocketIO"
   },
   "connection": {
     "connect": {

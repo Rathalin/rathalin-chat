@@ -79,7 +79,9 @@
     "name": "Rathalin Messenger",
     "github": {
       "url": "https://github.com/Rathalin/rathalin-chat"
-    }
+    },
+    "description": "Rathalin Messenger är en modern och gratis chattapplikation utvecklad och underhållen av Daniel Flockert",
+    "keywords": "Chattapp Rathalin Daniel Flockert Gratis Modern Responsive Multi-Device Desktop Mobile Theme Svelte SvelteKit SocketIO"
   },
   "chat": {
     "input": {
