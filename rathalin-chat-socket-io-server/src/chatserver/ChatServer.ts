@@ -120,7 +120,7 @@ export class ChatServer {
                 text: clientTextMessage.text,
             };
             socket.broadcast.to(roomName).emit(ServerEvent.SEND_TEXT_MESSAGE, textMessage);
-            this.clientManager.addMessageToChatroom(roomName, textMessage);
+            this.clientManager.addMessagesToChatroom(roomName, textMessage);
         });
     }
 

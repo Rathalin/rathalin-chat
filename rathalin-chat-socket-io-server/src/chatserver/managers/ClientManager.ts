@@ -105,7 +105,7 @@ export class ClientManager {
     }
 
 
-    public addMessageToChatroom(roomName: ChatroomName, ...messages: Message[]): void {
+    public addMessagesToChatroom(roomName: ChatroomName, ...messages: Message[]): void {
         const room: Chatroom = this.getChatroomByName(roomName);
         room.messages.push(...messages);
         // Delete old messages
