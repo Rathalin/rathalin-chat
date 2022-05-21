@@ -6,9 +6,9 @@ import {
     _
 } from "svelte-i18n";
 
-import en from "./en.json";
-import de from "./de.json";
-import sv from "./sv.json";
+import en from "$lib/i18n/en.json";
+import de from "$lib/i18n/de.json";
+import sv from "$lib/i18n/sv.json";
 
 function setupI18n() {
     addMessages("en", en);
