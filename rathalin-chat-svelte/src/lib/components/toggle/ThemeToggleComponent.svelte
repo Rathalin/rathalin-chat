@@ -14,6 +14,7 @@
 
     export const storageKey: string = "theme-preference";
 
+    const themeIconSize: string = "1.6em";
     const attributeKey: string = "data-theme";
     let themePreference: ThemePreference = "system";
     const themePreferences: ThemePreference[] = ["system", "light", "dark"];
@@ -94,10 +95,10 @@
     )}
 >
     {#if themePreference === "system"}
-        <ThemeLightDark size={$iconSize} />
+        <ThemeLightDark size={themeIconSize} />
     {:else if themePreference === "light"}
-        <WhiteBalanceSunny size={$iconSize} />
+        <WhiteBalanceSunny size={themeIconSize} />
     {:else}
-        <MoonWaningCrescent size={$iconSize} />
+        <MoonWaningCrescent size={themeIconSize} />
     {/if}
 </button>

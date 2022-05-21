@@ -12,7 +12,7 @@
         <div class="left flex-row gap align-items-center">
             <div>{$_("app.name")}</div>
             <a href={$_("app.github.url")} target="_blank">
-                <Github size="1.7em" />
+                <Github size="1.6em" />
             </a>
         </div>
         <div class="right flex-row flex-wrap gap align-items-center">

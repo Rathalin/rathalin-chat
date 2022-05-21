@@ -47,8 +47,6 @@
 
 <img
     on:click|preventDefault={toggleLanguage}
-    width="25"
-    height="25"
     draggable="false"
     src={currentLanguage.path}
     alt={`language-symbol-${currentLanguage.lang}`}
@@ -57,5 +55,7 @@
 <style>
     img {
         cursor: pointer;
+        width: 1.6em;
+        height: 1.6em;
     }
 </style>
