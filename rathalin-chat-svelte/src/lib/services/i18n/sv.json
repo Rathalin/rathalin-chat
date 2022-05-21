@@ -85,5 +85,14 @@
     "input": {
       "placeholder": "Meddelande"
     }
+  },
+  "theme": {
+    "toggle_button": {
+      "title": {
+        "system": "Systemtema",
+        "light": "Ljust tema",
+        "dark": "Mörkt tema"
+      }
+    }
   }
 }

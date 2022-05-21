@@ -71,8 +71,7 @@
   },
   "chat": {
     "input": {
-      "placeholder": "Message"
-    }
+      "placeholder": "Message" }
   },
   "messages": {
     "login": {
@@ -110,6 +109,15 @@
         "text": "Back to the main page"
       },
       "text": "You're a lost soul, even to Jesus."
+    }
+  },
+  "theme": {
+    "toggle_button": {
+      "title": {
+        "system": "System theme",
+        "light": "Light theme",
+        "dark": "Dark theme"
+      }
     }
   }
 }

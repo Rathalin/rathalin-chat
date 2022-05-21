@@ -10,15 +10,24 @@
     } from "$lib/types/ThemePreference";
     import type { Theme } from "$lib/types/Theme";
     import { iconSize, theme } from "$lib/stores/theme.store";
+    import { _ } from "svelte-i18n";
 
     export const storageKey: string = "theme-preference";
 
     const attributeKey: string = "data-theme";
     let themePreference: ThemePreference = "system";
     const themePreferences: ThemePreference[] = ["system", "light", "dark"];
+
     onMount(() => {
         themePreference = getThemePreference();
         reflectPreference();
+        window
+            .matchMedia("(prefers-color-scheme: dark)")
+            .addEventListener("change", () => {
+                if (themePreference === "system") {
+                    setThemePreference();
+                }
+            });
     });
 
     function onClick(): void {
@@ -50,13 +59,10 @@
     function getTheme(): Theme {
         if (themePreference === "system") {
             if (window.matchMedia("(prefers-color-scheme: dark)").matches) {
-                console.log("dark");
                 return "dark";
             }
-            console.log("light");
             return "light";
         }
-        console.log(themePreference);
         return themePreference;
     }
 
@@ -74,7 +80,19 @@
     }
 </script>
 
-<button on:click={onClick} class="link" aria-label={themePreference}>
+<button
+    on:click={onClick}
+    class="link"
+    aria-label={themePreference}
+    title={$_(
+        "theme.toggle_button.title." +
+            (themePreference === "system"
+                ? "system"
+                : themePreference === "light"
+                ? "light"
+                : "dark")
+    )}
+>
     {#if themePreference === "system"}
         <ThemeLightDark size={$iconSize} />
     {:else if themePreference === "light"}

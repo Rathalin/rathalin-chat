@@ -111,5 +111,14 @@
     "input": {
       "placeholder": "Nachricht"
     }
+  },
+  "theme": {
+    "toggle_button": {
+      "title": {
+        "system": "Systemdesign",
+        "light": "Helles Design",
+        "dark": "Dunkles Design"
+      }
+    }
   }
 }

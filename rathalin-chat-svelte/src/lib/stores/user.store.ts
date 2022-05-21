@@ -13,7 +13,7 @@ connected.subscribe((newConnected) => {
 
 // Username
 export const user: Writable<User | null> = writable<User | null>(null);
-const lastUsernameKey: string = "lastUsername";
+const lastUsernameKey: string = "last-username";
 export const lastUsername: Writable<string> = writable<string>(browser && localStorage != null ? localStorage.getItem(lastUsernameKey) ?? "" : "");
 if (browser && localStorage != null) {
     lastUsername.subscribe((newUsername) => {
@@ -34,7 +34,7 @@ loggedIn.subscribe((newLoggedIn) => {
         chatroom.set(null);
     }
 });
-const lastChatroomKey: string = "lastChatroom";
+const lastChatroomKey: string = "last-chatroom";
 export const lastChatroom: Writable<string> = writable<string>(browser && localStorage != null ? localStorage.getItem(lastChatroomKey) ?? "" : "");
 if (browser && localStorage != null) {
     lastChatroom.subscribe((newChatroomName) => {
