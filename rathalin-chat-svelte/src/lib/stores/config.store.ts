@@ -1,8 +1,5 @@
 import { type Writable, writable, type Readable, readable } from "svelte/store";
 
-// Language
-export const selectedLocale: Writable<string> = writable<string>('en');
-
 // Message List Limit
 export const messageListLimit: Readable<number> = readable<number>(100);
 

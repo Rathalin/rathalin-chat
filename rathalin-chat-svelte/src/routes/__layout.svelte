@@ -9,7 +9,7 @@
 <script lang="ts">
     import HeaderComponent from "$lib/components/header/HeaderComponent.svelte";
     import { locale, setupI18n } from "$lib/services/i18n/i18n.service";
-    import { selectedLocale } from "$lib/stores/config.store";
+    import { selectedLocale } from "$lib/stores/locale.store";
     import "$lib/styles/app.scss";
 </script>
 

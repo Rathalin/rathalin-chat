@@ -1,10 +1,10 @@
 <script lang="ts">
     import { _ } from "$lib/services/i18n/i18n.service";
     import ChangeChatroomComponent from "./ChangeChatroomComponent.svelte";
-    import LanguageSelectionComponent from "./LanguageSelectionComponent.svelte";
+    import LanguageToggleComponent from "../toggle/LanguageToggleComponent.svelte";
     import LogoutComponent from "./LogoutComponent.svelte";
     import Github from "svelte-material-icons/Github.svelte";
-    import ThemeToggle from "../theme/ThemeToggle.svelte";
+    import ThemeToggleComponent from "../toggle/ThemeToggleComponent.svelte";
 </script>
 
 <header>
@@ -18,8 +18,8 @@
         <div class="right flex-row flex-wrap gap align-items-center">
             <ChangeChatroomComponent />
             <LogoutComponent />
-            <ThemeToggle />
-            <LanguageSelectionComponent />
+            <ThemeToggleComponent />
+            <LanguageToggleComponent />
         </div>
     </nav>
 </header>

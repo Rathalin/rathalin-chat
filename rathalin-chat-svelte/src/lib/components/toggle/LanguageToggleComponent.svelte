@@ -1,5 +1,5 @@
 <script lang="ts">
-    import { selectedLocale } from "$lib/stores/config.store";
+    import { selectedLocale } from "$lib/stores/locale.store";
 
     interface Language {
         lang: string;
@@ -39,17 +39,17 @@
     let currentLanguageIndex: number = initialLanguageIndex;
     let currentLanguage: Language = initialLanguage;
 
-    function toggleLanguage(event: any) {
-        event.preventDefault();
+    function toggleLanguage() {
         currentLanguage = languages[++currentLanguageIndex % languages.length];
-        selectedLocale.set(currentLanguage.lang);
+        $selectedLocale = currentLanguage.lang;
     }
 </script>
 
 <img
-    on:click={toggleLanguage}
+    on:click|preventDefault={toggleLanguage}
     width="25"
     height="25"
+    draggable="false"
     src={currentLanguage.path}
     alt={`language-symbol-${currentLanguage.lang}`}
 />
