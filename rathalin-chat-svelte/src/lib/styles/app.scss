@@ -73,7 +73,7 @@ button {
     transition-property: border-color, background-color, color;
     transition-duration: var(--duration-normal);
     border-radius: var(--border-radius-s);
-    color: var(--c-text-prime);
+    color: var(--c-text-dark);
     background-color: var(--c-prime);
     font-weight: var(--font-weight-normal);
 
@@ -84,7 +84,7 @@ button {
 }
 
 button.second {
-    color: var(--c-text-prime);
+    color: var(--c-text-dark);
     background-color: var(--c-second);
 
     &:hover {

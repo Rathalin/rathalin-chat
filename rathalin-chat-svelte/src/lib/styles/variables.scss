@@ -35,6 +35,8 @@ html {
         --c-text-second: hwb(0 21% 79%);
         --c-text-inverse-prime: hwb(0 100% 0%);
         --c-text-inverse-second: hwb(0 90% 10%);
+        --c-text-light: hwb(0 95% 5%);
+        --c-text-dark: hwb(0 10% 90%);
 
         --c-prime-acc-2: hwb(22 9% 30%);
         --c-prime-acc-1: hwb(22 10% 18%);
@@ -62,7 +64,6 @@ html {
         --c-msg-text-me: hwb(22 38% 0%);
         --c-msg-system: hwb(240 61% 18%);
         --c-msg-input: hwb(240 56% 37%);
-
     }
 
     &[data-theme="dark"] {

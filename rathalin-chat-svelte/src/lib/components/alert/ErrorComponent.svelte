@@ -15,7 +15,7 @@
         flex: 1;
         padding: 1em 1.5em;
         margin-bottom: 1em;
-        color: var(--c-text-inverse-prime);
+        color: var(--c-text-light);
         border-radius: var(--border-radius-s);
         background-color: var(--c-error);
     }
