@@ -92,5 +92,6 @@ import { _ } from "svelte-i18n";
         border-width: 0px;
         background-color: transparent;
         outline: none;
+        font-weight: var(--font-weight-semibold);
     }
 </style>

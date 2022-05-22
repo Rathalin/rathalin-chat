@@ -6,9 +6,7 @@
 
     --font-prime: "Cairo", -apple-system, Ubuntu, Tahoma, Geneva, Verdana, sans-serif;
     --font-second: "Segoe UI", -apple-system, Ubuntu, Tahoma, Geneva, Verdana, sans-serif;
-    --font-weight-light: 400;
-    --font-weight-normal: 600;
-    --font-weight-bold: 800;
+
     --font-size-normal: 18pt;
 
     --duration-short: 100ms;
@@ -26,6 +24,11 @@
 
 html {
     &[data-theme="light"] {
+        --font-weight-light: 400;
+        --font-weight-normal: 600;
+        --font-weight-semibold: 700;
+        --font-weight-bold: 800;
+
         --c-back-acc-1: hwb(210 88% 8%);
         --c-back: hwb(207 81% 12%);
         --c-back-dim-1: hwb(208 72% 23%);
@@ -67,6 +70,11 @@ html {
     }
 
     &[data-theme="dark"] {
+        --font-weight-light: 200;
+        --font-weight-normal: 400;
+        --font-weight-semibold: 600;
+        --font-weight-bold: 700;
+
         --c-back-acc-1: hwb(0 9% 91%);
         --c-back: hwb(0 13% 87%);
         --c-back-dim-1: hwb(0 21% 79%);

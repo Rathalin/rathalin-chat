@@ -17,6 +17,7 @@
 	import { socketIoServerConnection } from "$lib/stores/config.store";
 	import { onDestroy, onMount } from "svelte";
 	import type { Subscription } from "rxjs";
+
 	const subscriptions: Subscription[] = [];
 
 	onMount(() => {

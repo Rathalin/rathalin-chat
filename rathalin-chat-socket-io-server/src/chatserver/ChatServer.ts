@@ -61,7 +61,7 @@ export class ChatServer {
 
     private registerClientDisconnect(socket: Socket): void {
         socket.on("disconnect", reason => {
-            const client: Client = this.clientManager.removeClient(socket);
+            const client: Client = this.clientManager.getClientBySocket(socket);
             this.logger.log(`- User (${this.clientManager.numberOfClients})`, "disconnect");
             if (client.user?.username?.trim()) {
                 const userLeavingChatroomMessage: UsernameMessage = {
@@ -70,8 +70,12 @@ export class ChatServer {
                     date: new Date().toString(),
                     username: client.user.username,
                 }
-                socket.broadcast.emit(ServerEvent.SEND_LEAVE_CHATROOM, userLeavingChatroomMessage);
+                const roomesOfClient: string[] = this.clientManager.getChatroomNamesOfClient(socket);
+                if (roomesOfClient.length > 0) {
+                    socket.to(roomesOfClient).emit(ServerEvent.SEND_LEAVE_CHATROOM, userLeavingChatroomMessage);
+                }
             }
+            this.clientManager.removeClient(socket);
         });
     }
 
