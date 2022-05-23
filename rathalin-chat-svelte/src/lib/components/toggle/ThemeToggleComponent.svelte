@@ -51,10 +51,7 @@
                 return storageValue;
             }
         }
-        if (window.matchMedia("(prefers-color-scheme: dark)").matches) {
-            return "dark";
-        }
-        return "light";
+        return "system";
     }
 
     function getTheme(): Theme {
