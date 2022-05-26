@@ -24,6 +24,8 @@
 
 html {
     &[data-theme="light"] {
+        color-scheme: light;
+
         --font-weight-light: 400;
         --font-weight-normal: 600;
         --font-weight-semibold: 600;
@@ -70,6 +72,8 @@ html {
     }
 
     &[data-theme="dark"] {
+        color-scheme: dark;
+        
         --font-weight-light: 200;
         --font-weight-normal: 400;
         --font-weight-semibold: 600;
