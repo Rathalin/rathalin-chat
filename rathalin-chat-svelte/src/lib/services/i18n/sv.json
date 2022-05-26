@@ -70,7 +70,8 @@
       "not_existing": {
         "label": "Detta chattrum finns inte"
       }
-    }
+    },
+    "label": "Chattrum"
   },
   "header": {
     "view_on": "Syn på"
@@ -95,6 +96,11 @@
         "light": "Ljust tema",
         "dark": "Mörkt tema"
       }
+    }
+  },
+  "profile": {
+    "username": {
+      "label": "Användarnamn"
     }
   }
 }

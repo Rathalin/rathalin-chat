@@ -69,7 +69,8 @@
       "not_existing": {
         "label": "Dieser Chatraum existiert nicht"
       }
-    }
+    },
+    "label": "Chatraum"
   },
   "messages": {
     "login": {
@@ -121,6 +122,11 @@
         "light": "Helles Design",
         "dark": "Dunkles Design"
       }
+    }
+  },
+  "profile": {
+    "username": {
+      "label": "Benutzername"
     }
   }
 }

@@ -69,7 +69,8 @@
       "not_existing": {
         "label": "This Chatroom does not exist"
       }
-    }
+    },
+    "label": "Chatroom"
   },
   "chat": {
     "input": {
@@ -121,6 +122,11 @@
         "light": "Light theme",
         "dark": "Dark theme"
       }
+    }
+  },
+  "profile": {
+    "username": {
+      "label": "Username"
     }
   }
 }
