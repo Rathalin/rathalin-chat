@@ -41,7 +41,7 @@ import { iconSize } from "$lib/stores/theme.store";
         }
         joinPending = false;
         joinDone = true;
-        await goto("/chat");
+        await goto("/");
     }
 </script>
 
