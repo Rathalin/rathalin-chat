@@ -187,7 +187,6 @@ export class ChatServer {
             const roomName: ChatroomName = chatroomMessage.room.trim();
             if (this.clientManager.chatroomLimitReached()) {
                 socket.emit(ServerEvent.RESPONSE_CHATROOM_LIMIT_REACHED);
-                console.log("Send limit reached");
                 this.logger.log(`Chatroom limit of ${this.chatroomLimit} reached.`, ServerEvent.RESPONSE_CHATROOM_LIMIT_REACHED);
                 return;
             }
