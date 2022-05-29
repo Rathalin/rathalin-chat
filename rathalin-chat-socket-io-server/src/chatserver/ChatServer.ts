@@ -18,10 +18,19 @@ export class ChatServer {
 
     // Constructor
 
+    constructor(
+        private readonly usernameMaxLength: number = 30,
+        private readonly roomNameMaxLength: number = 30,
+        private readonly chatroomLimit: number = 0,
+        private readonly messageLimitPerChatroom: number = 1000,
+    ) {
+        this.clientManager = new ClientManager(this.chatroomLimit, this.messageLimitPerChatroom)
+    }
+
     // Members and Properties
 
     private server: Server | null = null;
-    private readonly clientManager: ClientManager = new ClientManager();
+    private readonly clientManager: ClientManager;
     private readonly logger: Logger = new Logger("chat-server");
 
 
@@ -43,7 +52,7 @@ export class ChatServer {
     // Private Methods
 
     private initConnections(): void {
-        if (this.server == null) return;
+        if (this.server == null) throw new Error("Initialize Server by calling 'listen'!");
 
         this.server.on("connection", socket => {
             this.clientManager.addClient(socket);
@@ -62,7 +71,7 @@ export class ChatServer {
     private registerClientDisconnect(socket: Socket): void {
         socket.on("disconnect", reason => {
             const client: Client = this.clientManager.getClientBySocket(socket);
-            this.logger.log(`- User (${this.clientManager.numberOfClients})`, "disconnect");
+            this.logger.log(`- User (${this.clientManager.numberOfClients}) (Reason: ${reason})`, "disconnect");
             if (client.user?.username?.trim()) {
                 const userLeavingChatroomMessage: UsernameMessage = {
                     event: ServerEvent.SEND_LEAVE_CHATROOM,
@@ -82,8 +91,7 @@ export class ChatServer {
 
     private registerClientRequestsLogin(socket: Socket): void {
         socket.on(ClientEvent.REQUEST_LOGIN, (usernameMessage: UsernameMessage): void => {
-            const usernameMaxLength: number = 30;
-            const username: Username = usernameMessage.username.trim().substring(0, usernameMaxLength);
+            const username: Username = usernameMessage.username.trim().substring(0, this.usernameMaxLength);
             if (username.length === 0) return;
 
             if (this.clientManager.usernameTaken(username)) {
@@ -177,14 +185,20 @@ export class ChatServer {
         socket.on(ClientEvent.REQUEST_CREATE_CHATROOM, (chatroomMessage: ChatroomMessage) => {
             if (!this.clientManager.authUser(socket)) return;
             const roomName: ChatroomName = chatroomMessage.room.trim();
+            if (this.clientManager.chatroomLimitReached()) {
+                socket.emit(ServerEvent.RESPONSE_CHATROOM_LIMIT_REACHED);
+                console.log("Send limit reached");
+                this.logger.log(`Chatroom limit of ${this.chatroomLimit} reached.`, ServerEvent.RESPONSE_CHATROOM_LIMIT_REACHED);
+                return;
+            }
             if (!this.clientManager.chatroomExists(roomName)) {
                 this.clientManager.addChatroom(roomName);
                 socket.emit(ServerEvent.RESPONSE_CREATE_CHATROOM_ACCEPT);
                 this.logger.log(`Chatroom "${chatroomMessage.room}" was created.`, ServerEvent.RESPONSE_CREATE_CHATROOM_ACCEPT);
-            } else {
-                socket.emit(ServerEvent.RESPONSE_CREATE_CHATROOM_TAKEN);
-                this.logger.log(`Chatroom "${chatroomMessage.room}" not created because taken.`, ServerEvent.RESPONSE_CREATE_CHATROOM_TAKEN);
+                return;
             }
+            socket.emit(ServerEvent.RESPONSE_CREATE_CHATROOM_TAKEN);
+            this.logger.log(`Chatroom "${chatroomMessage.room}" not created because taken.`, ServerEvent.RESPONSE_CREATE_CHATROOM_TAKEN);
         });
     }
 
@@ -192,8 +206,7 @@ export class ChatServer {
     private registerClientRequestsJoinChatroom(socket: Socket): void {
         socket.on(ClientEvent.REQUEST_JOIN_CHATROOM, (chatroomMessage: ChatroomMessage) => {
             if (!this.clientManager.authUser(socket)) return;
-            const roomNameMaxLength: number = 30;
-            const roomName: ChatroomName = chatroomMessage.room.trim().substring(0, roomNameMaxLength);
+            const roomName: ChatroomName = chatroomMessage.room.trim().substring(0, this.roomNameMaxLength);
             if (roomName.length === 0) return;
             if (this.clientManager.chatroomExists(roomName)) {
                 this.clientManager.addClientToChatroom(socket, roomName);

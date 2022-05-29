@@ -12,7 +12,8 @@ export class ClientManager {
     // Constructor
 
     constructor(
-        public readonly messageLimitPerChatroom: number = 1000
+        public readonly chatroomLimit: number,
+        public readonly messageLimitPerChatroom: number,
     ) { }
 
     // Members and Properties
@@ -84,6 +85,9 @@ export class ClientManager {
 
 
     public addChatroom(name: ChatroomName): void {
+        if (this.chatroomLimitReached()) {
+            throw new Error(`Chatroom limit of ${this.chatroomLimit} reached!`);
+        }
         if (this.chatroomExists(name)) {
             throw new Error(`Chatroom '${name}' can not be added because it already exists.`);
         }
@@ -148,6 +152,20 @@ export class ClientManager {
     }
 
 
+    public removeChatroom(roomName: ChatroomName): void {
+        this.removeChatroomFromClients(roomName);
+        this._chatrooms = this._chatrooms.filter(chatroom => chatroom.name !== roomName);
+    }
+
+    public authUser(socket: Socket): boolean {
+        return this.hasValidUsername(socket);
+    }
+
+    public chatroomLimitReached(): boolean {
+        return this._chatrooms.length >= this.chatroomLimit;
+    }
+
+
     // Private Methods
 
 
@@ -169,16 +187,6 @@ export class ClientManager {
     private removeChatroomFromClients(roomName: ChatroomName): void {
         this._clientsInChatrooms = this._clientsInChatrooms
             .filter(clientInRoom => clientInRoom.roomName !== roomName);
-    }
-
-
-    public removeChatroom(roomName: ChatroomName): void {
-        this.removeChatroomFromClients(roomName);
-        this._chatrooms = this._chatrooms.filter(chatroom => chatroom.name !== roomName);
-    }
-
-    public authUser(socket: Socket): boolean {
-        return this.hasValidUsername(socket);
     }
 
     // Private Methods

@@ -49,10 +49,10 @@ class ChatService {
 
 
     // Public methods
-    
+
     public connect(): void {
         this._socket.connect();
-    }    
+    }
 
 
     public disconnect(): void {
@@ -126,12 +126,17 @@ class ChatService {
     public joinChatroom(room: ChatroomName): Promise<boolean> {
         return new Promise((resolve) => {
             this._socket.on(ServerEvent.RESPONSE_JOIN_CHATROOM_ACCEPT, () => {
-                resolve(true);
                 this._socket.removeAllListeners(ServerEvent.RESPONSE_JOIN_CHATROOM_ACCEPT);
+                resolve(true);
             });
             this._socket.on(ServerEvent.RESPONSE_JOIN_CHATROOM_NOT_EXISTING, () => {
-                resolve(false);
                 this._socket.removeAllListeners(ServerEvent.RESPONSE_JOIN_CHATROOM_NOT_EXISTING);
+                resolve(false);
+            });
+            this._socket.on(ServerEvent.RESPONSE_CHATROOM_LIMIT_REACHED, () => {
+                console.error("CHATROOM LIMIT REACHED!", ServerEvent.RESPONSE_CHATROOM_LIMIT_REACHED);
+                this._socket.removeAllListeners(ServerEvent.RESPONSE_CHATROOM_LIMIT_REACHED);
+                resolve(false);
             });
             const chatroomMessage: ChatroomMessage = {
                 event: ClientEvent.REQUEST_JOIN_CHATROOM,
@@ -186,7 +191,7 @@ class ChatService {
 
 
     public sendTextMessage(text: string, sender: Username, date: Date = new Date()): TextMessage {
-        const textMessage: TextMessage = {  
+        const textMessage: TextMessage = {
             event: ClientEvent.SEND_TEXT_MESSAGE,
             type: MessageType.TEXT,
             date: date.toString(),

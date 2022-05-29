@@ -5,6 +5,7 @@
     import LogoutComponent from "./LogoutComponent.svelte";
     import Github from "svelte-material-icons/Github.svelte";
     import ThemeToggleComponent from "../toggle/ThemeToggleComponent.svelte";
+import ProfileMenuComponent from "./ProfileMenuComponent.svelte";
 </script>
 
 <header>

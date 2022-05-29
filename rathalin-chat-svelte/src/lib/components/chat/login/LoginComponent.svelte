@@ -14,7 +14,7 @@
 
     const subscriptions: Subscription[] = [];
 
-    let usernameMaxInputLength: number = 50;
+    let usernameMaxInputLength: number = 30;
     let usernameInput: string = $lastUsername;
     let showConnectionError: boolean = false;
     let showDuplicateUsernameError: boolean = false;

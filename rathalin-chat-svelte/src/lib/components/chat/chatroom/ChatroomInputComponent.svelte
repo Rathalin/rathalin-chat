@@ -7,7 +7,7 @@
     import Chat from "svelte-material-icons/Chat.svelte";
     import { fade } from "svelte/transition";
     import LoadComponent from "$lib/components/alert/LoadComponent.svelte";
-import { iconSize } from "$lib/stores/theme.store";
+    import { iconSize } from "$lib/stores/theme.store";
 
     export let disabled: boolean = false;
 
@@ -31,6 +31,7 @@ import { iconSize } from "$lib/stores/theme.store";
                 joinPending = true;
             }
         }, joinPendingDelay);
+        let joinFailed: boolean = false;
         if (!(await chatService.chatroomExists(room))) {
             console.log(`Creating Chatroom '${room}'`);
             await chatService.createChatroom(room);
@@ -38,10 +39,15 @@ import { iconSize } from "$lib/stores/theme.store";
         if (await chatService.joinChatroom(room)) {
             console.log(`Joining chatroom '${room}'`);
             $chatroom = room;
+        } else {
+            console.log(`Chatroom limit reached`);
+            joinFailed = true;
         }
         joinPending = false;
         joinDone = true;
-        await goto("/");
+        if (!joinFailed) {
+            await goto("/");
+        }
     }
 </script>
 
