@@ -71,7 +71,7 @@ export class ChatServer {
     private registerClientDisconnect(socket: Socket): void {
         socket.on("disconnect", reason => {
             const client: Client = this.clientManager.getClientBySocket(socket);
-            this.logger.log(`- User (${this.clientManager.numberOfClients}) (Reason: ${reason})`, "disconnect");
+            this.logger.log(`- User (${this.clientManager.numberOfClients - 1}) (Reason: ${reason})`, "disconnect");
             if (client.user?.username?.trim()) {
                 const userLeavingChatroomMessage: UsernameMessage = {
                     event: ServerEvent.SEND_LEAVE_CHATROOM,
@@ -191,14 +191,14 @@ export class ChatServer {
                 this.logger.log(`Chatroom limit of ${this.chatroomLimit} reached.`, ServerEvent.RESPONSE_CHATROOM_LIMIT_REACHED);
                 return;
             }
-            if (!this.clientManager.chatroomExists(roomName)) {
-                this.clientManager.addChatroom(roomName);
-                socket.emit(ServerEvent.RESPONSE_CREATE_CHATROOM_ACCEPT);
-                this.logger.log(`Chatroom "${chatroomMessage.room}" was created.`, ServerEvent.RESPONSE_CREATE_CHATROOM_ACCEPT);
+            if (this.clientManager.chatroomExists(roomName)) {
+                socket.emit(ServerEvent.RESPONSE_CREATE_CHATROOM_TAKEN);
+                this.logger.log(`Chatroom "${chatroomMessage.room}" not created because taken.`, ServerEvent.RESPONSE_CREATE_CHATROOM_TAKEN);
                 return;
             }
-            socket.emit(ServerEvent.RESPONSE_CREATE_CHATROOM_TAKEN);
-            this.logger.log(`Chatroom "${chatroomMessage.room}" not created because taken.`, ServerEvent.RESPONSE_CREATE_CHATROOM_TAKEN);
+            this.clientManager.addChatroom(roomName);
+            socket.emit(ServerEvent.RESPONSE_CREATE_CHATROOM_ACCEPT);
+            this.logger.log(`Chatroom "${chatroomMessage.room}" was created.`, ServerEvent.RESPONSE_CREATE_CHATROOM_ACCEPT);
         });
     }
 

@@ -68,6 +68,9 @@
     "error": {
       "not_existing": {
         "label": "This Chatroom does not exist"
+      },
+      "limit_reached": {
+        "label": "Chatroom limit reached. No more chatrooms can be created on this server."
       }
     },
     "label": "Chatroom"

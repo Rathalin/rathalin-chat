@@ -14,6 +14,7 @@
     let joinRoomInput: string = $lastChatroom;
     let roomMaxLength: number = 30;
     let showChatroomNotExistingError: boolean = false;
+    let showChatroomLimitReachedError: boolean = false;
     let joinPending: boolean = false;
     const joinPendingDelay: number = 100;
 
@@ -42,6 +43,7 @@
         } else {
             console.log(`Chatroom limit reached`);
             joinFailed = true;
+            showChatroomLimitReachedError = true;
         }
         joinPending = false;
         joinDone = true;
@@ -55,6 +57,11 @@
     {#if showChatroomNotExistingError}
         <div class="row error">
             <ErrorComponent text={$_("chatroom.error.not_existing.label")} />
+        </div>
+    {/if}
+    {#if showChatroomLimitReachedError}
+        <div class="row error">
+            <ErrorComponent text={$_("chatroom.error.limit_reached.label")} />
         </div>
     {/if}
     <div class="row">

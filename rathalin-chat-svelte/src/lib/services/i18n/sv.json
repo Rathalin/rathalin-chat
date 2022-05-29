@@ -69,6 +69,9 @@
     "error": {
       "not_existing": {
         "label": "Detta chattrum finns inte"
+      },
+      "limit_reached": {
+        "label": "Chattrumgränsen nådd. \nInga fler chattrum kan skapas på denna server."
       }
     },
     "label": "Chattrum"
