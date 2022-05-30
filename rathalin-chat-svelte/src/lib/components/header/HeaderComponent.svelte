@@ -12,7 +12,7 @@ import ProfileMenuComponent from "./ProfileMenuComponent.svelte";
     <nav>
         <div class="left flex-row gap align-items-center">
             <div>{$_("app.name")}</div>
-            <a href={$_("app.github.url")} target="_blank">
+            <a href={$_("app.github.link.url")} target="_blank" alt={$_("app.github.link.alt_text")}>
                 <Github size="1.6em" />
             </a>
         </div>

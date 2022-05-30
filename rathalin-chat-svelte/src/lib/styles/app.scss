@@ -57,7 +57,7 @@ a {
 
     &:hover {
         text-decoration: underline;
-        color: var(--c-prime-acc-1);
+        color: var(--c-prime);
     }
 }
 
@@ -110,7 +110,7 @@ button.link {
     &:hover,
     &:focus-visible {
         &:not([disabled]) {
-            color: var(--c-prime-acc-1);
+            color: var(--c-prime);
             cursor: pointer;
             background-color: transparent;
         }

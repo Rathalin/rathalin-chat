@@ -70,6 +70,9 @@ html {
         --c-msg-system: hwb(240 61% 18%);
         --c-msg-input: hwb(240 56% 37%);
 
+        --c-theme-toggle: hwb(44 25% 11%);
+        --c-theme-toggle-hover: hwb(0 0% 100%);
+
         --bg-scrollbar-thumb: hwb(0 30% 70%);
         --bg-scrollbar-thumb-hover: hwb(0 20% 80%);
         --bg-scrollbar-thumb-active: hwb(0 10% 90%);
@@ -98,11 +101,11 @@ html {
         --c-text-light: hwb(0 95% 5%);
         --c-text-dark: hwb(0 10% 90%);
 
-        --c-prime-acc-2: hwb(22 14% 9%);
-        --c-prime-acc-1: hwb(22 14% 19%);
+        --c-prime-acc-2: hwb(27 50% 0%);
+        --c-prime-acc-1: hwb(27 33% 0%);
         --c-prime: hwb(27 18% 4%);
-        --c-prime-dim-1: hwb(22 11% 41%);
-        --c-prime-dim-2: hwb(22 8% 53%);
+        --c-prime-dim-1: hwb(27 9% 24%);
+        --c-prime-dim-2: hwb(27 7% 38%);
 
         --c-second-acc-2: hwb(0 47% 53%);
         --c-second-acc-1: hwb(0 29% 71%);
@@ -124,6 +127,9 @@ html {
         --c-msg-text: hwb(0 18% 82%);
         --c-msg-text-me: hwb(0 35% 65%);
         --c-msg-input: hwb(0 18% 82%);
+
+        --c-theme-toggle: hsl(54, 100%, 50%);
+        --c-theme-toggle-hover: hsl(0, 0%, 100%);
 
         --bg-scrollbar-thumb: hwb(0 90% 10%);
         --bg-scrollbar-thumb-hover: hwb(0 95% 15%);

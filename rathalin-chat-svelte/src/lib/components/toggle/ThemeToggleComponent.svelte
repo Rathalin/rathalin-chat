@@ -80,6 +80,7 @@
 
 <button
     on:click={onClick}
+    id="theme-toggle-button"
     class="link"
     aria-label={themePreference}
     title={$_(
@@ -99,3 +100,13 @@
         <MoonWaningCrescent size={themeIconSize} />
     {/if}
 </button>
+
+<style lang="scss">
+    #theme-toggle-button {
+        color: var(--c-theme-toggle);
+
+        &:hover {
+        color: var(--c-theme-toggle-hover);
+        }
+    }
+</style>
