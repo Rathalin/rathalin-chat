@@ -108,6 +108,11 @@ class ChatService {
                 resolve(true);
                 this._socket.removeAllListeners(ServerEvent.RESPONSE_CREATE_CHATROOM_ACCEPT);
             });
+            this._socket.on(ServerEvent.RESPONSE_CHATROOM_LIMIT_REACHED, () => {
+                console.error("CHATROOM LIMIT REACHED!", ServerEvent.RESPONSE_CHATROOM_LIMIT_REACHED);
+                this._socket.removeAllListeners(ServerEvent.RESPONSE_CHATROOM_LIMIT_REACHED);
+                resolve(false);
+            });
             this._socket.on(ServerEvent.RESPONSE_CREATE_CHATROOM_TAKEN, () => {
                 resolve(false);
                 this._socket.removeAllListeners(ServerEvent.RESPONSE_CREATE_CHATROOM_TAKEN);
@@ -131,11 +136,6 @@ class ChatService {
             });
             this._socket.on(ServerEvent.RESPONSE_JOIN_CHATROOM_NOT_EXISTING, () => {
                 this._socket.removeAllListeners(ServerEvent.RESPONSE_JOIN_CHATROOM_NOT_EXISTING);
-                resolve(false);
-            });
-            this._socket.on(ServerEvent.RESPONSE_CHATROOM_LIMIT_REACHED, () => {
-                console.error("CHATROOM LIMIT REACHED!", ServerEvent.RESPONSE_CHATROOM_LIMIT_REACHED);
-                this._socket.removeAllListeners(ServerEvent.RESPONSE_CHATROOM_LIMIT_REACHED);
                 resolve(false);
             });
             const chatroomMessage: ChatroomMessage = {
