@@ -21,7 +21,7 @@ export class ChatServer {
     constructor(
         private readonly usernameMaxLength: number = 30,
         private readonly roomNameMaxLength: number = 30,
-        private readonly chatroomLimit: number = 0,
+        private readonly chatroomLimit: number = 500,
         private readonly messageLimitPerChatroom: number = 1000,
     ) {
         this.clientManager = new ClientManager(this.chatroomLimit, this.messageLimitPerChatroom)
