@@ -18,7 +18,7 @@
     let lastWindowHeight: number = 0;
     let messageListEl: HTMLUListElement;
     let lastTextMessage: TextMessage | null = null;
-    let scrollIsAtBottom: boolean = true;
+    const scrollBottomMarginPx: number = 200;
 
     let myUsername: Username = $user?.name ?? "";
     let messages: Message[] = [];
@@ -26,7 +26,7 @@
     onMount(async () => {
         subscriptions.push(
             chatService.onJoinChatroomMessage.subscribe(async (joinMessage) => {
-                await addMessageToChat(joinMessage);
+                await addMessagesToChatAndAutoScroll(joinMessage);
                 $onlineUserNames = [...$onlineUserNames, joinMessage.username];
                 if (joinMessage.username === myUsername) {
                     await scrollToBottom();
@@ -34,18 +34,18 @@
             }),
             chatService.onLeaveChatroomMessage.subscribe(
                 async (leaveMessage) => {
-                    await addMessageToChat(leaveMessage);
+                    await addMessagesToChatAndAutoScroll(leaveMessage);
                     $onlineUserNames = $onlineUserNames.filter(
                         (username) => username !== leaveMessage.username
                     );
                 }
             ),
             chatService.onTextMessage.subscribe(async (textMessage) => {
-                await addMessageToChat(textMessage);
+                await addMessagesToChatAndAutoScroll(textMessage);
                 lastTextMessage = textMessage;
             }),
             chatService.onSystemMessage.subscribe(async (systemMessage) => {
-                await addMessageToChat(systemMessage);
+                await addMessagesToChatAndAutoScroll(systemMessage);
             })
         );
         const result = await Promise.all([
@@ -54,24 +54,12 @@
         ]);
         addMessagesToChat(...result[0].messages);
         setOnlineUsernames(...result[1].users);
+        await scrollToBottom();
     });
 
     onDestroy(() => {
         subscriptions.forEach((subscription) => subscription.unsubscribe());
     });
-
-    async function addMessageToChat(message: Message): Promise<void> {
-        messages = [...messages, message];
-        await tick();
-        if (scrollIsAtBottom) {
-            scrollToBottom();
-        }
-    }
-
-    function addMessagesToChat(...newMessages: Message[]): void {
-        console.table(newMessages);
-        messages = [...messages, ...newMessages];
-    }
 
     function setOnlineUsernames(...newOnlineUsernames: Username[]): void {
         $onlineUserNames = [...newOnlineUsernames];
@@ -81,13 +69,9 @@
         event: CustomEvent<{ text: string; sender: Username }>
     ): Promise<void> {
         const { text, sender } = event.detail;
-        await addMessageToChat(chatService.sendTextMessage(text, sender));
-    }
-
-    async function scrollToBottom(): Promise<void> {
-        await tick();
-        messageListEl.scrollTop =
-            messageListEl.scrollHeight - messageListEl.clientHeight;
+        await addMessagesToChatAndScroll(
+            chatService.sendTextMessage(text, sender)
+        );
     }
 
     function textMessageIsFollowUp(message: TextMessage): boolean {
@@ -108,7 +92,49 @@
         );
     }
 
+    function addMessagesToChat(...newMessages: Message[]): void {
+        console.table(newMessages);
+        messages = [...messages, ...newMessages];
+    }
+
+    async function addMessagesToChatAndScroll(
+        ...newMessages: Message[]
+    ): Promise<void> {
+        addMessagesToChat(...newMessages);
+        await scrollToBottom();
+    }
+
+    async function addMessagesToChatAndAutoScroll(
+        ...newMessages: Message[]
+    ): Promise<void> {
+        addMessagesToChat(...newMessages);
+        await autoScrollToBottom();
+    }
+
+    async function scrollToBottom(): Promise<void> {
+        await tick();
+        messageListEl.scrollTop =
+            messageListEl.scrollHeight - messageListEl.clientHeight;
+    }
+
+    async function autoScrollToBottom(): Promise<void> {
+        if (isScrollAtBottom()) {
+            await scrollToBottom();
+        }
+    }
+
+    function isScrollAtBottom(): boolean {
+        return (
+            messageListEl == null ||
+            messageListEl.scrollTop -
+                (messageListEl.scrollHeight - messageListEl.offsetHeight) +
+                scrollBottomMarginPx >
+                0
+        );
+    }
+
     function onResize(event: UIEvent): void {
+        console.log("Window Resize");
         // if (
         //     lastWindowHeight &&
         //     window.outerHeight < 700 &&
