@@ -45,7 +45,12 @@
             <div class="name">
                 <span> {textMessage.sender}</span>
                 <span class:hidden={onlineIndicatorHidden}>
-                    <Jumper size="1" unit="em" color="#00FF00" duration="3s" />
+                    <Jumper
+                        size="1"
+                        unit="em"
+                        color="var(--c-mgs-text-online-indicator)"
+                        duration="3s"
+                    />
                 </span>
             </div>
         {/if}

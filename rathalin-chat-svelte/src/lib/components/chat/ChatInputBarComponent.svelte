@@ -2,9 +2,8 @@
     import type { Username } from "$lib/shared/message/user/Username";
     import { user } from "$lib/stores/user.store";
     import Send from "svelte-material-icons/Send.svelte";
-
     import { createEventDispatcher, onDestroy, onMount } from "svelte";
-import { _ } from "svelte-i18n";
+    import { _ } from "svelte-i18n";
 
     let dispatch = createEventDispatcher<{
         message: { text: string; sender: Username };
@@ -30,31 +29,20 @@ import { _ } from "svelte-i18n";
         }
 
         text = "";
-        inputEl.focus();
+        focusInput();
     }
 
-    /**
-     * Hangle keydown of input
-     * @param event KeyboardEvent
-     */
     function inputKeyDown(event: KeyboardEvent) {
         if (event.key !== "Enter") return;
-
         sendMessage();
     }
 
     function focusInput(): void {
         inputEl.focus();
     }
-
-    onMount(() => {
-        window.addEventListener("keydown", focusInput);
-    });
-
-    onDestroy(() => {
-        window.removeEventListener("keydown", focusInput);
-    });
 </script>
+
+<svelte:window on:keydown={focusInput} />
 
 <div id="chat-input-wrapper" on:click={focusInput}>
     <!-- svelte-ignore a11y-autofocus -->
