@@ -68,7 +68,7 @@ import { _ } from "svelte-i18n";
         id="chat-input"
         autofocus
     />
-    <button id="send-message-button" class="link" on:click={sendMessage}>
+    <button id="send-message-button" class="no-outline" on:click={sendMessage}>
         <span class="flex-row">
             <Send size="1.5em" />
         </span>

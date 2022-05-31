@@ -81,7 +81,7 @@
 <button
     on:click={onClick}
     id="theme-toggle-button"
-    class="link"
+    class="no-outline"
     aria-label={themePreference}
     title={$_(
         "theme.toggle_button.title." +

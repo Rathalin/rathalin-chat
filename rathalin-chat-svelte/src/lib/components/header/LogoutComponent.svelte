@@ -12,7 +12,7 @@
 </script>
 
 {#if $loggedIn}
-    <button id="exit-button" class="link" on:click={exit}>
+    <button id="exit-button" class="no-outline" on:click={exit}>
         <span class="wrap">{$user?.name}</span>
         <Pencil />
     </button>
