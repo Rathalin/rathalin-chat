@@ -92,7 +92,7 @@
   },
   "chat": {
     "input": {
-      "placeholder": "Meddelande"
+      "placeholder": "Skriv ditt meddelande"
     }
   },
   "theme": {
