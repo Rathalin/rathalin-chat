@@ -2,7 +2,7 @@
     import type { Username } from "$lib/shared/message/user/Username";
     import { user } from "$lib/stores/user.store";
     import Send from "svelte-material-icons/Send.svelte";
-    import { createEventDispatcher, onDestroy, onMount } from "svelte";
+    import { createEventDispatcher } from "svelte";
     import { _ } from "svelte-i18n";
 
     let dispatch = createEventDispatcher<{
@@ -12,11 +12,9 @@
     let text: string = "";
     let inputEl: HTMLInputElement;
     let myUsername: Username;
+    
     user.subscribe((u) => (myUsername = u?.name ?? ""));
 
-    /**
-     * Raises the message event
-     */
     function sendMessage(): void {
         const messageText: string = text.trim();
 

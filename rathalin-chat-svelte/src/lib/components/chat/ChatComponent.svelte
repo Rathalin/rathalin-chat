@@ -15,7 +15,7 @@
     import { ServerEvent } from "$lib/shared/ServerEvent";
 
     const subscriptions: Subscription[] = [];
-    let lastWindowHeight: number = 0;
+    let lastWindowHeight: number = -1;
     let messageListEl: HTMLUListElement;
     let lastTextMessage: TextMessage | null = null;
     const scrollBottomMarginPx: number = 200;
@@ -93,7 +93,6 @@
     }
 
     function addMessagesToChat(...newMessages: Message[]): void {
-        console.table(newMessages);
         messages = [...messages, ...newMessages];
     }
 
@@ -134,28 +133,12 @@
     }
 
     function onResize(event: UIEvent): void {
-        console.log("Window Resize");
-        // if (
-        //     lastWindowHeight &&
-        //     window.outerHeight < 700 &&
-        //     lastWindowHeight !== window.innerHeight
-        // ) {
-        //     const keyboardGotOpened: boolean =
-        //         lastWindowHeight > window.innerHeight;
-        //     const keyboardOffset: number = keyboardGotOpened ? 250 : 0;
-        //     const isAtBottom: boolean =
-        //         document.body.scrollHeight - window.scrollY ===
-        //         window.innerHeight + keyboardOffset;
-        //     if (!(!keyboardGotOpened && isAtBottom)) {
-        //         window.scrollBy(0, lastWindowHeight - window.innerHeight);
-        //     }
-        //     // addMessageToChat({
-        //     //     person: { name: "Debug" },
-        //     //     timestamp: "",
-        //     //     text: `${document.body.scrollHeight} - ${window.scrollY} === ${window.innerHeight} + ${keyboardOffset}`,
-        //     // });
-        // }
-        // lastWindowHeight = window.innerHeight;
+        const windowHeight: number = window.innerHeight;
+        if (lastWindowHeight != -1) {
+            messageListEl.scrollTop += lastWindowHeight - windowHeight;
+            console.log("ScrollTop: ", messageListEl.scrollTop);
+        }
+        lastWindowHeight = windowHeight;
     }
 </script>
 

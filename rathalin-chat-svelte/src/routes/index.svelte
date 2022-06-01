@@ -19,7 +19,7 @@
 	import { chatService } from "$lib/services/chat/chat.service";
 	import { socketIoServerConnection } from "$lib/stores/config.store";
 	import { connected } from "$lib/stores/user.store";
-import { goto } from "$app/navigation";
+	import { goto } from "$app/navigation";
 
 	const subscriptions: Subscription[] = [];
 
