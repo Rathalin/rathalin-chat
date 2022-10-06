@@ -1,6 +1,5 @@
 <script lang="ts">
     import { Jumper } from "svelte-loading-spinners";
-    import { fade } from "svelte/transition";
     import {
         messageFadeInPosition,
         messageFadeInDuration,

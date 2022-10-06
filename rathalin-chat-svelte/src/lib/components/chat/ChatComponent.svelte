@@ -17,7 +17,6 @@
     const subscriptions: Subscription[] = [];
     let lastWindowHeight: number = -1;
     let messageListEl: HTMLUListElement;
-    let lastTextMessage: TextMessage | null = null;
     const scrollBottomMarginPx: number = 200;
 
     let myUsername: Username = $user?.name ?? "";
@@ -42,7 +41,6 @@
             ),
             chatService.onTextMessage.subscribe(async (textMessage) => {
                 await addMessagesToChatAndAutoScroll(textMessage);
-                lastTextMessage = textMessage;
             }),
             chatService.onSystemMessage.subscribe(async (systemMessage) => {
                 await addMessagesToChatAndAutoScroll(systemMessage);

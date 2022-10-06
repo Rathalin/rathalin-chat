@@ -9,7 +9,7 @@
         isThemePreference,
     } from "$lib/types/ThemePreference";
     import type { Theme } from "$lib/types/Theme";
-    import { iconSize, theme } from "$lib/stores/theme.store";
+    import { theme } from "$lib/stores/theme.store";
     import { _ } from "svelte-i18n";
 
     export const storageKey: string = "theme-preference";

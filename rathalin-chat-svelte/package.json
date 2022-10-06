@@ -2,6 +2,7 @@
   "name": "rathalin-chat-svelte",
   "version": "1.0.0",
   "scripts": {
+    "start": "node dist/index.js",
     "dev": "svelte-kit dev",
     "dev:host": "svelte-kit dev --host",
     "build": "svelte-kit build",
