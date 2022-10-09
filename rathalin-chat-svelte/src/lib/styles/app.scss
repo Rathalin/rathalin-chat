@@ -32,6 +32,7 @@ body {
     box-sizing: border-box;
     font-family: inherit;
     color: inherit;
+    transition: background-color var(--duration-long, 300ms);
 }
 
 .row {

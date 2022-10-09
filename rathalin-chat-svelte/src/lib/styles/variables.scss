@@ -70,15 +70,15 @@ html {
         --c-msg-system: hwb(240 61% 18%);
         --c-msg-input: hwb(240 56% 37%);
 
-        --c-theme-toggle: hwb(44 25% 11%);
-        --c-theme-toggle-hover: hwb(0 0% 100%);
+        --c-theme-toggle: hsl(0, 0%, 10%);
+        --c-theme-toggle-hover: hsl(51, 4%, 35%);
 
         --bg-scrollbar-thumb: hwb(0 30% 70%);
         --bg-scrollbar-thumb-hover: hwb(0 20% 80%);
         --bg-scrollbar-thumb-active: hwb(0 10% 90%);
         --bg-scrollbar-track: hwb(0 60% 40%);
-        --bg-scrollbar-track-hover: hwb(0 70% 30%);   
-        --bg-scrollbar-track-active: hwb(0 80% 20%);     
+        --bg-scrollbar-track-hover: hwb(0 70% 30%);
+        --bg-scrollbar-track-active: hwb(0 80% 20%);
     }
 
     &[data-theme="dark"] {
@@ -128,15 +128,14 @@ html {
         --c-msg-text-me: hwb(0 35% 65%);
         --c-msg-input: hwb(0 18% 82%);
 
-        --c-theme-toggle: hsl(54, 100%, 50%);
-        --c-theme-toggle-hover: hsl(0, 0%, 100%);
+        --c-theme-toggle: hsl(0, 0%, 100%);
+        --c-theme-toggle-hover: hsl(54, 100%, 50%);
 
         --bg-scrollbar-thumb: hwb(0 90% 10%);
         --bg-scrollbar-thumb-hover: hwb(0 95% 15%);
         --bg-scrollbar-thumb-active: hwb(0 100% 0%);
         --bg-scrollbar-track: hwb(0 30% 70%);
-        --bg-scrollbar-track-hover: hwb(0 20% 80%);   
-        --bg-scrollbar-track-active: hwb(0 10% 90%);     
+        --bg-scrollbar-track-hover: hwb(0 20% 80%);
+        --bg-scrollbar-track-active: hwb(0 10% 90%);
     }
 }
-
