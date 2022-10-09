@@ -19,7 +19,7 @@
         on:mouseenter={onMouseEnter}
         on:mouseleave={onMouseLeave}
     >
-        <button class="link">
+        <button class="no-outline">
             <Account />
         </button>
         {#if showMenu}

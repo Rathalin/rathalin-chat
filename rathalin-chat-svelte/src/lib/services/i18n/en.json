@@ -80,7 +80,7 @@
   },
   "chat": {
     "input": {
-      "placeholder": "Message"
+      "placeholder": "Write your message"
     }
   },
   "messages": {

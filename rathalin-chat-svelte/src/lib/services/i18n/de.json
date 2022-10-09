@@ -118,7 +118,7 @@
   },
   "chat": {
     "input": {
-      "placeholder": "Nachricht"
+      "placeholder": "Schreibe deine Nachricht"
     }
   },
   "theme": {

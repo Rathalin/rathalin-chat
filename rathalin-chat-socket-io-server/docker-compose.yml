@@ -1,0 +1,10 @@
+version: '3.7'
+services:
+  websocket:
+    build: rathalin-chat-socket-io-server
+    restart: always
+    networks:
+      - nginx-net
+networks:
+  nginx-net:
+    external: true

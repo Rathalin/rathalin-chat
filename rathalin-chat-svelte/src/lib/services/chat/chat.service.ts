@@ -1,5 +1,5 @@
 import { Manager, Socket } from "socket.io-client";
-import { Subject, timestamp } from "rxjs";
+import { Subject } from "rxjs";
 import { socketIoServerConnection } from "$lib/stores/config.store";
 import { get } from "svelte/store";
 import type { Username } from "$lib/shared/message/user/Username";
@@ -45,7 +45,6 @@ class ChatService {
     // Members and Properties
 
     private _socket: Socket;
-    private _room: string | null = null;
 
 
     // Public methods
@@ -150,7 +149,7 @@ class ChatService {
 
 
     public leaveChatroom(room: ChatroomName): Promise<boolean> {
-        return new Promise((resolve, reject) => {
+        return new Promise((resolve) => {
             this._socket.on(ServerEvent.RESPONSE_LEAVE_CHATROOM_ACCEPT, () => {
                 resolve(true);
             });
