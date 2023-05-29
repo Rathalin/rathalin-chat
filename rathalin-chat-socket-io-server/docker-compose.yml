@@ -1,7 +1,12 @@
-version: "3.7"
 services:
-  websocket:
-    build: rathalin-chat-socket-io-server
+  rathalin-chat-server:
+    build: .
     restart: always
-    ports:
-      - "5001:5001"
+    networks:
+      - nginx-net
+    env_file:
+      - .env
+networks:
+  nginx-net:
+    external: true
+    

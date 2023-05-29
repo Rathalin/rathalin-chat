@@ -1,16 +1,15 @@
 FROM node:16
-
-WORKDIR /usr/src/rathalin-chat-socket-io-server
-COPY package*.json ./
+RUN apt-get update && apt-get install libvips-dev -y
+ARG NODE_ENV=development
+ENV NODE_ENV=${NODE_ENV}
+WORKDIR /opt/
+COPY ./package.json ./package-lock.json  ./
+ENV PATH /opt/node_modules/.bin:$PATH
 RUN npm ci
-
-COPY . .
-RUN npx tsc
-
-# VOLUME [ "/usr/src/rathalin-chat-socket-io-server/data" ]
-
+WORKDIR /opt/app
+COPY ./ .
+RUN npm run build
 ENV SOCKET_IO_PORT=5001
 ENV CORS_PORT=*
 EXPOSE 5001
-
 CMD [ "npm", "run", "start" ]
