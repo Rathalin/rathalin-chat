@@ -31,7 +31,7 @@
                 if (joinMessage.username === myUsername) {
                     await scrollToBottom();
                 } else {                    
-                    if ($notificationsAllowed) {
+                    if ($notificationsAllowed && document.hidden) {
                         new Notification(`${joinMessage.username} joined the chat.`)
                     }
                 }
@@ -42,14 +42,14 @@
                     $onlineUserNames = $onlineUserNames.filter(
                         (username) => username !== leaveMessage.username
                     );
-                    if ($notificationsAllowed) {
+                    if ($notificationsAllowed && document.hidden) {
                         new Notification(`${leaveMessage.username} left the chat.`)
                     }
                 }
             ),
             chatService.onTextMessage.subscribe(async (textMessage) => {
                 await addMessagesToChatAndAutoScroll(textMessage);
-                if ($notificationsAllowed) {
+                if ($notificationsAllowed && document.hidden) {
                     new Notification(`${textMessage.sender} send a message.`, {
                         body: textMessage.text,
                     })
