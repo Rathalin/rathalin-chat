@@ -13,6 +13,7 @@
     import { messageListLimit } from "$lib/stores/config.store";
     import type { Username } from "$lib/shared/message/user/Username";
     import { ServerEvent } from "$lib/shared/ServerEvent";
+    import { notificationsAllowed } from "$lib/stores/notifications.store";
 
     const subscriptions: Subscription[] = [];
     let lastWindowHeight: number = -1;
@@ -29,6 +30,10 @@
                 $onlineUserNames = [...$onlineUserNames, joinMessage.username];
                 if (joinMessage.username === myUsername) {
                     await scrollToBottom();
+                } else {                    
+                    if ($notificationsAllowed) {
+                        new Notification(`${joinMessage.username} joined the chat.`)
+                    }
                 }
             }),
             chatService.onLeaveChatroomMessage.subscribe(
@@ -37,10 +42,18 @@
                     $onlineUserNames = $onlineUserNames.filter(
                         (username) => username !== leaveMessage.username
                     );
+                    if ($notificationsAllowed) {
+                        new Notification(`${leaveMessage.username} left the chat.`)
+                    }
                 }
             ),
             chatService.onTextMessage.subscribe(async (textMessage) => {
                 await addMessagesToChatAndAutoScroll(textMessage);
+                if ($notificationsAllowed) {
+                    new Notification(`${textMessage.sender} send a message.`, {
+                        body: textMessage.text,
+                    })
+                }
             }),
             chatService.onSystemMessage.subscribe(async (systemMessage) => {
                 await addMessagesToChatAndAutoScroll(systemMessage);

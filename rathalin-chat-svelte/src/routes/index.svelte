@@ -20,6 +20,7 @@
 	import { socketIoServerConnection } from "$lib/stores/config.store";
 	import { connected } from "$lib/stores/user.store";
 	import { goto } from "$app/navigation";
+	import { notificationsAllowed } from "$lib/stores/notifications.store";
 
 	const subscriptions: Subscription[] = [];
 
@@ -47,6 +48,14 @@
 				goto("/login");
 			})
 		);
+
+		Notification.requestPermission().then((perm) => {
+			if (perm === "granted") {
+				$notificationsAllowed = true;
+			} else {
+				$notificationsAllowed = false;
+			}
+		})
 	});
 
 	onDestroy(() => {
