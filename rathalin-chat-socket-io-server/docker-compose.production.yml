@@ -7,7 +7,7 @@ services:
     environment:
       - SOCKET_IO_PORT=${SOCKET_IO_PORT}
       - CORS_PORT=${CORS_PORT}
+      - NODE_ENV=${NODE_ENV}
 networks:
   web-net:
     external: true
-    
