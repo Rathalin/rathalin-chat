@@ -4,8 +4,9 @@ services:
     restart: always
     networks:
       - web-net
-    env_file:
-      - .env
+    environment:
+      - SOCKET_IO_PORT=${SOCKET_IO_PORT}
+      - CORS_PORT=${CORS_PORT}
 networks:
   web-net:
     external: true
