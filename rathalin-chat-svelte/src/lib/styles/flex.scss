@@ -1,41 +1,41 @@
 .flex {
-    display: flex;
+  display: flex;
 }
 
 .flex-row {
-    display: flex;
-    flex-direction: row;
+  display: flex;
+  flex-direction: row;
 }
 
 .flex-column {
-    display: flex;
-    flex-direction: column;
+  display: flex;
+  flex-direction: column;
 }
 
 .gap {
-    gap: 0.5em;
+  gap: 0.5em;
 }
 
 .justify-self-start {
-    justify-self: flex-start;
+  justify-self: flex-start;
 }
 
 .justify-self-end {
-    justify-self: flex-end;
+  justify-self: flex-end;
 }
 
 .justify-content-center {
-    justify-content: center;
+  justify-content: center;
 }
 
 .align-items-center {
-    align-items: center;
+  align-items: center;
 }
 
 .flex-wrap {
-    flex-wrap: wrap;
+  flex-wrap: wrap;
 }
 
 .flex-no-warp {
-    flex-wrap: nowrap;
+  flex-wrap: nowrap;
 }

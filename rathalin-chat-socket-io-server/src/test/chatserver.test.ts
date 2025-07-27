@@ -1,15 +1,11 @@
 import { ChatServer } from "src/chatserver/ChatServer";
 
-describe('Connect', () => {
+describe("Connect", () => {
+  let server: ChatServer;
 
-    let server: ChatServer;
+  beforeEach(() => {
+    server = new ChatServer();
+  });
 
-    beforeEach(() => {
-        server = new ChatServer();
-    });
-
-    it('should add new client to list', () => {
-        
-    });
-
+  it("should add new client to list", () => {});
 });

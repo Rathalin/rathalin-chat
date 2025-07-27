@@ -1,4 +1,4 @@
 export interface ServerConfig {
-    socketIoPort: number;
-    corsPort: number | "*";
-};
+  socketIoPort: number;
+  corsPort: number | "*";
+}

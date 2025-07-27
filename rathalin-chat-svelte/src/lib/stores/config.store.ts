@@ -9,5 +9,5 @@ export const messageFadeInDuration = readable(300);
 
 // Connection
 export const socketIoServerConnection = readable(
-  `${import.meta.env.VITE_CHAT_SERVER_HOST ?? "http://localhost:5001"}`
+  `${import.meta.env.VITE_CHAT_SERVER_HOST ?? "http://localhost:5001"}`,
 );
