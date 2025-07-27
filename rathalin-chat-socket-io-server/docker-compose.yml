@@ -3,10 +3,10 @@ services:
     build: .
     restart: always
     networks:
-      - nginx-net
+      - web-net
     env_file:
       - .env
 networks:
-  nginx-net:
+  web-net:
     external: true
     
